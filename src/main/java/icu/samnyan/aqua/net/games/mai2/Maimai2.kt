@@ -6,6 +6,7 @@ import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
 import icu.samnyan.aqua.sega.maimai2.model.*
 import icu.samnyan.aqua.sega.maimai2.model.userdata.*
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -34,6 +35,8 @@ class Maimai2(
             "titleId" to { u, v -> u.titleId = v.int() },
             "frameId" to { u, v -> u.frameId = v.int() },
             "partnerId" to { u, v -> u.partnerId = v.int() },
+            "charaSlot" to { u, v -> u.charaSlot = v.split(',').map { it.int() } },
+            "charaLockSlot" to { u, v -> u.charaLockSlot = v.split(',').map { it.int() } },
         )
     }
     override val gettableFields: Set<String> = setOf("lastGameId", "lastRomVersion", "classRank", "playerRating", "courseRank")
@@ -107,6 +110,35 @@ class Maimai2(
             userDataRepo.save(user)
         }
         mapOf("newName" to newNameFull)
+    }
+
+    @GetMapping("get-login-bonus")
+    suspend fun getLoginBonus(@RP token: String) = us.jwt.auth(token) { u ->
+        us.cardByName(u.username) { card ->
+            repos.userLoginBonus.findByUser_Card_ExtId(card.extId)
+        }
+    }
+
+    @PostMapping("set-current-login-bonus")
+    suspend fun setCurrentLoginBonus(@RP token: String, @RP bonusId: Int) = us.jwt.auth(token) { u ->
+        us.cardByName(u.username) { card ->
+            val loginBonus = repos.userLoginBonus.findByUser_Card_ExtId(card.extId).mut
+            for (bonus in loginBonus) {
+                bonus.isCurrent = bonus.bonusId == bonusId
+            }
+            // if no bonus.bonusId == bonusId in loginBonus
+            if (loginBonus.none { it.bonusId == bonusId }) {
+                // create one
+                val newBonus = Mai2UserLoginBonus().apply {
+                    user = repos.userData.findByCardExtId(card.extId).orElse(null) ?: (404 - "User not found")
+                    this.bonusId = bonusId
+                    isCurrent = true
+                }
+                loginBonus.add(newBonus)
+            }
+            repos.userLoginBonus.saveAll(loginBonus)
+        }
+        SUCCESS
     }
 
     @PostMapping("set-rival")
