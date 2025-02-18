@@ -6,7 +6,6 @@ import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
 import icu.samnyan.aqua.sega.maimai2.model.*
 import icu.samnyan.aqua.sega.maimai2.model.userdata.*
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -112,7 +111,7 @@ class Maimai2(
         mapOf("newName" to newNameFull)
     }
 
-    @GetMapping("get-login-bonus")
+    @API("get-login-bonus")
     suspend fun getLoginBonus(@RP token: String) = us.jwt.auth(token) { u ->
         us.cardByName(u.username) { card ->
             repos.userLoginBonus.findByUser_Card_ExtId(card.extId)
@@ -139,6 +138,13 @@ class Maimai2(
             repos.userLoginBonus.saveAll(loginBonus)
         }
         SUCCESS
+    }
+
+    @API("owned-items")
+    suspend fun ownedItems(@RP token: String) = us.jwt.auth(token) { u ->
+        us.cardByName(u.username) { card ->
+            repos.userItem.findByUser_Card_ExtId(card.extId)
+        }
     }
 
     @PostMapping("set-rival")
