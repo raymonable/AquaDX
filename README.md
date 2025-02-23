@@ -33,7 +33,7 @@ Below is a list of games supported by this server.
 
 | Game                   | Ver  | Codename            | Thanks to                                  |
 |------------------------|------|---------------------|--------------------------------------------|
-| SDHD: CHUNITHM         | 2.27 | LUMINOUS PLUS       | [@rinsama](https://github.com/mxihan)      |
+| SDHD: CHUNITHM         | 2.30 | VERSE               | [@rinsama](https://github.com/mxihan)      |
 | SDEZ: MaiMai DX        | 1.50 | PRiSM               | [@肥宅虾哥](https://github.com/FeiZhaixiage)   |
 | SDGA: MaiMai DX (Intl) | 1.50 | PRiSM               | [@Clansty](https://github.com/clansty)     |
 | SDED: Card Maker       | 1.39 |                     | [@Becods](https://github.com/Becods)       |
