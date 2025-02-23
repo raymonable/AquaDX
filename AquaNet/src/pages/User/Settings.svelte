@@ -14,6 +14,7 @@
   import Mai2Settings from "../../components/settings/Mai2Settings.svelte";
   import WaccaSettings from "../../components/settings/WaccaSettings.svelte";
   import GeneralGameSettings from "../../components/settings/GeneralGameSettings.svelte";
+  import OngekiSettings from "../../components/settings/OngekiSettings.svelte";
 
   USER.ensureLoggedIn()
 
@@ -27,6 +28,7 @@
     [ 'displayName', t('settings.profile.name') ],
     [ 'username', t('settings.profile.username') ],
     [ 'password', t('settings.profile.password') ],
+    [ 'country', t('settings.profile.country') ],
     [ 'profileLocation', t('settings.profile.location') ],
     [ 'profileBio', t('settings.profile.bio') ],
   ] as const
@@ -49,6 +51,9 @@
       }
       if (games.wacca && !tabs.includes('wacca')) {
         tabs = [...tabs, 'wacca']
+      }
+      if (games.ongeki && !tabs.includes('ongeki')) {
+        tabs = [...tabs, 'ongeki']
       }
     })
   }).catch(e => error = e.message)
@@ -193,6 +198,8 @@
     <Mai2Settings username={me.username} />
   {:else if tabs[tab] === 'wacca'}
     <WaccaSettings />
+  {:else if tabs[tab] === 'ongeki'}
+    <OngekiSettings />
   {:else if tabs[tab] === 'game'}
     <GeneralGameSettings />
   {/if}
