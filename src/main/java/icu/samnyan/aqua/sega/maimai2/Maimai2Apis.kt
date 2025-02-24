@@ -60,20 +60,6 @@ fun Maimai2ServletController.initApis() {
     "GetGameEvent" static { mapOf("type" to 1, "gameEventList" to db.gameEvent.findByEnable(true)) }
     "GetGameCharge" static { db.gameCharge.findAll().let { mapOf("length" to it.size, "gameChargeList" to it) } }
 
-    "GetUserRivalData" {
-        val rivalId = parsing { data["rivalId"]!!.long }
-
-        // rivalId should store and fetch with the id column of table rather than card_ext_id
-        // or user will be able to get others' ext_id by setting them as rival
-        mapOf(
-            "userId" to uid,
-            "userRivalData" to mapOf(
-                "rivalId" to rivalId,
-                "rivalName" to (db.userData.findById(rivalId)()?.userName ?: "")
-            )
-        )
-    }
-
     "GetUserOption" { mapOf(
         "userId" to uid,
         "userOption" to (db.userOption.findSingleByUser_Card_ExtId(uid)() ?: (404 - "User not found"))
@@ -155,10 +141,16 @@ fun Maimai2ServletController.initApis() {
 
     "GetUserRivalData" {
         val rivalId = parsing { data["rivalId"]!!.long }
-        mapOf("userId" to uid, "userRivalData" to mapOf(
-            "rivalId" to rivalId,
-            "rivalName" to (db.userData.findByCardExtId(rivalId)()?.userName ?: "")
-        ))
+
+        // rivalId should store and fetch with the id column of table rather than card_ext_id
+        // or user will be able to get others' ext_id by setting them as rival
+        mapOf(
+            "userId" to uid,
+            "userRivalData" to mapOf(
+                "rivalId" to rivalId,
+                "rivalName" to (db.userData.findById(rivalId)()?.userName ?: "")
+            )
+        )
     }
 
     "GetUserRivalMusic" {
