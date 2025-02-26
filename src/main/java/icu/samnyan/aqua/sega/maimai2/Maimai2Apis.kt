@@ -197,23 +197,21 @@ fun Maimai2ServletController.initApis() {
     // Kaleidoscope, added on 1.50
     "GetGameKaleidxScope" { mapOf("gameKaleidxScopeList" to ls(
         mapOf("gateId" to 1, "phaseId" to findPhase(LocalDate.of(2025, 1, 18))),
-        mapOf("gateId" to 2, "phaseId" to findPhase(LocalDate.of(2025, 2, 20))),
+        mapOf("gateId" to 2, "phaseId" to 2),
         mapOf("gateId" to 3, "phaseId" to 2),
-        mapOf("gateId" to 4, "phaseId" to 2),
+        mapOf("gateId" to 4, "phaseId" to findPhase(LocalDate.of(2025, 2, 25))),
         mapOf("gateId" to 5, "phaseId" to 2),
         mapOf("gateId" to 6, "phaseId" to 2),
     )) }
     "GetUserKaleidxScope".unpaged {
         val u = db.userData.findByCardExtId(uid)() ?: (404 - "User not found")
-        db.userKaleidx.findByUser(u)
-            .mapApply { isKeyFound = true }
-            .ifEmpty { ls(
-                // I'll add this here so people don't need to unlock it
-                Mai2UserKaleidx().apply {
-                    user = u
-                    gateId = 1
-                }
-            ) }
+        val lst = db.userKaleidx.findByUser(u)
+            .mapApply { isKeyFound = true }.toMutableList()
+
+        lst += (1..6).filter { i -> lst.none { it.gateId == i } }
+            .map { Mai2UserKaleidx().apply { user = u; gateId = it } }
+
+        lst
     }
     // Added on 1.50
     "GetUserNewItemList" { mapOf("userId" to uid, "userItemList" to empty) }
