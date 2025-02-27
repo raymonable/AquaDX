@@ -4,8 +4,10 @@ import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
+import icu.samnyan.aqua.sega.maimai2.handler.UploadUserPhotoHandler
 import icu.samnyan.aqua.sega.maimai2.model.*
 import icu.samnyan.aqua.sega.maimai2.model.userdata.*
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -171,5 +173,23 @@ class Maimai2(
             repos.userGeneralData.save(myRival)
         }
         SUCCESS
+    }
+
+    @API("my-photo")
+    suspend fun myPhoto(@RP token: Str) = us.jwt.auth(token) { u ->
+        val find = "${u.ghostCard.extId}-"
+        UploadUserPhotoHandler.uploadDir.toFile().listFiles()
+            ?.map { it.name }
+            ?.filter { it.startsWith(find) }
+            ?.sorted()
+            ?: emptyList()
+    }
+
+    @API("my-photo/{fileName}", produces = [MediaType.IMAGE_JPEG_VALUE])
+    suspend fun myPhoto(@RP token: Str, @PV fileName: Str) = us.jwt.auth(token) { u ->
+        if (!fileName.startsWith("${u.ghostCard.extId}-")) (403 - "Not your photo")
+        val f = (UploadUserPhotoHandler.uploadDir / fileName).toFile()
+        if (!f.exists()) (404 - "Photo not found")
+        f.readBytes()
     }
 }
