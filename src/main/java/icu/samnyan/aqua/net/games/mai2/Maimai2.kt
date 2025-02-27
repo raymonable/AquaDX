@@ -175,10 +175,12 @@ class Maimai2(
         SUCCESS
     }
 
+    val photoDir = UploadUserPhotoHandler.uploadDir.toFile().canonicalFile
+
     @API("my-photo")
     suspend fun myPhoto(@RP token: Str) = us.jwt.auth(token) { u ->
         val find = "${u.ghostCard.extId}-"
-        UploadUserPhotoHandler.uploadDir.toFile().listFiles()
+        photoDir.listFiles()
             ?.map { it.name }
             ?.filter { it.startsWith(find) }
             ?.sorted()
@@ -187,8 +189,9 @@ class Maimai2(
 
     @API("my-photo/{fileName}", produces = [MediaType.IMAGE_JPEG_VALUE])
     suspend fun myPhoto(@RP token: Str, @PV fileName: Str) = us.jwt.auth(token) { u ->
-        if (!fileName.startsWith("${u.ghostCard.extId}-")) (403 - "Not your photo")
-        val f = (UploadUserPhotoHandler.uploadDir / fileName).toFile()
+        val f = (photoDir / fileName)
+        if (!f.canonicalFile.startsWith(photoDir)) (403 - "Never gonna give you up")
+        if (!f.name.startsWith("${u.ghostCard.extId}-")) (403 - "Not your photo")
         if (!f.exists()) (404 - "Photo not found")
         f.readBytes()
     }
