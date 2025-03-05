@@ -65,7 +65,10 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
             .mapIndexed { i, it -> it.r.apply { rank = i + 1 } }
             .also { logger.info("Ranking returned in ${millis() - time}ms") }
 
-        return page?.let { v.drop((it - 1) * pageSize).take(pageSize) } ?: v
+        return page?.let {
+            if (it < 0) (400 - "Invalid page number")
+            v.drop(it * pageSize).take(pageSize)
+        } ?: v
     }
 
     @PostConstruct
