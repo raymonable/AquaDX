@@ -63,4 +63,5 @@ class UpsertUserAll(
     var userNetBattleData: List<UpsertNetBattleData>? = null,
     var userCMissionList: List<UserCMissionResp>? = null,
     var userFavoriteMusicList: List<FavNewMusic>? = null,
+    var userUnlockChallengeList: List<Chu3UserChallenge>? = null,
 )

@@ -124,6 +124,10 @@ fun ChusanController.upsertApiInit() {
                 db.userDuel.saveAll(list.distinctBy { it.duelId }.mapApply {
                     id = db.userDuel.findByUserAndDuelId(u, duelId)?.id ?: 0 }) }
 
+            userUnlockChallengeList?.let { list ->
+                db.userChallenge.saveAll(list.distinctBy { it.unlockChallengeId }.mapApply {
+                    id = db.userChallenge.findByUserAndUnlockChallengeId(u, unlockChallengeId)?.id ?: 0 }) }
+
             // Need testing
 //            userLoginBonusList?.let { list ->
 //                db.userLoginBonus.saveAll(list.distinctBy { it["presetId"] as String }.map {
