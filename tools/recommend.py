@@ -12,17 +12,16 @@ import implicit
 from hypy_utils.logging_utils import setup_logger
 
 BASE_URL = "https://aquadx.net/aqua/api/v2/game"
-GAME = "mai2"
 BOT_SECRET = "hunter2"
 
 log = setup_logger()
 
 
-if __name__ == '__main__':
+def main(game: str):
     # Load the CSV data
     log.info("Loading data...")
     # data = pd.read_csv("data.csv")
-    resp = requests.get(f"{BASE_URL}/{GAME}/recommender-fetch", params={"botSecret": BOT_SECRET})
+    resp = requests.get(f"{BASE_URL}/{game}/recommender-fetch", params={"botSecret": BOT_SECRET})
     assert resp.status_code == 200, f"Failed to fetch data: {resp.status_code} {resp.text}"
     data = pd.read_csv(StringIO(resp.text))
 
@@ -48,4 +47,13 @@ if __name__ == '__main__':
     # Save recommendations to a file
     log.info("Saving recommendations...")
     # Path("recommendations.json").write_text(json.dumps(recommendations))
-    resp = requests.post(f"{BASE_URL}/{GAME}/recommender-update", params={"botSecret": BOT_SECRET}, json=recommendations)
+    resp = requests.post(f"{BASE_URL}/{game}/recommender-update", params={"botSecret": BOT_SECRET}, json=recommendations)
+    if resp.status_code != 200:
+        log.error(f"Failed to update recommendations: {resp.status_code} {resp.text}")
+
+    log.info("Done!")
+
+
+if __name__ == '__main__':
+    main("mai2")
+    main("chu3")
