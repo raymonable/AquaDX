@@ -56,11 +56,8 @@ fun ChusanController.chusanInit() {
 
     "GetUserRecMusic".paged("userRecMusicList") {
         // musicId: int, recMusicList: string
-
-//        listOf(
-//            mapOf("musicId" to "2630", "recMusicList" to "2387,1"),
-//        )
-        val list = (chusan.recommendedMusic[uid] ?: empty)
+        val u = db.userData.findByCard_ExtId(uid)() ?: return@paged empty
+        val list = (chusan.recommendedMusic[u.id] ?: empty)
         list.map { mapOf("musicId" to it, "recMusicList" to "$it,1") }
     }
 
