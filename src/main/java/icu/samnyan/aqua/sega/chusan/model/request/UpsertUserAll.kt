@@ -54,6 +54,7 @@ class UpsertUserAll(
     var userRatingBaseHotList: List<UserRecentRating>? = null,
     var userRatingBaseList: List<UserRecentRating>? = null,
     var userRatingBaseNextList: List<UserRecentRating>? = null,
+    var userRatingBaseNewList: List<UserRecentRating>? = null,
     var userLoginBonusList: List<JDict>? = null,
     var userMapAreaList: List<UserMap>? = null,
     var userOverPowerList: List<JDict>? = null,
