@@ -56,9 +56,10 @@ fun ChusanController.chusanInit() {
 
     "GetUserRecMusic".paged("userRecMusicList") {
         // musicId: int, recMusicList: string
+        // musicId cannot be the same with the id in recMusicList
         val u = db.userData.findByCard_ExtId(uid)() ?: return@paged empty
-        val list = (chusan.recommendedMusic[u.id] ?: empty)
-        list.map { mapOf("musicId" to it, "recMusicList" to "$it,1") }
+        val list = (chusan.recommendedMusic[u.id] ?: ls()).filter { it != 1 }
+        ls(mapOf("musicId" to 1, "recMusicList" to list.joinToString(";") { "$it,1" }))
     }
 
     "GetUserRecRating".paged("userRecRatingList") {
