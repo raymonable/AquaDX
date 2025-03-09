@@ -10,6 +10,7 @@ import requests
 import scipy.sparse as sp
 import implicit
 from hypy_utils.logging_utils import setup_logger
+from tqdm import tqdm
 
 BASE_URL = "https://aquadx.net/aqua/api/v2/game"
 BOT_SECRET = "hunter2"
@@ -40,7 +41,7 @@ def main(game: str):
     # Generate recommendations for each user
     log.info("Generating recommendations...")
     recommendations = {}
-    for user_id in range(user_item_matrix.shape[0]):  # Loop over all users
+    for user_id in tqdm(list(range(user_item_matrix.shape[0]))):  # Loop over all users
         rec, prob = model.recommend(user_id, user_item_matrix[user_id], N=20)
         recommendations[user_id] = [int(item) for item in rec]
 
