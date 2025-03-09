@@ -55,8 +55,13 @@ fun ChusanController.chusanInit() {
     }
 
     "GetUserRecMusic".paged("userRecMusicList") {
-        // musicId: int, recMusicList: string???
-        empty
+        // musicId: int, recMusicList: string
+
+//        listOf(
+//            mapOf("musicId" to "2630", "recMusicList" to "2387,1"),
+//        )
+        val list = (chusan.recommendedMusic[uid] ?: empty)
+        list.map { mapOf("musicId" to it, "recMusicList" to "$it,1") }
     }
 
     "GetUserRecRating".paged("userRecRatingList") {
