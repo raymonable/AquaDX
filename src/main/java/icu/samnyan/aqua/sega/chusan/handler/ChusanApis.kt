@@ -27,6 +27,45 @@ fun ChusanController.chusanInit() {
         mapOf("type" to type, "length" to 0, "gameRankingList" to lst)
     }
 
+    // VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE
+    "GetGameCourseLevel" {
+        // gameCourseLevelList: [{courseId: int, startDate: date, endDate: date}]
+        mapOf("length" to 0, "gameCourseLevelList" to listOf(
+            mapOf("courseId" to 300004, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14"),
+            mapOf("courseId" to 300009, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14")
+        ))
+    }
+
+    "GetGameUCCondition" {
+        val lst = listOf(
+            mapOf("unlockChallengeId" to 10001, "length" to 1, "conditionList" to listOf(
+                mapOf("type" to 1, "conditionId" to 3020798, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2077-01-01 11:45:14")
+            )),
+            mapOf("unlockChallengeId" to 10002, "length" to 1, "conditionList" to listOf(
+                mapOf("type" to 0, "conditionId" to -1, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2077-01-01 11:45:14")
+            ))
+        )
+        mapOf("length" to lst.size, "gameUnlockChallengeConditionList" to lst)
+    }
+
+    "GetUserUC".paged("userUnlockChallengeList") {
+        // TODO: Save and load user unlock challenge
+        // unlockChallengeId: int, status: int, clearCourseId: int, conditionType: int
+        // score: int, life: int, clearDate: date
+        empty
+    }
+
+    "GetUserRecMusic".paged("userRecMusicList") {
+        // musicId: int, recMusicList: string???
+        empty
+    }
+
+    "GetUserRecRating".paged("userRecRatingList") {
+        // ratingMin: int, ratingMax: int, recMusicList: string???
+        empty
+    }
+    // VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE
+
     // Stub handlers
     "GetGameIdlist" { """{"type":"${data["type"]}","length":"0","gameIdlistList":[]}""" }
 
