@@ -42,8 +42,11 @@ fun ChusanController.upsertApiInit() {
             fun Iterable<UserRecentRating>.str() = joinToString(",") { "${it.musicId}:${it.difficultId}:${it.score}" }
 
             ls(
-                userRecentRatingList to "recent_rating_list", userRatingBaseList to "rating_base_list",
-                userRatingBaseHotList to "rating_hot_list", userRatingBaseNextList to "rating_next_list",
+                userRecentRatingList to "recent_rating_list",
+                userRatingBaseList to "rating_base_list",
+                userRatingBaseHotList to "rating_hot_list",
+                userRatingBaseNextList to "rating_next_list",
+                userRatingBaseNewList to "rating_new_list"
             ).filter { it.first != null }.forEach { (list, key) ->
                 val d = db.userGeneralData.findByUserAndPropertyKey(u, key)()
                     ?: UserGeneralData().apply { user = u; propertyKey = key }
