@@ -35,7 +35,7 @@ fun ChusanController.upsertApiInit() {
             listOfNotNull(
                 userPlaylogList, userGameOption, userMapAreaList, userCharacterList, userItemList,
                 userMusicDetailList, userActivityList, userChargeList, userCourseList, userDuelList,
-                userNetBattlelogList
+                userNetBattlelogList, userUnlockChallengeList
             ).flatten().forEach { it.user = u }
 
             // Ratings
