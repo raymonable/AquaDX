@@ -49,10 +49,9 @@ fun ChusanController.chusanInit() {
     }
 
     "GetUserUC".paged("userUnlockChallengeList") {
-        // TODO: Save and load user unlock challenge
         // unlockChallengeId: int, status: int, clearCourseId: int, conditionType: int
         // score: int, life: int, clearDate: date
-        empty
+        db.userChallenge.findByUser_Card_ExtId(uid)
     }
 
     "GetUserRecMusic".paged("userRecMusicList") {
