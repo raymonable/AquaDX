@@ -1,6 +1,5 @@
 package icu.samnyan.aqua.sega.aimedb
 
-import icu.samnyan.aqua.sega.aimedb.AimeDbClient.Companion.sendAimePacket
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
@@ -55,6 +54,6 @@ class AimeDbClient(val gameId: String, val keychipShort: String) {
             = Unpooled.wrappedBuffer(Socket(server, 22345).use {
                 it.getOutputStream().write(array())
                 it.getInputStream().readBytes()
-            })
+            }).let { AimeDbEncryption.decrypt(it) }
     }
 }
