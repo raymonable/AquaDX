@@ -117,6 +117,10 @@ springBoot {
     mainClass.set("icu.samnyan.aqua.EntryKt")
 }
 
+application {
+    mainClass = "icu.samnyan.aqua.EntryKt"
+}
+
 hibernate {
     enhancement {
         enableLazyInitialization = true
