@@ -1,5 +1,6 @@
 package ext
 
+import icu.samnyan.aqua.sega.util.ZLib
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -7,10 +8,9 @@ import java.net.http.HttpResponse
 
 val client = HttpClient.newBuilder().build()
 
-fun HttpRequest.Builder.send() = client.send(this.build(), HttpResponse.BodyHandlers.ofString())
+fun HttpRequest.Builder.send() = client.send(this.build(), HttpResponse.BodyHandlers.ofByteArray())
 fun HttpRequest.Builder.header(pair: Pair<Any, Any>) = this.header(pair.first.toString(), pair.second.toString())
 fun String.request() = HttpRequest.newBuilder(URI.create(this))
-inline fun <reified T> String.postJson(body: Any) = request().post(body).json<T>()
 
 fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
     is ByteArray -> HttpRequest.BodyPublishers.ofByteArray(body)
@@ -19,5 +19,16 @@ fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
     else -> throw Exception("Unsupported body type")
 }).send()
 
+
 inline fun <reified T> HttpResponse<String>.json(): T = body().json()
 
+fun HttpRequest.Builder.postZ(body: String) = run {
+    header("Content-Type" to "application/json")
+    header("Content-Encoding" to "deflate")
+    post(ZLib.compress(body.toByteArray()))
+}
+
+fun <T> HttpResponse<T>.header(key: String) = headers().firstValue(key).orElse(null)
+fun HttpResponse<ByteArray>.bodyString() = body().toString(Charsets.UTF_8)
+fun HttpResponse<ByteArray>.bodyZ() = ZLib.decompress(body()).decodeToString()
+fun HttpResponse<ByteArray>.bodyMaybeZ() = if (header("Content-Encoding") == "deflate") bodyZ() else bodyString()
