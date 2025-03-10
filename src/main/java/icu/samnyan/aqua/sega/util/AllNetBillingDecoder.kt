@@ -21,8 +21,20 @@ object AllNetBillingDecoder {
         }
     }
 
+    fun encode(src: Map<String, String>, base64: Boolean): ByteArray {
+        // Join the key-value pairs with '&' symbol
+        val output = src.map { "${it.key}=${it.value}" }.joinToString("&")
+
+        // Compress the joined string
+        val bytes = ZLib.compress(output.toByteArray(UTF_8))
+
+        // Encode the compressed byte array to Base64 MIME encoding
+        return if (!base64) bytes else Base64.getMimeEncoder().encode(bytes)
+    }
+
     @JvmStatic
     fun decodeAllNet(src: ByteArray) = decode(src, base64 = true, nowrap = false)
+    fun encodeAllNet(src: Map<String, String>) = encode(src, base64 = true)
 
     @JvmStatic
     fun decodeBilling(src: ByteArray) = decode(src, base64 = false, nowrap = true)
