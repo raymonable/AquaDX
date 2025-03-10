@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import ext.jsonArray
+import ext.jsonMap
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -20,7 +22,7 @@ import java.time.format.DateTimeFormatter
 class StringMapper: IMapper {
     override fun write(o: Any?) = STRING_MAPPER.writeValueAsString(o)
     fun <T> convert(map: Any?, toClass: Class<T>?) = STRING_MAPPER.convertValue(map, toClass)
-    final inline fun <reified T> convert(map: Any?) = convert(map, T::class.java)
+    final inline fun <reified T> convert(map: Any?) = STRING_MAPPER.convertValue(map, object : TypeReference<T>() {})
     fun toMap(obj: Any?) = STRING_MAPPER.convertValue(obj, object : TypeReference<LinkedHashMap<String, Any>>() {})
 
     companion object {
