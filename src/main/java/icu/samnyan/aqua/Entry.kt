@@ -17,7 +17,6 @@ fun main(args: Array<String>) {
     AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS)
     when (args.getOrNull(0)) {
         "futari" -> return MaimaiFutari().start()
-        "data" -> return icu.samnyan.aqua.sega.chusan.main(args)
     }
 
     // If data/ is not found, create it
