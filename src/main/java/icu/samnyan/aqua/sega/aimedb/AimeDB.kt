@@ -12,8 +12,6 @@ import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
@@ -127,8 +125,7 @@ class AimeDB(
      */
     fun doFelicaLookupV2(msg: ByteBuf): ByteBuf {
         val idm = msg.slice(0x30, 0x38 - 0x30).getLong(0)
-        val dfc = msg.slice(0x38, 0x40 - 0x38).getLong(0)
-        logger.info("> Felica Lookup v2 (idm $idm, dfc $dfc)")
+        logger.info("> Felica Lookup v2 (idm $idm)")
 
         // Get the decimal represent of the hex value, same from minime
         val accessCode = idm.toString().replace("-", "").padStart(20, '0')

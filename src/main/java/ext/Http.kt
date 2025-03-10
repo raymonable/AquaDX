@@ -10,6 +10,7 @@ val client = HttpClient.newBuilder().build()
 fun HttpRequest.Builder.send() = client.send(this.build(), HttpResponse.BodyHandlers.ofString())
 fun HttpRequest.Builder.header(pair: Pair<Any, Any>) = this.header(pair.first.toString(), pair.second.toString())
 fun String.request() = HttpRequest.newBuilder(URI.create(this))
+inline fun <reified T> String.postJson(body: Any) = request().post(body).json<T>()
 
 fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
     is ByteArray -> HttpRequest.BodyPublishers.ofByteArray(body)
@@ -17,3 +18,6 @@ fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
     is HttpRequest.BodyPublisher -> body
     else -> throw Exception("Unsupported body type")
 }).send()
+
+inline fun <reified T> HttpResponse<String>.json(): T = body().json()
+
