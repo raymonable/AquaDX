@@ -1,7 +1,6 @@
 package icu.samnyan.aqua
 
 import icu.samnyan.aqua.sega.aimedb.AimeDbServer
-import icu.samnyan.aqua.sega.maimai2.worldslink.MaimaiFutari
 import icu.samnyan.aqua.spring.AutoChecker
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.ansi.AnsiOutput
@@ -15,9 +14,6 @@ class Entry
 
 fun main(args: Array<String>) {
     AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS)
-    when (args.getOrNull(0)) {
-        "futari" -> return MaimaiFutari().start()
-    }
 
     // If data/ is not found, create it
     File("data").mkdirs()

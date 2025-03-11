@@ -37,7 +37,7 @@ data class MusicIdWrapper(
     val musicId: Int = 0,
 )
 
-class UpsertUserAll(
+class Chu3UserAll(
     var userData: List<Chu3UserData>? = null,
     var userGameOption: List<UserGameOption>? = null,
     var userCharacterList: List<UserCharacter>? = null,

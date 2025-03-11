@@ -1,10 +1,11 @@
 package icu.samnyan.aqua.net.transfer
 
 import ext.*
-import icu.samnyan.aqua.sega.chusan.model.request.UpsertUserAll
+import icu.samnyan.aqua.sega.chusan.model.request.Chu3UserAll
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserActivity
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserItem
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserMusicDetail
+import icu.samnyan.aqua.sega.maimai2.model.request.Mai2UserAll
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import icu.samnyan.aqua.sega.util.jackson.IMapper
 import icu.samnyan.aqua.sega.util.jackson.StringMapper
@@ -48,7 +49,7 @@ class ChusanDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
         val userId = mapOf("userId" to allNet.userId)
         val paged = userId + mapOf("nextIndex" to 0, "maxCount" to 10000000)
 
-        return mapper.write(UpsertUserAll().apply {
+        return mapper.write(Chu3UserAll().apply {
             userData = ls("GetUserDataApi".get("userData", userId))
             userGameOption = ls("GetUserOptionApi".get("userGameOption", userId))
             userCharacterList = "GetUserCharacterApi".get("userCharacterList", paged)
@@ -85,8 +86,10 @@ class MaimaiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
         val userId = mapOf("userId" to allNet.userId)
         val paged = userId + mapOf("nextIndex" to 0, "maxCount" to 10000000)
 
-        return UpsertUserAll().apply {
+        return Mai2UserAll().apply {
             userData = ls("GetUserDataApi".get("userData", userId))
+//            userGameOption = ls("GetUserOptionApi".get("userGameOption", userId))
+
         }.toJson()
     }
 

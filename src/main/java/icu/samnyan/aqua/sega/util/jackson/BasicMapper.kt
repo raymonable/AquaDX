@@ -79,9 +79,9 @@ class StringMapper: IMapper(STRING_MAPPER)
 
 
 // Testing code
-private class A {
-    var cat = ""
-}
+private class A(
+    var cat: String = ""
+)
 
 fun main(args: Array<String>) {
     val json = """{"cat":"meow"}"""
