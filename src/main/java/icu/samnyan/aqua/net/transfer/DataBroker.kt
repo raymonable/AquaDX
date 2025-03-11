@@ -6,6 +6,9 @@ import icu.samnyan.aqua.sega.chusan.model.userdata.UserActivity
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserItem
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserMusicDetail
 import icu.samnyan.aqua.sega.maimai2.model.request.Mai2UserAll
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserFavorite
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserItem
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserMusicDetail
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import icu.samnyan.aqua.sega.util.jackson.IMapper
 import icu.samnyan.aqua.sega.util.jackson.StringMapper
@@ -18,7 +21,7 @@ abstract class DataBroker(
     abstract val mapper: IMapper
     abstract val url: String
 
-    inline fun <reified T> String.get(key: String, data: JDict): T = "$url/$this".request()
+    inline fun <reified T> String.getNullable(key: String, data: JDict): T? = "$url/$this".request()
         .postZ(mapper.write(data))
         .bodyMaybeZ()
         .jsonMap()[key]
@@ -26,7 +29,12 @@ abstract class DataBroker(
         ?.also {
             if (it is List<*>) log("✅ $this: ${it.size}")
             else log("✅ $this")
-        } ?: throw NullPointerException("❌ $this")
+        }
+
+    inline fun <reified T> String.get(key: String, data: JDict): T = getNullable(key, data) ?: run {
+        log("❌ $this")
+        throw Exception("Failed to get $this")
+    }
 
     abstract fun pull(): String
     fun push(data: String) {
@@ -79,6 +87,8 @@ class MaimaiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
     override val mapper = BasicMapper()
     override val url by lazy { "${allNet.gameUrl.ensureEndingSlash()}Maimai2Servlet" }
 
+    class UserMusicWrapper(var userMusicDetailList: List<Mai2UserMusicDetail>)
+
     override fun pull(): String {
         log("Game URL: ${allNet.gameUrl}")
         log("User ID: ${allNet.userId}")
@@ -88,8 +98,27 @@ class MaimaiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
 
         return Mai2UserAll().apply {
             userData = ls("GetUserDataApi".get("userData", userId))
-//            userGameOption = ls("GetUserOptionApi".get("userGameOption", userId))
+            userOption = ls("GetUserOptionApi".get("userOption", userId))
+            userExtend = ls("GetUserExtendApi".get("userExtend", userId))
+            userRatingList = ls("GetUserRatingApi".get("userRating", userId))
+            userActivityList = ls("GetUserActivityApi".get("userActivity", userId))
 
+            userMusicDetailList = "GetUserMusicApi".get<List<UserMusicWrapper>>("userMusicList", paged)
+                .flatMap { it.userMusicDetailList }
+            userFriendSeasonRankingList = "GetUserFriendSeasonRankingApi".get("userFriendSeasonRankingList", paged)
+            userCharacterList = "GetUserCharacterApi".get("userCharacterList", paged)
+            userItemList = (1..12).flatMap {
+                "GetUserItemApi".get<List<Mai2UserItem>>("userItemList", paged + mapOf("nextIndex" to 10000000000 * it))
+            }
+            userCourseList = "GetUserCourseApi".get("userCourseList", paged)
+            userFavoriteList = (1..5).mapNotNull {
+                "GetUserFavoriteApi".getNullable<Mai2UserFavorite>("userFavorite", userId + mapOf("itemKind" to it))
+            }
+            userGhost = "GetUserGhostApi".get("userGhostList", userId)
+            userMapList = "GetUserMapApi".get("userMapList", paged)
+            userLoginBonusList = "GetUserLoginBonusApi".get("userLoginBonusList", userId)
+
+            // TODO: userFavoriteMusicList
         }.toJson()
     }
 
