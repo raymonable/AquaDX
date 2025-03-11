@@ -17,7 +17,7 @@ fun ChusanController.upsertApiInit() {
     }
 
     "UpsertUserAll" api@ {
-        val req = mapper.convert(data["upsertUserAll"], UpsertUserAll::class.java)
+        val req = parsing { mapper.convert<UpsertUserAll>(data["upsertUserAll"]!!) }
 
         req.run {
             // UserData
