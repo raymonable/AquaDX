@@ -21,9 +21,9 @@
   <!-- First input line -->
   <div class="inputs">
     <InputTextShort desc="Server Address" placeholder="e.g. http://aquadx.hydev.org"
-      bind:value={src.server} on:change />
+      bind:value={src.server} on:change validate={v => /^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(v)} />
     <InputTextShort desc="Keychip ID" placeholder="e.g. A0299792458"
-      bind:value={src.keychip} on:change />
+      bind:value={src.keychip} on:change validate={v => /^[A-Z0-9]{11}$/.test(v)} />
   </div>
 
   <!-- Second input line -->
