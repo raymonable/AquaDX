@@ -1,9 +1,6 @@
 package icu.samnyan.aqua.net.transfer
 
-import ext.API
-import ext.RB
-import ext.logger
-import ext.toJson
+import ext.*
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.RestController
 import java.io.PrintWriter
@@ -35,21 +32,41 @@ class TransferApis {
 
     fun PrintWriter.log(m: String) = sendJson(mapOf("message" to m))
 
-    @API("/export")
-    fun export(@RB allNet: AllNetClient, response: HttpServletResponse) {
+    @API("/pull")
+    fun pull(@RB allNet: AllNetClient, response: HttpServletResponse) {
         val stream = response.initStream()
         try {
-            log.info("Transfer export: $allNet")
-            stream.log("Starting export...")
+            log.info("Transfer pull: $allNet")
+            stream.log("Starting pull...")
             val broker = allNet.findDataBroker { stream.log(it) }
             val out = broker.pull()
-            stream.log("Export complete")
+            stream.log("Pull complete")
             stream.sendJson(mapOf("data" to out))
         } catch (e: Exception) {
-            log.error("Transfer export error", e)
+            log.error("Transfer pull error", e)
             stream.sendJson(mapOf("error" to e.message))
         } finally {
             stream.close()
         }
     }
+
+    @API("/push")
+    fun push(@RB allNet: AllNetClient, data: String) = try {
+        log.info("Transfer push: $allNet")
+        val broker = allNet.findDataBroker { log.info(it) }
+        broker.push(data)
+        mapOf("status" to "ok")
+    } catch (e: Exception) {
+        log.error("Transfer push error", e)
+        mapOf("error" to e.message)
+    }
+
+    @API("/info")
+    fun info() = mapOf(
+        "support" to ls("chu3", "mai2"),
+        "game" to mapOf(
+            "chu3" to ls("SDHD", "2.30"),
+            "mai2" to ls("SDGA", "1.50")
+        )
+    )
 }
