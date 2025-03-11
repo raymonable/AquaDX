@@ -77,7 +77,9 @@ var STRING_MAPPER = jacksonObjectMapper().apply {
 @Component
 class StringMapper: IMapper(STRING_MAPPER)
 
-class A {
+
+// Testing code
+private class A {
     var cat = ""
 }
 
