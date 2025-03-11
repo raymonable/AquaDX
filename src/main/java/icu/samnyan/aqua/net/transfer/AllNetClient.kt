@@ -2,7 +2,6 @@ package icu.samnyan.aqua.net.transfer
 
 import ext.*
 import icu.samnyan.aqua.sega.aimedb.AimeDbClient
-import icu.samnyan.aqua.sega.aimedb.AimeDbClient.Companion.sendAimePacket
 import icu.samnyan.aqua.sega.util.AllNetBillingDecoder
 
 val keychipPattern = Regex("([A-Z\\d]{4}-[A-Z\\d]{11}|[A-Z\\d]{11})")
@@ -21,7 +20,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
         if (keychip.length == 11) keychip
         else keychip.substring(0, 4) + keychip.substring(5, 11)
     }
-    val aime by lazy { AimeDbClient(game, keychipShort) }
+    val aime by lazy { AimeDbClient(game, keychipShort, dns.substringAfter("://")) }
 
     // Send AllNet PowerOn request to obtain game URL
     val gameUrl by lazy {
@@ -43,13 +42,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
             ?: throw Exception("PowerOn Failed: No game URL returned")
     }
 
-    val userId by lazy {
-        when (card.length) {
-            20 -> aime.createReqLookupV2(card)
-            16 -> aime.createReqFelicaLookupV2(card)
-            else -> throw Exception("Invalid card. Please input either 20-digit numeric access code (e.g. 5010000...0) or 16-digit hex Felica ID (e.g. 012E123456789ABC).")
-        }.sendAimePacket(dns.substringAfter("://")).getLongLE(0x20)
-    }
+    val userId by lazy { aime.execLookup(card) }
 
     fun findDataBroker(log: (String) -> Unit) = when (game) {
         "SDHD" -> ChusanDataBroker(this, log)

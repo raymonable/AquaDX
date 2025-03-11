@@ -5,10 +5,10 @@ import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import java.net.Socket
 
-class AimeDbClient(val gameId: String, val keychipShort: String) {
+class AimeDbClient(val gameId: String, val keychipShort: String, val server: String) {
     // https://sega.bsnk.me/allnet/aimedb/common/#packet-header
-    fun createRequest(type: UShort, writer: ByteBuf.() -> Unit): ByteBuf
-        = AimeDbEncryption.encrypt(Unpooled.buffer(1024).clear().run {
+    fun createRequest(type: UShort, writer: ByteBuf.() -> Unit) =
+        AimeDbEncryption.encrypt(Unpooled.buffer(1024).clear().run {
             writeShortLE(0xa13e)            // 00  2b: Magic
             writeShortLE(0x3087)            // 02  2b: Version
             writeShortLE(type.toInt())      // 04  2b: Type
@@ -22,11 +22,11 @@ class AimeDbClient(val gameId: String, val keychipShort: String) {
             copy(0, writerIndex())          // Trim unused bytes
         })
 
-    private fun ByteBuf.writeAscii(value: String, length: Int)
-        = writeBytes(value.toByteArray(Charsets.US_ASCII).copyOf(length))
+    private fun ByteBuf.writeAscii(value: String, length: Int) =
+        writeBytes(value.toByteArray(Charsets.US_ASCII).copyOf(length))
 
-    fun createReqLookupV2(accessCode: String)
-        = createRequest(0x0fu) {
+    fun createReqLookupV2(accessCode: String) =
+        createRequest(0x0fu) {
             // Access code is a 20-digit number, should be converted to a 10-byte array
             writeBytes(ByteBufUtil.decodeHexDump(accessCode.padStart(20, '0')))
             writeByte(0)  // 0A  1b: Company code
@@ -34,8 +34,8 @@ class AimeDbClient(val gameId: String, val keychipShort: String) {
             writeIntLE(0) // 0C  4b: Serial number
         }
 
-    fun createReqFelicaLookupV2(felicaIdm: String)
-        = createRequest(0x11u) {
+    fun createReqFelicaLookupV2(felicaIdm: String) =
+        createRequest(0x11u) {
             writeBytes(ByteArray(16))   // 00 16b: Random Challenge
             // 10  8b: Felica IDm
             writeBytes(ByteBufUtil.decodeHexDump(felicaIdm.padStart(16, '0')))
@@ -49,11 +49,25 @@ class AimeDbClient(val gameId: String, val keychipShort: String) {
             writeIntLE(0)               // 4C  4b: Unknown padding
         }
 
-    companion object {
-        fun ByteBuf.sendAimePacket(server: String): ByteBuf
-            = Unpooled.wrappedBuffer(Socket(server, 22345).use {
-                it.getOutputStream().write(array())
-                it.getInputStream().readBytes()
-            }).let { AimeDbEncryption.decrypt(it) }
-    }
+    fun createReqRegister(accessCode: String) =
+        createRequest(0x05u) {
+            // Access code is a 20-digit number, should be converted to a 10-byte array
+            writeBytes(ByteBufUtil.decodeHexDump(accessCode.padStart(20, '0')))
+            writeByte(0)  // 0A  1b: Company code
+            writeByte(0)  // 0B  1b: R/W Firmware version
+            writeIntLE(0) // 0C  4b: Serial number
+        }
+
+    fun sendAimePacket(buf: ByteBuf): ByteBuf =
+        Unpooled.wrappedBuffer(Socket(server, 22345).use {
+            it.getOutputStream().write(buf.array())
+            it.getInputStream().readBytes()
+        }).let { AimeDbEncryption.decrypt(it) }
+
+    fun execLookup(card: String) =
+        sendAimePacket(when (card.length) {
+            20 -> createReqLookupV2(card)
+            16 -> createReqFelicaLookupV2(card)
+            else -> throw Exception("Invalid card. Please input either 20-digit numeric access code (e.g. 5010000...0) or 16-digit hex Felica ID (e.g. 012E123456789ABC).")
+        }).getLongLE(0x20)
 }
