@@ -42,7 +42,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
             ?: throw Exception("PowerOn Failed: No game URL returned")
     }
 
-    val userId by lazy { aime.execLookup(card) }
+    val userId by lazy { aime.execLookupOrRegister(card) }
 
     fun findDataBroker(log: (String) -> Unit) = when (game) {
         "SDHD" -> ChusanDataBroker(this, log)

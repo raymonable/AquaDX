@@ -58,16 +58,31 @@ class AimeDbClient(val gameId: String, val keychipShort: String, val server: Str
             writeIntLE(0) // 0C  4b: Serial number
         }
 
-    fun sendAimePacket(buf: ByteBuf): ByteBuf =
+    fun send(buf: ByteBuf): ByteBuf =
         Unpooled.wrappedBuffer(Socket(server, 22345).use {
             it.getOutputStream().write(buf.array())
             it.getInputStream().readBytes()
         }).let { AimeDbEncryption.decrypt(it) }
 
     fun execLookup(card: String) =
-        sendAimePacket(when (card.length) {
+        send(when (card.length) {
             20 -> createReqLookupV2(card)
             16 -> createReqFelicaLookupV2(card)
             else -> throw Exception("Invalid card. Please input either 20-digit numeric access code (e.g. 5010000...0) or 16-digit hex Felica ID (e.g. 012E123456789ABC).")
-        }).getLongLE(0x20)
+        }).getUnsignedIntLE(0x20).let {
+            if (it == 0xffffffff) -1L else it
+        }
+
+    fun execRegister(card: String) =
+        when (card.length) {
+            20 -> card
+            16 -> ByteBufUtil.hexDump(send(createReqFelicaLookupV2(card)).slice(0x2c, 10))
+            else -> throw Exception("Invalid card. Please input a 20-digit numeric access code (e.g. 5010000...0).")
+        }.let { send(createReqRegister(it)).getUnsignedIntLE(0x20) }
+
+    fun execLookupOrRegister(card: String) =
+        execLookup(card).let {
+            if (it == -1L) execRegister(card)
+            else it
+        }
 }

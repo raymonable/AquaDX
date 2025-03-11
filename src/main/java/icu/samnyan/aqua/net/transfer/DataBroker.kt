@@ -36,10 +36,22 @@ abstract class DataBroker(
         throw Exception("Failed to get $this")
     }
 
+    fun prePull(): Pair<Map<String, Long>, MutableMap<String, Long>> {
+        log("Game URL: ${allNet.gameUrl}")
+        log("User ID: ${allNet.userId}")
+
+        val userId = mapOf("userId" to allNet.userId)
+        val paged = userId + mapOf("nextIndex" to 0, "maxCount" to 10000000)
+        return userId to paged
+    }
+
     abstract fun pull(): String
     fun push(data: String) {
         log("Pushing data")
-        "UpsertUserAll".request().postZ(data).bodyMaybeZ().also { log(it) }
+        "$url/UpsertUserAllApi".request().postZ(mapper.write(mapOf(
+            "userId" to allNet.userId,
+            "upsertUserAll" to data.jsonMap()
+        ))).bodyMaybeZ().also { log(it) }
     }
 }
 
@@ -51,11 +63,7 @@ class ChusanDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
     class UserMusicWrapper(var userMusicDetailList: List<UserMusicDetail>)
 
     override fun pull(): String {
-        log("Game URL: ${allNet.gameUrl}")
-        log("User ID: ${allNet.userId}")
-
-        val userId = mapOf("userId" to allNet.userId)
-        val paged = userId + mapOf("nextIndex" to 0, "maxCount" to 10000000)
+        val (userId, paged) = prePull()
 
         return mapper.write(Chu3UserAll().apply {
             userData = ls("GetUserDataApi".get("userData", userId))
@@ -90,11 +98,7 @@ class MaimaiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
     class UserMusicWrapper(var userMusicDetailList: List<Mai2UserMusicDetail>)
 
     override fun pull(): String {
-        log("Game URL: ${allNet.gameUrl}")
-        log("User ID: ${allNet.userId}")
-
-        val userId = mapOf("userId" to allNet.userId)
-        val paged = userId + mapOf("nextIndex" to 0, "maxCount" to 10000000)
+        val (userId, paged) = prePull()
 
         return Mai2UserAll().apply {
             userData = ls("GetUserDataApi".get("userData", userId))
