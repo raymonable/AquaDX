@@ -2,13 +2,15 @@ package icu.samnyan.aqua.net.transfer
 
 import ext.*
 import icu.samnyan.aqua.sega.chusan.model.request.Chu3UserAll
-import icu.samnyan.aqua.sega.chusan.model.userdata.UserActivity
-import icu.samnyan.aqua.sega.chusan.model.userdata.UserItem
+import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserActivity
+import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserItem
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserMusicDetail
 import icu.samnyan.aqua.sega.maimai2.model.request.Mai2UserAll
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserFavorite
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserItem
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserMusicDetail
+import icu.samnyan.aqua.sega.ongeki.model.request.UpsertUserAll
+import icu.samnyan.aqua.sega.ongeki.model.userdata.UserItem
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import icu.samnyan.aqua.sega.util.jackson.IMapper
 import icu.samnyan.aqua.sega.util.jackson.StringMapper
@@ -70,13 +72,10 @@ class ChusanDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
             userGameOption = ls("GetUserOptionApi".get("userGameOption", userId))
             userCharacterList = "GetUserCharacterApi".get("userCharacterList", paged)
             userActivityList = (1..5).flatMap {
-                "GetUserActivityApi".get<List<UserActivity>>("userActivityList", userId + mapOf("kind" to it))
+                "GetUserActivityApi".get<List<Chu3UserActivity>>("userActivityList", userId + mapOf("kind" to it))
             }
             userItemList = (1..12).flatMap {
-                "GetUserItemApi".get<List<UserItem>>(
-                    "userItemList",
-                    userId + mapOf("nextIndex" to 10000000000 * it, "maxCount" to 10000000)
-                )
+                "GetUserItemApi".get<List<Chu3UserItem>>("userItemList", paged + mapOf("nextIndex" to 10000000000 * it))
             }
             userRecentRatingList = "GetUserRecentRatingApi".get("userRecentRatingList", userId)
             userMusicDetailList = "GetUserMusicApi".get<List<UserMusicWrapper>>("userMusicList", paged)
@@ -125,5 +124,45 @@ class MaimaiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
             // TODO: userFavoriteMusicList
         }.toJson()
     }
+}
+
+class OngekiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(allNet, log) {
+    override val mapper = BasicMapper()
+    override val url by lazy { allNet.gameUrl.ensureNoEndingSlash() }
+
+    override fun pull(): String {
+        val (userId, paged) = prePull()
+
+        return UpsertUserAll().apply {
+            userData = ls("GetUserDataApi".get("userData", userId))
+            userOption = ls("GetUserOptionApi".get("userOption", userId))
+            userMusicItemList = "GetUserMusicItemApi".get("userMusicItemList", paged)
+            userBossList = "GetUserBossApi".get("userBossList", userId)
+            userMusicDetailList = "GetUserMusicApi".get("userMusicList", paged)
+            userTechCountList = "GetUserTechCountApi".get("userTechCountList", userId)
+            userCardList = "GetUserCardApi".get("userCardList", paged)
+            userCharacterList = "GetUserCharacterApi".get("userCharacterList", paged)
+            userStoryList = "GetUserStoryApi".get("userStoryList", userId)
+            userChapterList = "GetUserChapterApi".get("userChapterList", userId)
+            userMemoryChapterList = "GetUserMemoryChapterApi".get("userMemoryChapterList", userId)
+            userDeckList = "GetUserDeckByKeyApi".get("userDeckList", userId + mapOf("authKey" to ""))
+            userTrainingRoomList = "GetUserTrainingRoomByKeyApi".get("userTrainingRoomList", userId + mapOf("authKey" to ""))
+            userActivityList = "GetUserActivityApi".get("userActivityList", userId + mapOf("kind" to 1))
+            userRatinglogList = "GetUserRatinglogApi".get("userRatinglogList", userId)
+            userRecentRatingList = "GetUserRecentRatingApi".get("userRecentRatingList", userId)
+            userItemList = ls(2, 3, 4, 8, 9, 11, 12, 13, 14, 15, 16, 17, 19, 20).flatMap {
+                "GetUserItemApi".get<List<UserItem>>("userItemList", paged + mapOf("nextIndex" to 10000000000 * it))
+            }
+            userEventPointList = "GetUserEventPointApi".get("userEventPointList", userId)
+            userMissionPointList = "GetUserMissionPointApi".get("userMissionPointList", userId)
+            userLoginBonusList = "GetUserLoginBonusApi".get("userLoginBonusList", userId)
+            userScenarioList = "GetUserScenarioApi".get("userScenarioList", userId)
+            userTradeItemList = "GetUserTradeItemApi".get("userTradeItemList", userId + mapOf("startChapterId" to 0, "endChapterId" to 99999))
+            userEventMusicList = "GetUserEventMusicApi".get("userEventMusicList", userId)
+            userTechEventList = "GetUserTechEventRankingApi".get("userTechEventRankingList", userId)
+            userKopList = "GetUserKopApi".get("userKopList", userId)
+        }.toJson()
+    }
+}
 
 }

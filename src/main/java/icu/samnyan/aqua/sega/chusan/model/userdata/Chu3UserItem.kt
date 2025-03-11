@@ -7,7 +7,7 @@ import jakarta.persistence.UniqueConstraint
 
 @Entity(name = "ChusanUserItem")
 @Table(name = "chusan_user_item", uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "item_id", "item_kind"])])
-class UserItem(
+class Chu3UserItem(
     var itemKind: Int = 0,
     var itemId: Int = 0,
     var stock: Int = 1,

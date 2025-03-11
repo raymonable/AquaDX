@@ -5,7 +5,7 @@ import icu.samnyan.aqua.sega.chusan.ChusanController
 import icu.samnyan.aqua.sega.chusan.model.request.UpsertUserGacha
 import icu.samnyan.aqua.sega.chusan.model.request.UserEmoney
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserCardPrintState
-import icu.samnyan.aqua.sega.chusan.model.userdata.UserItem
+import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserItem
 import java.time.LocalDateTime
 
 fun ChusanController.cmApiInit() {
@@ -76,7 +76,7 @@ fun ChusanController.cmApiInit() {
 
     "CMUpsertUserPrintSubtract" api@ {
         val userCardPrintState = cmMapper.convert<UserCardPrintState>(parsing { data["userCardPrintState"]!! })
-        val userItemList = cmMapper.convert<List<UserItem>>(parsing { data["userItemList"]!! })
+        val userItemList = cmMapper.convert<List<Chu3UserItem>>(parsing { data["userItemList"]!! })
 
         val u = db.userData.findByCard_ExtId(uid)() ?: return@api null
 

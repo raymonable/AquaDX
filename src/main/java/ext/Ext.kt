@@ -237,6 +237,7 @@ fun Str.path() = Path.of(this)
 operator fun Path.div(part: Str) = resolve(part)
 operator fun File.div(fileName: Str) = File(this, fileName)
 fun Str.ensureEndingSlash() = if (endsWith('/')) this else "$this/"
+fun Str.ensureNoEndingSlash() = if (endsWith('/')) dropLast(1) else this
 
 fun <T: Any> T.logger() = LoggerFactory.getLogger(this::class.java)
 

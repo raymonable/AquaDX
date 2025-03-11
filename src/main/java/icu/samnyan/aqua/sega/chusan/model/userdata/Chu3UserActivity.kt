@@ -8,7 +8,7 @@ import jakarta.persistence.UniqueConstraint
 
 @Entity(name = "ChusanUserActivity")
 @Table(name = "chusan_user_activity", uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "kind", "activity_id"])])
-class UserActivity : Chu3UserEntity() {
+class Chu3UserActivity : Chu3UserEntity() {
     var kind = 0
     @JsonProperty("id")
     @Column(name = "activity_id")

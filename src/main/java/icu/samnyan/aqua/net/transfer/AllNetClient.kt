@@ -47,6 +47,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
     fun findDataBroker(log: (String) -> Unit) = when (game) {
         "SDHD" -> ChusanDataBroker(this, log)
         "SDEZ", "SDGA" -> MaimaiDataBroker(this, log)
+        "SDDT" -> OngekiDataBroker(this, log)
         else -> throw IllegalArgumentException("Unsupported game: $game")
     }
 }
