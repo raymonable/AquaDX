@@ -16,7 +16,7 @@ class TransferApis {
         mapOf("gameUrl" to allNet.gameUrl, "userId" to allNet.userId)
     } catch (e: Exception) {
         log.error("Transfer check error", e)
-        mapOf("error" to e.message)
+        400 - "Transfer check error: ${e.message}"
     }
 
     fun HttpServletResponse.initStream(): PrintWriter {
@@ -58,15 +58,6 @@ class TransferApis {
         mapOf("status" to "ok")
     } catch (e: Exception) {
         log.error("Transfer push error", e)
-        mapOf("error" to e.message)
+        400 - "Transfer push error: ${e.message}"
     }
-
-    @API("/info")
-    fun info() = mapOf(
-        "support" to ls("chu3", "mai2"),
-        "game" to mapOf(
-            "chu3" to ls("SDHD", "2.30"),
-            "mai2" to ls("SDGA", "1.50")
-        )
-    )
 }
