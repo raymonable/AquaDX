@@ -90,137 +90,6 @@ export async function post(endpoint: string, params: Record<string, any> = {}, i
   return ret
 }
 
-export async function get(endpoint: string, params:any,init?: RequestInitWithParams): Promise<any> {
-  // Add token if exists
-  const token = localStorage.getItem('token')
-  if (token && !('token' in params)) params = { ...(params ?? {}), token }
-
-  if (init?.localCache) {
-    const cached = cache[endpoint + JSON.stringify(init)]
-    if (cached) return cached
-  }
-
-  const res = await fetchWithParams(AQUA_HOST + endpoint, {
-    method: 'GET',
-    params,
-    ...init
-  }).catch(e => {
-    console.error(e)
-    throw new Error('Network error')
-  })
-
-  if (!res.ok) {
-    const text = await res.text()
-    console.error(`${res.status}: ${text}`)
-
-    // If 400 invalid token is caught, should invalidate the token and redirect to signin
-    if (text === 'Invalid token') {
-      localStorage.removeItem('token')
-      window.location.href = '/'
-    }
-
-    // Try to parse as json
-    let json
-    try {
-      json = JSON.parse(text)
-    } catch (e) {
-      throw new Error(text)
-    }
-    if (json.error) throw new Error(json.error)
-  }
-
-  const ret = res.json()
-  cache[endpoint + JSON.stringify(init)] = ret
-
-  return ret
-}
-
-export async function put(endpoint: string, params: any, init?: RequestInitWithParams): Promise<any> {
-  // Add token if exists
-  const token = localStorage.getItem('token')
-  if (token && !('token' in params)) params = { ...(params ?? {}), token }
-
-  if (init?.localCache) {
-    const cached = cache[endpoint + JSON.stringify(params) + JSON.stringify(init)]
-    if (cached) return cached
-  }
-
-  const res = await fetchWithParams(AQUA_HOST + endpoint, {
-    method: 'PUT',
-    body: JSON.stringify(params),
-    headers:{
-      'Content-Type':'application/json',
-      ...init?.headers
-    },
-    ...init
-  }).catch(e => {
-    console.error(e)
-    throw new Error('Network error')
-  })
-
-  if (!res.ok) {
-    const text = await res.text()
-    console.error(`${res.status}: ${text}`)
-
-    // If 400 invalid token is caught, should invalidate the token and redirect to signin
-    if (text === 'Invalid token') {
-      localStorage.removeItem('token')
-      window.location.href = '/'
-    }
-
-    // Try to parse as json
-    let json
-    try {
-      json = JSON.parse(text)
-    } catch (e) {
-      throw new Error(text)
-    }
-    if (json.error) throw new Error(json.error)
-  }
-
-  const ret = res.json()
-  cache[endpoint + JSON.stringify(params) + JSON.stringify(init)] = ret
-
-  return ret
-}
-
-export async function realPost(endpoint: string, params: any, init?: RequestInitWithParams): Promise<any> {
-  const res = await fetchWithParams(AQUA_HOST + endpoint, {
-    method: 'POST',
-    body: JSON.stringify(params),
-    headers:{
-      'Content-Type':'application/json',
-      ...init?.headers
-    },
-    ...init
-  }).catch(e => {
-    console.error(e)
-    throw new Error('Network error')
-  })
-
-  if (!res.ok) {
-    const text = await res.text()
-    console.error(`${res.status}: ${text}`)
-
-    // If 400 invalid token is caught, should invalidate the token and redirect to signin
-    if (text === 'Invalid token') {
-      localStorage.removeItem('token')
-      window.location.href = '/'
-    }
-
-    // Try to parse as json
-    let json
-    try {
-      json = JSON.parse(text)
-    } catch (e) {
-      throw new Error(text)
-    }
-    if (json.error) throw new Error(json.error)
-  }
-
-  return res.json()
-}
-
 /**
  * aqua.net.UserRegistrar
  *
@@ -263,11 +132,11 @@ export const USER = {
 
 export const USERBOX = {
   getProfile: (): Promise<{ user: UserBox, items: UserItem[] }> =>
-    get('/api/v2/game/chu3/user-box', {}),
+    post('/api/v2/game/chu3/user-box', {}),
   setUserBox: (d: { field: string, value: number | string }) =>
     post(`/api/v2/game/chu3/user-detail-set`, d),
   getUserProfile: (username: string): Promise<UserBox> =>
-    get(`/api/v2/game/chu3/user-detail`, {username})
+    post(`/api/v2/game/chu3/user-detail`, {username})
 }
 
 export const CARD = {
@@ -319,5 +188,7 @@ export const SETTING = {
 }
 
 export const TRANSFER = {
-  
+  check: (d: AllNetClient): Promise<TrCheckGood> =>
+    post('/api/v2/transfer/check', d),
+
 }
