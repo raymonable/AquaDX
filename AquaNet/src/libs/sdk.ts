@@ -189,6 +189,6 @@ export const SETTING = {
 
 export const TRANSFER = {
   check: (d: AllNetClient): Promise<TrCheckGood> =>
-    post('/api/v2/transfer/check', d),
+    post('/api/v2/transfer/check', {}, { body: JSON.stringify(d), headers: { 'Content-Type': 'application/json' } }),
 
 }

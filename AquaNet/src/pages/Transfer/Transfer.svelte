@@ -14,8 +14,8 @@
   let tab = 0
 
   let src = JSON.parse(localStorage.getItem('src') ?? JSON.stringify({
+    dns: "",
     card: "",
-    server: "",
     keychip: ""
   }))
   let dst = JSON.parse(localStorage.getItem('dst') ?? `{ card: "", server: "", keychip: "" }`)

@@ -1,7 +1,7 @@
 
 interface AllNetSrc {
   card: string
-  server: string
+  dns: string
   keychip: string
 }
 

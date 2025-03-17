@@ -1,15 +1,10 @@
 <script lang="ts">
+  import StatusOverlays from "../../components/StatusOverlays.svelte";
+  import { TRANSFER } from "../../libs/sdk";
   import InputTextShort from "./InputTextShort.svelte";
 
-  export let src: {
-    card: string,
-    server: string,
-    keychip: string
-  }
-  export let gameInfo: {
-    game: string,
-    version: string,
-  }
+  export let src: AllNetSrc
+  export let gameInfo: AllNetGame
   export let isSrc: boolean = true
 
   let tested: boolean = false
@@ -21,7 +16,7 @@
   <!-- First input line -->
   <div class="inputs">
     <InputTextShort desc="Server Address" placeholder="e.g. http://aquadx.hydev.org"
-      bind:value={src.server} on:change validate={v => /^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(v)} />
+      bind:value={src.dns} on:change validate={v => /^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(v)} />
     <InputTextShort desc="Keychip ID" placeholder="e.g. A0299792458"
       bind:value={src.keychip} on:change validate={v => /^[A-Z0-9]{11}$/.test(v)} />
   </div>
