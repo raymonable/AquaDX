@@ -29,6 +29,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
     val gameUrl by lazy {
         "$dns/sys/servlet/PowerOn".request()
             .header("Content-Type" to "application/x-www-form-urlencoded")
+            .header("Pragma" to "DFI")
             .post(
                 AllNetBillingDecoder.encodeAllNet(mapOf(
                 "game_id" to game,
