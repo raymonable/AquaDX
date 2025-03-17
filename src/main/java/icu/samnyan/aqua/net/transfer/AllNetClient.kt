@@ -1,6 +1,9 @@
 package icu.samnyan.aqua.net.transfer
 
-import ext.*
+import ext.bodyString
+import ext.header
+import ext.post
+import ext.request
 import icu.samnyan.aqua.sega.aimedb.AimeDbClient
 import icu.samnyan.aqua.sega.util.AllNetBillingDecoder
 
@@ -13,7 +16,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
         if (!keychipPattern.matches(keychip)) throw Exception("Invalid keychip")
     }
 
-    override fun toString() = toJson()
+    override fun toString() = "AllNetClient($dns, $keychip, $game, $version, $card)"
 
     val keychipShort by lazy {
         // A123-45678901337 -> A1234567890
