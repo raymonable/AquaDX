@@ -15,8 +15,7 @@ class TransferApis {
         log.info("Transfer check: $allNet")
         mapOf("gameUrl" to allNet.gameUrl, "userId" to allNet.userId)
     } catch (e: Exception) {
-        log.error("Transfer check error", e)
-        400 - "Transfer check error: ${e.message}"
+        400 - "Transfer check failed. Please check your host and keychip.\n${e.message}"
     }
 
     fun HttpServletResponse.initStream(): PrintWriter {
@@ -26,7 +25,7 @@ class TransferApis {
     }
 
     fun PrintWriter.sendJson(m: Any) {
-        println("data: ${m.toJson()}\n")
+        println(m.toJson())
         flush()
     }
 
@@ -50,11 +49,14 @@ class TransferApis {
         }
     }
 
+    class PushReq(val client: AllNetClient, val data: String)
+
     @API("/push")
-    fun push(@RB allNet: AllNetClient, data: String) = try {
+    fun push(@RB obj: PushReq) = try {
+        val allNet = obj.client
         log.info("Transfer push: $allNet")
         val broker = allNet.findDataBroker { log.info(it) }
-        broker.push(data)
+        broker.push(obj.data)
         mapOf("status" to "ok")
     } catch (e: Exception) {
         log.error("Transfer push error", e)
