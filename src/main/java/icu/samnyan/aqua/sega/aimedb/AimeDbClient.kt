@@ -1,5 +1,6 @@
 package icu.samnyan.aqua.sega.aimedb
 
+import ext.minus
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
@@ -68,7 +69,7 @@ class AimeDbClient(val gameId: String, val keychipShort: String, val server: Str
         send(when (card.length) {
             20 -> createReqLookupV2(card)
             16 -> createReqFelicaLookupV2(card)
-            else -> throw Exception("Invalid card. Please input either 20-digit numeric access code (e.g. 5010000...0) or 16-digit hex Felica ID (e.g. 012E123456789ABC).")
+            else -> 400 - "Invalid card. Please input either 20-digit numeric access code (e.g. 5010000...0) or 16-digit hex Felica ID (e.g. 012E123456789ABC)."
         }).getUnsignedIntLE(0x20).let {
             if (it == 0xffffffff) -1L else it
         }
@@ -77,7 +78,7 @@ class AimeDbClient(val gameId: String, val keychipShort: String, val server: Str
         when (card.length) {
             20 -> card
             16 -> ByteBufUtil.hexDump(send(createReqFelicaLookupV2(card)).slice(0x2c, 10))
-            else -> throw Exception("Invalid card. Please input a 20-digit numeric access code (e.g. 5010000...0).")
+            else -> 400 - "Invalid card. Please input a 20-digit numeric access code (e.g. 5010000...0)."
         }.let { send(createReqRegister(it)).getUnsignedIntLE(0x20) }
 
     fun execLookupOrRegister(card: String) =
