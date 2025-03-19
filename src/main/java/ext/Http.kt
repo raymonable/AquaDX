@@ -20,7 +20,7 @@ fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
 }).send()
 
 
-inline fun <reified T> HttpResponse<String>.json(): T = body().json()
+inline fun <reified T> HttpResponse<String>.json(): T? = body()?.json()
 
 fun HttpRequest.Builder.postZ(body: String) = run {
     header("Content-Type" to "application/json")
@@ -29,6 +29,6 @@ fun HttpRequest.Builder.postZ(body: String) = run {
 }
 
 fun <T> HttpResponse<T>.header(key: String) = headers().firstValue(key).orElse(null)
-fun HttpResponse<ByteArray>.bodyString() = body().toString(Charsets.UTF_8)
-fun HttpResponse<ByteArray>.bodyZ() = ZLib.decompress(body()).decodeToString()
+fun HttpResponse<ByteArray>.bodyString() = body()?.toString(Charsets.UTF_8)
+fun HttpResponse<ByteArray>.bodyZ() = body()?.let { ZLib.decompress(it)?.decodeToString() }
 fun HttpResponse<ByteArray>.bodyMaybeZ() = if (header("Content-Encoding") == "deflate") bodyZ() else bodyString()

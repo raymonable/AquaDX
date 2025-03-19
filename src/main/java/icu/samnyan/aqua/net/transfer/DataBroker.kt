@@ -26,7 +26,7 @@ abstract class DataBroker(
     inline fun <reified T> String.getNullable(key: String, data: JDict): T? = "$url/$this".request()
         .postZ(mapper.write(data))
         .bodyMaybeZ()
-        .jsonMap()[key]
+        ?.jsonMaybeMap()?.get(key)
         ?.let { mapper.convert<T>(it) }
         ?.also {
             if (it is List<*>) log("✅ $this: ${it.size}")
@@ -53,7 +53,7 @@ abstract class DataBroker(
         "$url/UpsertUserAllApi".request().postZ(mapper.write(mapOf(
             "userId" to allNet.userId,
             "upsertUserAll" to data.jsonMap()
-        ))).bodyMaybeZ().also { log(it) }
+        ))).bodyMaybeZ()?.also { log(it) }
     }
 }
 

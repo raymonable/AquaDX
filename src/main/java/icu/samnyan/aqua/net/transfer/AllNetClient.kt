@@ -30,8 +30,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
         "$dns/sys/servlet/PowerOn".request()
             .header("Content-Type" to "application/x-www-form-urlencoded")
             .header("Pragma" to "DFI")
-            .post(
-                AllNetBillingDecoder.encodeAllNet(mapOf(
+            .post(AllNetBillingDecoder.encodeAllNet(mapOf(
                 "game_id" to game,
                 "ver" to version,
                 "serial" to keychipShort,
@@ -39,10 +38,10 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
                 "encode" to "UTF-8", "format_ver" to "3", "hops" to "1", "token" to "2864179931"
             )))
             .bodyString()
-            .split("&")
-            .map { it.split("=") }
-            .filter { it.size == 2 }
-            .associate { it[0] to it[1] }["uri"]
+            ?.split("&")
+            ?.map { it.split("=") }
+            ?.filter { it.size == 2 }
+            ?.associate { it[0] to it[1] }?.get("uri")
             ?: throw Exception("PowerOn Failed: No game URL returned")
     }
 
