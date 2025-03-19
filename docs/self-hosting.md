@@ -42,3 +42,9 @@ docker compose up
 
 ### Building
 You need to install JDK 21 on your system, then run `./gradlew clean build`. The jar file will be built into the `build/libs` folder.
+
+## Why drop SQLite support?
+
+If you wonder why I dropped SQLite support, ask SQLite devs why they still haven't supported adding a single constraint to a table without all the hassle of creating a new one and migrating all data over and finally deleting the original.
+
+![](sqlite-sucks.png)
