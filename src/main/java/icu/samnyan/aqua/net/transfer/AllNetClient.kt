@@ -23,7 +23,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
         if (keychip.length == 11) keychip
         else keychip.substring(0, 4) + keychip.substring(5, 12)
     }
-    val aime by lazy { AimeDbClient(game, keychipShort, dns.substringAfter("://")) }
+    val aime by lazy { AimeDbClient(game, keychipShort, dns.substringAfter("://").substringBefore(":").substringBefore("/")) }
 
     // Send AllNet PowerOn request to obtain game URL
     val gameUrl by lazy {
