@@ -69,7 +69,7 @@
     console.log("Import data...")
     loading = true
 
-    TRANSFER.push({...src, ...gameInfo}, data).then(() => {
+    return TRANSFER.push({...src, ...gameInfo}, data).then(() => {
       console.log("Data imported successfully")
       messages = ["Data imported successfully"]
     }).catch(err => expectedError = err.message).finally(() => loading = false)
