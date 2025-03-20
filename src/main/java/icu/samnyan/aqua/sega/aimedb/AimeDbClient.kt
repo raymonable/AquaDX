@@ -16,7 +16,7 @@ class AimeDbClient(val gameId: String, val keychipShort: String, val server: Str
             writeShortLE(0)                 // 06  2b: Length
             writeShortLE(0)                 // 08  2b: Result
             writeAscii(gameId, 6)           // 0A  6b: Game ID
-            writeIntLE(0)                   // 10  4b: Store ID (Place ID)
+            writeIntLE(299)                 // 10  4b: Store ID (Place ID)
             writeAscii(keychipShort, 12)    // 14 12b: Keychip ID
             writer()                        // Write Payload
             setShortLE(6, writerIndex())    // Update Length
