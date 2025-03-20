@@ -4,6 +4,8 @@
   import TransferServer from "./TransferServer.svelte";
   import { DATA_HOST } from "../../libs/config";
   import type { ConfirmProps } from "../../libs/generalTypes";
+  import ActionCard from "../../components/ActionCard.svelte";
+  import StatusOverlays from "../../components/StatusOverlays.svelte";
 
 
   let tabs = ['chu3', 'mai2', 'ongeki']
@@ -21,7 +23,7 @@
 
   let srcEl: TransferServer, dstEl: TransferServer
   let srcExportedData: string
-  let loading: boolean = false
+  let [error, loading] = ["", false]
   let confirm: ConfirmProps | null = null
 
   function defaultGame() {
@@ -35,20 +37,7 @@
     localStorage.setItem('gameInfo', JSON.stringify(gameInfo))
   }
 
-  function startTransfer() {
-    if (!(srcTested && dstTested)) return alert("Please test both servers first!")
-    if (loading) return alert("Transfer already in progress!")
-    console.log("Starting transfer...")
-    loading = true
-
-    if (!dstEl.exportedData) {
-      // Ask user to make sure to backup their data
-      if (!confirm("It seems like you haven't backed up your destination data. Are you sure you want to proceed? (This will overwrite your destination server's data)")) {
-        loading = false
-        return
-      }
-    }
-
+  function actuallyStartTransfer() {
     srcEl.pull()
       .then(() => dstEl.push(srcExportedData))
       .then(() => alert("Transfer successful!"))
@@ -56,8 +45,28 @@
       .finally(() => loading = false)
   }
 
+  function startTransfer() {
+    if (!(srcTested && dstTested)) return alert("Please test both servers first!")
+    if (loading) return alert("Transfer already in progress!")
+    console.log("Starting transfer...")
+    loading = true
+
+    if (dstEl.exportedData) return actuallyStartTransfer()
+
+    // Ask user to make sure to backup their data
+    confirm = {
+      title: "Confirm transfer",
+      message: "It seems like you haven't backed up your destination data. Are you sure you want to proceed? (This will overwrite your destination server's data)",
+      dangerous: true,
+      confirm: actuallyStartTransfer,
+      cancel: () => { loading = false }
+    }
+  }
+
   defaultGame()
 </script>
+
+<StatusOverlays {confirm} {error} />
 
 <main class="content">
   <div class="outer-title-options">
