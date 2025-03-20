@@ -1,9 +1,15 @@
-package icu.samnyan.aqua.sega.util
+package icu.samnyan.aqua.sega.allnet
 
+import ext.bodyString
+import ext.header
+import icu.samnyan.aqua.sega.util.ZLib
+import java.net.http.HttpResponse
 import java.util.*
 import kotlin.text.Charsets.UTF_8
 
 object AllNetBillingDecoder {
+    fun String.urlToMap() = split("&").map { it.split("=") }.filter { it.size == 2 }.associate { it[0] to it[1] }
+
     /**
      * Decode the input byte array from Base64 MIME encoding and decompress the decoded byte array
      */
@@ -15,10 +21,7 @@ object AllNetBillingDecoder {
         val output = ZLib.decompress(bytes, nowrap).toString(UTF_8).trim()
 
         // Split the string by '&' symbol to separate key-value pairs
-        return output.split("&").associate {
-            val (key, value) = it.split("=")
-            key to value
-        }
+        return output.urlToMap()
     }
 
     fun encode(src: Map<String, String>, base64: Boolean): ByteArray {
@@ -29,7 +32,7 @@ object AllNetBillingDecoder {
         val bytes = ZLib.compress(output.toByteArray(UTF_8))
 
         // Encode the compressed byte array to Base64 MIME encoding
-        return if (!base64) bytes else Base64.getMimeEncoder().encode(bytes)
+        return if (!base64) bytes else Base64.getEncoder().encode(bytes)
     }
 
     @JvmStatic
@@ -38,4 +41,10 @@ object AllNetBillingDecoder {
 
     @JvmStatic
     fun decodeBilling(src: ByteArray) = decode(src, base64 = false, nowrap = true)
+
+    fun HttpResponse<ByteArray>.decodeAllNetResp() =
+        if (header("Pragma") == "DFI") decodeAllNet(body())
+        else bodyString()?.urlToMap()
 }
+
+

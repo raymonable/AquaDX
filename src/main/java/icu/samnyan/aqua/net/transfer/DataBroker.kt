@@ -35,7 +35,8 @@ abstract class DataBroker(
 
     inline fun <reified T> String.get(key: String, data: JDict): T = getNullable(key, data) ?: run {
         log("❌ $this")
-        throw Exception("Failed to get $this")
+        if (this == "GetUserDataApi") 404 - "Failed to get $this (User not found?)"
+        else 417 - "Failed to get $this"
     }
 
     fun prePull(): Pair<Map<String, Long>, MutableMap<String, Long>> {

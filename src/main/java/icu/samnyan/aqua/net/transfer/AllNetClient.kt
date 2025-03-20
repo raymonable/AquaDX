@@ -1,11 +1,11 @@
 package icu.samnyan.aqua.net.transfer
 
-import ext.bodyString
 import ext.header
 import ext.post
 import ext.request
 import icu.samnyan.aqua.sega.aimedb.AimeDbClient
-import icu.samnyan.aqua.sega.util.AllNetBillingDecoder
+import icu.samnyan.aqua.sega.allnet.AllNetBillingDecoder
+import icu.samnyan.aqua.sega.allnet.AllNetBillingDecoder.decodeAllNetResp
 
 val keychipPattern = Regex("([A-Z\\d]{4}-[A-Z\\d]{11}|[A-Z\\d]{11})")
 
@@ -28,6 +28,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
     // Send AllNet PowerOn request to obtain game URL
     val gameUrl by lazy {
         "$dns/sys/servlet/PowerOn".request()
+            .header("User-Agent" to "AquaTrans/1.0")
             .header("Content-Type" to "application/x-www-form-urlencoded")
             .header("Pragma" to "DFI")
             .post(AllNetBillingDecoder.encodeAllNet(mapOf(
@@ -37,11 +38,10 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
                 "ip" to "127.0.0.1", "firm_ver" to "60001", "boot_ver" to "0000",
                 "encode" to "UTF-8", "format_ver" to "3", "hops" to "1", "token" to "2864179931"
             )))
-            .bodyString()
-            ?.split("&")
-            ?.map { it.split("=") }
-            ?.filter { it.size == 2 }
-            ?.associate { it[0] to it[1] }?.get("uri")
+            ?.also {
+                println(it)
+            }
+            ?.decodeAllNetResp()?.get("uri")
             ?: throw Exception("PowerOn Failed: No game URL returned")
     }
 
