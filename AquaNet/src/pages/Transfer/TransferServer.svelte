@@ -1,17 +1,89 @@
 <script lang="ts">
   import StatusOverlays from "../../components/StatusOverlays.svelte";
   import { TRANSFER } from "../../libs/sdk";
+  import { download, selectJsonFile } from "../../libs/ui";
   import InputTextShort from "./InputTextShort.svelte";
 
   export let src: AllNetSrc
   export let gameInfo: AllNetGame
   export let isSrc: boolean = true
 
-  let tested: boolean = false
+  export let tested: boolean = false
+  let [loading, error, expectedError] = [false, "", ""]
+
+  function testConnection() {
+    if (loading) return
+
+    // Preliminiary checks
+    if (!src.dns || !src.keychip || !src.card || !gameInfo.game || !gameInfo.version) {
+      error = "Please fill out all fields"
+      return
+    }
+
+    loading = true
+    console.log("Testing connection...")
+    TRANSFER.check({...src, ...gameInfo}).then(res => {
+      console.log("Connection test result:", res)
+      tested = true
+    }).catch(err => expectedError = err.message).finally(() => loading = false)
+  }
+
+  let messages: string[] = []
+  export let exportedData: string = ""
+
+  export function pull(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      if (loading || !tested) return reject("Please test connection first")
+      if (exportedData) return resolve(exportedData)
+      console.log("Exporting data...")
+
+      TRANSFER.pull({...src, ...gameInfo}, (msg: TrStreamMessage) => {
+        console.log("Export progress: ", JSON.stringify(msg))
+
+        if ('message' in msg) messages = [...messages, msg.message]
+
+        if ('error' in msg) {
+          expectedError = msg.error
+          reject(msg.error)
+        }
+
+        if ('data' in msg) {
+          // file name: Export YYYY-MM-DD {server host} {game} {card last 6}.json
+          let date = new Date().toISOString().split('T')[0]
+          let host = new URL(src.dns).hostname
+          download(msg.data, `Export ${date} ${host} ${gameInfo.game} ${src.card.slice(-6)}.json`)
+          exportedData = msg.data
+          resolve(msg.data)
+        }
+      }).catch(err => { expectedError = err; reject(err) })
+    })
+  }
+
+  function pushBtn() {
+    if (loading || !tested) return
+    selectJsonFile().then(obj => push(JSON.stringify(obj)))
+  }
+
+  export function push(data: string) {
+    if (loading || !tested) return
+    console.log("Import data...")
+    loading = true
+
+    TRANSFER.push({...src, ...gameInfo}, data).then(() => {
+      console.log("Data imported successfully")
+      messages = ["Data imported successfully"]
+    }).catch(err => expectedError = err.message).finally(() => loading = false)
+  }
 </script>
 
-<div class="server source" class:src={isSrc}>
+<StatusOverlays {loading} {error} />
+
+<div class="server source" class:src={isSrc} class:hasError={expectedError} class:tested={tested}>
   <h3>{isSrc ? "Source" : "Target"} Server</h3>
+
+  {#if expectedError}
+    <blockquote class="error-msg">{expectedError}</blockquote>
+  {/if}
 
   <!-- First input line -->
   <div class="inputs">
@@ -33,12 +105,22 @@
       bind:value={src.card} on:change disabled={tested} />
   </div>
 
+  <!-- Streaming messages -->
+  {#if messages.length > 0}
+    <div class="stream-messages">
+      {#each messages.slice(Math.max(messages.length - 5, 0), undefined) as msg}
+        <p>{msg}</p>
+      {/each}
+    </div>
+  {/if}
+
   <!-- Buttons -->
   <div class="inputs buttons">
     {#if !tested}
-      <button class="flex-1" on:click={() => {}}>Test Connection</button>
+      <button class="flex-1" on:click={testConnection} disabled={loading}>Test Connection</button>
     {:else}
-      <button class="flex-1" on:click={() => {}}>Export Data</button>
+      <button class="flex-1" on:click={pull}>Export Data</button>
+      <button class="flex-1" on:click={pushBtn}>Import Data</button>
     {/if}
   </div>
 </div>
@@ -47,14 +129,28 @@
   @use "../../vars"
   @use "sass:color"
 
+  .error-msg
+    white-space: pre-wrap
+    margin: 0
+
   .server
     display: flex
     flex-direction: column
     gap: 1rem
 
-    --c-src: 255, 174, 174
-    &.src
-      --c-src: 173, 192, 247
+    // --c-src: 202, 168, 252
+    --c-src: 179, 198, 255
+    // animation: hue-rotate 10s infinite linear
+    // &.src
+      // --c-src: 173, 192, 247
+      // animation: hue-rotate 10s infinite linear reverse
+
+    &.tested
+      --c-src: 169, 255, 186
+
+    &.hasError
+      --c-src: 255, 174, 174
+      animation: none
 
     padding: 1rem
     border-radius: vars.$border-radius
@@ -71,6 +167,12 @@
       text-align: center
 
 
+  // @keyframes hue-rotate
+  //   0%
+  //     filter: hue-rotate(0deg)
+  //   100%
+  //     filter: hue-rotate(360deg)
+
   .inputs
     display: flex
     flex-wrap: wrap
@@ -85,5 +187,12 @@
         width: 100px
 
     &.buttons
-      margin-top: 1rem
+      margin-top: 0.5rem
+
+  .stream-messages
+    font-size: 0.8rem
+    opacity: 0.8
+
+    margin-top: 0.5rem
+    padding: 0 0.5rem
 </style>
