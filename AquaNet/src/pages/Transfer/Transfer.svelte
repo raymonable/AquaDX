@@ -4,7 +4,6 @@
   import TransferServer from "./TransferServer.svelte";
   import { DATA_HOST } from "../../libs/config";
   import type { ConfirmProps } from "../../libs/generalTypes";
-  import ActionCard from "../../components/ActionCard.svelte";
   import StatusOverlays from "../../components/StatusOverlays.svelte";
 
 

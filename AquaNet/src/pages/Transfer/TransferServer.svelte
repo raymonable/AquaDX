@@ -90,7 +90,7 @@
     <InputTextShort desc="Server Address" placeholder="e.g. http://aquadx.hydev.org"
       bind:value={src.dns} on:change validate={v => /^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(v)} disabled={tested} />
     <InputTextShort desc="Keychip ID" placeholder="e.g. A0299792458"
-      bind:value={src.keychip} on:change validate={v => /^[A-Z0-9]{11}$/.test(v)} disabled={tested} />
+      bind:value={src.keychip} on:change validate={v => /^([A-Z0-9]{11}|[A-Z0-9]{4}-[A-Z0-9]{11})$/.test(v)} disabled={tested} />
   </div>
 
   <!-- Second input line -->

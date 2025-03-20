@@ -21,7 +21,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
     val keychipShort by lazy {
         // A123-45678901337 -> A1234567890
         if (keychip.length == 11) keychip
-        else keychip.substring(0, 4) + keychip.substring(5, 11)
+        else keychip.substring(0, 4) + keychip.substring(5, 12)
     }
     val aime by lazy { AimeDbClient(game, keychipShort, dns.substringAfter("://")) }
 
