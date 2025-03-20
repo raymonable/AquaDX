@@ -13,9 +13,9 @@
   export let error: string | null
   export let loading: boolean = false
 
-  function doConfirm(fn: () => void) {
+  function doConfirm(fn?: () => void) {
     confirm = null
-    fn()
+    fn && fn()
   }
 </script>
 
@@ -27,9 +27,9 @@
 
       <div class="actions">
         {#if confirm.cancel}
-          <button on:click={() => doConfirm(confirm!!.cancel!!)}>{t('action.cancel')}</button>
+          <button on:click={() => doConfirm(confirm?.cancel)}>{t('action.cancel')}</button>
         {/if}
-        <button on:click={() => doConfirm(confirm!!.confirm)} class:error={confirm.dangerous}>{t('action.confirm')}</button>
+        <button on:click={() => doConfirm(confirm?.confirm)} class:error={confirm.dangerous}>{t('action.confirm')}</button>
       </div>
     </div>
   </div>
