@@ -40,8 +40,11 @@
   function actuallyStartTransfer() {
     srcEl.pull()
       .then(() => dstEl.push(srcExportedData))
-      .then(() => alert("Transfer successful!"))
-      .catch(e => alert(`Transfer failed: ${e}`))
+      .then(() => confirm = {
+        title: "Done!",
+        message: `Transfer completed successfully! Your data on ${dst.dns} is overwritten with your data from ${src.dns}.`
+      })
+      .catch(e => error = e)
       .finally(() => loading = false)
   }
 
