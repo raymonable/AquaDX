@@ -1,3 +1,5 @@
+export type Dict = Record<string, any>
+
 export interface TrendEntry {
   date: string
   rating: number
