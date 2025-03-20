@@ -66,7 +66,7 @@
   defaultGame()
 </script>
 
-<StatusOverlays {confirm} {error} />
+<StatusOverlays bind:confirm={confirm} {error} />
 
 <main class="content">
   <div class="outer-title-options">
