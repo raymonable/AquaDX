@@ -38,9 +38,6 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
                 "ip" to "127.0.0.1", "firm_ver" to "60001", "boot_ver" to "0000",
                 "encode" to "UTF-8", "format_ver" to "3", "hops" to "1", "token" to "2864179931"
             )))
-            ?.also {
-                println(it)
-            }
             ?.decodeAllNetResp()?.get("uri")
             ?: throw Exception("PowerOn Failed: No game URL returned")
     }
