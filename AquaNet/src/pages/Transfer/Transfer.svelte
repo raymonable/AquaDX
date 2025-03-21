@@ -40,16 +40,19 @@
     srcEl.pull()
       .then(() => dstEl.push(srcExportedData))
       .then(() => confirm = {
-        title: "Done!",
-        message: `Transfer completed successfully! Your data on ${dst.dns} is overwritten with your data from ${src.dns}.`
+        title: t('trans.confirm.done.title'),
+        message: t('trans.confirm.done.msg', { src: src.dns, dst: dst.dns })
       })
       .catch(e => error = e)
       .finally(() => loading = false)
   }
 
   function startTransfer() {
-    if (!(srcTested && dstTested)) return alert("Please test both servers first!")
-    if (loading) return alert("Transfer already in progress!")
+    if (!(srcTested && dstTested)) return confirm = {
+      title: t('trans.confirm.untested.title'),
+      message: t('trans.confirm.untested.msg')
+    }
+    if (loading) return alert(t('trans.alert.in-progress'))
     console.log("Starting transfer...")
     loading = true
 
@@ -57,8 +60,8 @@
 
     // Ask user to make sure to backup their data
     confirm = {
-      title: "Confirm transfer",
-      message: "It seems like you haven't backed up your destination data. Are you sure you want to proceed? (This will overwrite your destination server's data)",
+      title: t('trans.confirm.unbackuped.title'),
+      message: t('trans.confirm.unbackuped.msg'),
       dangerous: true,
       confirm: actuallyStartTransfer,
       cancel: () => { loading = false }
@@ -72,7 +75,7 @@
 
 <main class="content">
   <div class="outer-title-options">
-    <h2>🏳️‍⚧️ AquaTrans™ Data Transfer?</h2>
+    <h2>{t('trans.title')}</h2>
     <nav>
       {#each tabs as tabName, i}
         <div transition:slide={{axis: 'x'}} class:active={tab === i}
@@ -85,10 +88,7 @@
   </div>
 
   <div class="prompt">
-    <p>👋 Welcome to the AquaTrans™ server data transfer tool!</p>
-    <p>You can use this to export data from any server, and input data into any server using the connection credentials (card number, server address, and keychip id).</p>
-    <p>This tool will simulate a game client and pull your data from the source server, and push your data to the destination server.</p>
-    <p>Please fill out the info below to get started!</p>
+    {@html t("trans.prompt-html")}
   </div>
 
   <TransferServer bind:src={src} bind:gameInfo={gameInfo} on:change={onChange}
