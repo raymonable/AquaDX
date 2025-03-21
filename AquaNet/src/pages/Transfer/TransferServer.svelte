@@ -1,5 +1,6 @@
 <script lang="ts">
   import StatusOverlays from "../../components/StatusOverlays.svelte";
+  import { t } from "../../libs/i18n";
   import { TRANSFER } from "../../libs/sdk";
   import { download, selectJsonFile } from "../../libs/ui";
   import InputTextShort from "./InputTextShort.svelte";
@@ -9,23 +10,24 @@
   export let isSrc: boolean = true
 
   export let tested: boolean = false
-  let [loading, error, expectedError] = [false, "", ""]
+  let [loading, error] = [false, ""]
 
   function testConnection() {
     if (loading) return
 
     // Preliminiary checks
     if (!src.dns || !src.keychip || !src.card || !gameInfo.game || !gameInfo.version) {
-      error = "Please fill out all fields"
+      error = t('trans.error.empty')
       return
     }
 
     loading = true
+    error = ""
     console.log("Testing connection...")
-    TRANSFER.check({...src, ...gameInfo}).then(res => {
+    return TRANSFER.check({...src, ...gameInfo}).then(res => {
       console.log("Connection test result:", res)
       tested = true
-    }).catch(err => expectedError = err.message).finally(() => loading = false)
+    }).catch(err => error = err.message).finally(() => loading = false)
   }
 
   let messages: string[] = []
@@ -33,9 +35,10 @@
 
   export function pull(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      if (loading || !tested) return reject("Please test connection first")
+      if (loading || !tested) return reject(t('trans.error.untested'))
       if (exportedData) return resolve(exportedData)
       console.log("Exporting data...")
+      error = ""
 
       TRANSFER.pull({...src, ...gameInfo}, (msg: TrStreamMessage) => {
         console.log("Export progress: ", JSON.stringify(msg))
@@ -43,7 +46,7 @@
         if ('message' in msg) messages = [...messages, msg.message]
 
         if ('error' in msg) {
-          expectedError = msg.error
+          error = msg.error
           reject(msg.error)
         }
 
@@ -55,7 +58,7 @@
           exportedData = msg.data
           resolve(msg.data)
         }
-      }).catch(err => { expectedError = err; reject(err) })
+      }).catch(err => { error = err; reject(err) })
     })
   }
 
@@ -68,40 +71,41 @@
     if (loading || !tested) return
     console.log("Import data...")
     loading = true
+    error = ""
 
     return TRANSFER.push({...src, ...gameInfo}, data).then(() => {
       console.log("Data imported successfully")
-      messages = ["Data imported successfully"]
-    }).catch(err => expectedError = err.message).finally(() => loading = false)
+      messages = [t('trans.success.import')]
+    }).catch(err => error = err.message).finally(() => loading = false)
   }
 </script>
 
-<StatusOverlays {loading} {error} />
+<StatusOverlays {loading} />
 
-<div class="server source" class:src={isSrc} class:hasError={expectedError} class:tested={tested}>
-  <h3>{isSrc ? "Source" : "Target"} Server</h3>
+<div class="server source" class:src={isSrc} class:hasError={error} class:tested={tested}>
+  <h3>{t(`trans.${isSrc ? "source" : "target"}.title`)}</h3>
 
-  {#if expectedError}
-    <blockquote class="error-msg">{expectedError}</blockquote>
+  {#if error}
+    <blockquote class="error-msg">{error}</blockquote>
   {/if}
 
   <!-- First input line -->
   <div class="inputs">
-    <InputTextShort desc="Server Address" placeholder="e.g. http://aquadx.hydev.org"
+    <InputTextShort desc={t('trans.field.addr')} placeholder="e.g. http://aquadx.hydev.org"
       bind:value={src.dns} on:change validate={v => /^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(v)} disabled={tested} />
-    <InputTextShort desc="Keychip ID" placeholder="e.g. A0299792458"
+    <InputTextShort desc={t('trans.field.keychip')} placeholder="e.g. A0299792458"
       bind:value={src.keychip} on:change validate={v => /^([A-Z0-9]{11}|[A-Z0-9]{4}-[A-Z0-9]{11})$/.test(v)} disabled={tested} />
   </div>
 
   <!-- Second input line -->
   <div class="inputs">
     <div class="game-version">
-      <InputTextShort desc="Game" placeholder="e.g. SDHD"
+      <InputTextShort desc={t('trans.field.game')} placeholder="e.g. SDHD"
         bind:value={gameInfo.game} on:change disabled={tested} />
-      <InputTextShort desc="Version" placeholder="e.g. 2.30"
+      <InputTextShort desc={t('trans.field.version')} placeholder="e.g. 2.30"
         bind:value={gameInfo.version} on:change disabled={tested} />
     </div>
-    <InputTextShort desc="Card Number" placeholder="e.g. 27182818284590452353"
+    <InputTextShort desc={t('trans.field.card')} placeholder="e.g. 27182818284590452353"
       bind:value={src.card} on:change disabled={tested} />
   </div>
 
@@ -117,10 +121,10 @@
   <!-- Buttons -->
   <div class="inputs buttons">
     {#if !tested}
-      <button class="flex-1" on:click={testConnection} disabled={loading}>Test Connection</button>
+      <button class="flex-1" on:click={testConnection} disabled={loading}>{t('trans.btn.test')}</button>
     {:else}
-      <button class="flex-1" on:click={pull}>Export Data</button>
-      <button class="flex-1" on:click={pushBtn}>Import Data</button>
+      <button class="flex-1" on:click={pull}>{t('trans.btn.export')}</button>
+      <button class="flex-1" on:click={pushBtn}>{t('trans.btn.import')}</button>
     {/if}
   </div>
 </div>

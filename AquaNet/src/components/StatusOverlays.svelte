@@ -3,14 +3,13 @@
 <script lang="ts">
   import { fade } from 'svelte/transition'
   import type { ConfirmProps } from "../libs/generalTypes";
-  import { DISCORD_INVITE } from "../libs/config";
   import { t } from "../libs/i18n"
   import Loading from './ui/Loading.svelte';
   import Error from './ui/Error.svelte';
 
   // Props
   export let confirm: ConfirmProps | null = null
-  export let error: string | null
+  export let error: string | null = null
   export let loading: boolean = false
 
   function doConfirm(fn?: () => void) {
