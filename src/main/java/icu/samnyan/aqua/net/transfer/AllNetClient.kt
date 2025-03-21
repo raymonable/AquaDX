@@ -3,6 +3,7 @@ package icu.samnyan.aqua.net.transfer
 import ext.header
 import ext.post
 import ext.request
+import java.net.URI
 import icu.samnyan.aqua.sega.aimedb.AimeDbClient
 import icu.samnyan.aqua.sega.allnet.AllNetBillingDecoder
 import icu.samnyan.aqua.sega.allnet.AllNetBillingDecoder.decodeAllNetResp
@@ -23,7 +24,7 @@ class AllNetClient(val dns: String, val keychip: String, val game: String, val v
         if (keychip.length == 11) keychip
         else keychip.substring(0, 4) + keychip.substring(5, 12)
     }
-    val aime by lazy { AimeDbClient(game, keychipShort, dns.substringAfter("://").substringBefore(":").substringBefore("/")) }
+    val aime by lazy { AimeDbClient(game, keychipShort, URI(dns).host) }
 
     // Send AllNet PowerOn request to obtain game URL
     val gameUrl by lazy {

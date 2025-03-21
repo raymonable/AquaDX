@@ -165,5 +165,3 @@ class OngekiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
         }.toJson()
     }
 }
-
-}
