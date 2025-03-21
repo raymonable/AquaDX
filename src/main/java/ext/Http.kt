@@ -5,12 +5,13 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.time.Duration
 
 val client = HttpClient.newBuilder().build()
 
 fun HttpRequest.Builder.send() = client.send(this.build(), HttpResponse.BodyHandlers.ofByteArray())
 fun HttpRequest.Builder.header(pair: Pair<Any, Any>) = this.header(pair.first.toString(), pair.second.toString())
-fun String.request() = HttpRequest.newBuilder(URI.create(this))
+fun String.request() = HttpRequest.newBuilder(URI.create(this)).timeout(Duration.ofSeconds(10))
 
 fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
     is ByteArray -> HttpRequest.BodyPublishers.ofByteArray(body)
