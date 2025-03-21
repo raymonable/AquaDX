@@ -142,6 +142,8 @@ export interface UserBox {
   frameId: number,
   characterId: number,
   trophyId: number,
+  trophyIdSub1: number,
+  trophyIdSub2: number,
   mapIconId: number,
   voiceId: number,
   avatarWear: number,
