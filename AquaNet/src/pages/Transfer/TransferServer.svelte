@@ -9,7 +9,7 @@
   export let isSrc: boolean = true
 
   export let tested: boolean = false
-  let [loading, error, expectedError] = [false, "", ""]
+  let [loading, error] = [false, ""]
 
   function testConnection() {
     if (loading) return
@@ -21,11 +21,12 @@
     }
 
     loading = true
+    error = ""
     console.log("Testing connection...")
-    TRANSFER.check({...src, ...gameInfo}).then(res => {
+    return TRANSFER.check({...src, ...gameInfo}).then(res => {
       console.log("Connection test result:", res)
       tested = true
-    }).catch(err => expectedError = err.message).finally(() => loading = false)
+    }).catch(err => error = err.message).finally(() => loading = false)
   }
 
   let messages: string[] = []
@@ -36,6 +37,7 @@
       if (loading || !tested) return reject("Please test connection first")
       if (exportedData) return resolve(exportedData)
       console.log("Exporting data...")
+      error = ""
 
       TRANSFER.pull({...src, ...gameInfo}, (msg: TrStreamMessage) => {
         console.log("Export progress: ", JSON.stringify(msg))
@@ -43,7 +45,7 @@
         if ('message' in msg) messages = [...messages, msg.message]
 
         if ('error' in msg) {
-          expectedError = msg.error
+          error = msg.error
           reject(msg.error)
         }
 
@@ -55,7 +57,7 @@
           exportedData = msg.data
           resolve(msg.data)
         }
-      }).catch(err => { expectedError = err; reject(err) })
+      }).catch(err => { error = err; reject(err) })
     })
   }
 
@@ -68,21 +70,22 @@
     if (loading || !tested) return
     console.log("Import data...")
     loading = true
+    error = ""
 
     return TRANSFER.push({...src, ...gameInfo}, data).then(() => {
       console.log("Data imported successfully")
       messages = ["Data imported successfully"]
-    }).catch(err => expectedError = err.message).finally(() => loading = false)
+    }).catch(err => error = err.message).finally(() => loading = false)
   }
 </script>
 
-<StatusOverlays {loading} {error} />
+<StatusOverlays {loading} />
 
-<div class="server source" class:src={isSrc} class:hasError={expectedError} class:tested={tested}>
+<div class="server source" class:src={isSrc} class:hasError={error} class:tested={tested}>
   <h3>{isSrc ? "Source" : "Target"} Server</h3>
 
-  {#if expectedError}
-    <blockquote class="error-msg">{expectedError}</blockquote>
+  {#if error}
+    <blockquote class="error-msg">{error}</blockquote>
   {/if}
 
   <!-- First input line -->
