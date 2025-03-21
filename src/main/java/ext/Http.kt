@@ -17,7 +17,7 @@ fun HttpRequest.Builder.post(body: Any? = null) = this.POST(when (body) {
     is ByteArray -> HttpRequest.BodyPublishers.ofByteArray(body)
     is String -> HttpRequest.BodyPublishers.ofString(body)
     is HttpRequest.BodyPublisher -> body
-    else -> throw Exception("Unsupported body type")
+    else -> throw IllegalArgumentException("Unsupported body type")
 }).send()
 
 
