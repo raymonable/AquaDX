@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import java.net.Socket
+import java.net.SocketTimeoutException
 
 class AimeDbClient(val gameId: String, val keychipShort: String, val server: String) {
     // https://sega.bsnk.me/allnet/aimedb/common/#packet-header
@@ -59,11 +60,18 @@ class AimeDbClient(val gameId: String, val keychipShort: String, val server: Str
             writeIntLE(0) // 0C  4b: Serial number
         }
 
-    fun send(buf: ByteBuf): ByteBuf =
-        Unpooled.wrappedBuffer(Socket(server, 22345).use {
-            it.getOutputStream().write(buf.array())
-            it.getInputStream().readBytes()
-        }).let { AimeDbEncryption.decrypt(it) }
+    fun send(buf: ByteBuf): ByteBuf = Socket(server, 22345).use {
+        it.soTimeout = 3000
+        it.getOutputStream().write(buf.array())
+        it.getInputStream().use { r ->
+            Unpooled.buffer().apply {
+                val buffer = ByteArray(1024)
+                try {
+                    while (r.read(buffer) != -1) writeBytes(buffer)
+                } catch (_: SocketTimeoutException) { }
+            }
+        }
+    }.let { AimeDbEncryption.decrypt(it) }
 
     fun execLookup(card: String) =
         send(when (card.length) {
