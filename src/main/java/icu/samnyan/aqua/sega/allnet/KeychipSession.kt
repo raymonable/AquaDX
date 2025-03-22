@@ -84,8 +84,8 @@ class KeychipSessionService(
         lastUse = System.currentTimeMillis()
         try {
             repo.save(this)
-        } catch (e: Exception) {
-            logger.error("Failed to update last use time for session $token", e)
+        } catch (_: Exception) {
+            logger.error("Failed to update last use time for session $token")
         }
     }
 }
