@@ -31,10 +31,16 @@ class CompressionFilter : OncePerRequestFilter() {
         val isDfi = req.getHeader("pragma") == "DFI"
 
         // Decode input
-        val reqSrc = req.inputStream.readAllBytes().let {
-            if (isDeflate) ZLib.decompress(it)
-            else if (isDfi) ZLib.decompress(b64d.decode(it))
-            else it
+        val reqSrc = try {
+            req.inputStream.readAllBytes().let {
+                if (isDeflate) ZLib.decompress(it)
+                else if (isDfi) ZLib.decompress(b64d.decode(it))
+                else it
+            }
+        } catch (e: Exception) {
+            log.error("Failed to decode request from ip ${req.remoteAddr}")
+            resp.sendError(400, "Failed to decode request")
+            return
         }
 
         // Handle request
