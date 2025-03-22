@@ -32,4 +32,6 @@ fun HttpRequest.Builder.postZ(body: String) = run {
 fun <T> HttpResponse<T>.header(key: String) = headers().firstValue(key).orElse(null)
 fun HttpResponse<ByteArray>.bodyString() = body()?.toString(Charsets.UTF_8)
 fun HttpResponse<ByteArray>.bodyZ() = body()?.let { ZLib.decompress(it)?.decodeToString() }
-fun HttpResponse<ByteArray>.bodyMaybeZ() = if (header("Content-Encoding") == "deflate") bodyZ() else bodyString()
+fun HttpResponse<ByteArray>.bodyMaybeZ() =
+    if (body().first().let { it != '{'.code.toByte() && it != '['.code.toByte() }) bodyZ()
+    else bodyString()
