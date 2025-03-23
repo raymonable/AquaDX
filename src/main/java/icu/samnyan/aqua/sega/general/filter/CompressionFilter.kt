@@ -3,6 +3,7 @@ package icu.samnyan.aqua.sega.general.filter
 import ext.details
 import ext.logger
 import ext.toJson
+import icu.samnyan.aqua.net.components.GeoIP
 import icu.samnyan.aqua.sega.allnet.TokenChecker
 import icu.samnyan.aqua.sega.util.ZLib
 import jakarta.servlet.FilterChain
@@ -19,7 +20,9 @@ import java.util.*
  * @author samnyan (privateamusement@protonmail.com)
  */
 @Component
-class CompressionFilter : OncePerRequestFilter() {
+class CompressionFilter(
+    val geoip: GeoIP
+) : OncePerRequestFilter() {
     companion object {
         val log = logger()
         val b64d = Base64.getMimeDecoder()
@@ -38,7 +41,7 @@ class CompressionFilter : OncePerRequestFilter() {
                 else it
             }
         } catch (e: Exception) {
-            log.error("Failed to decode request from ip ${req.remoteAddr}")
+            log.error("Failed to decode request from ip ${geoip.getIP(req)}")
             resp.sendError(400, "Failed to decode request")
             return
         }
