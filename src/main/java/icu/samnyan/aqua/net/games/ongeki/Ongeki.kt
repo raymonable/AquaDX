@@ -4,10 +4,10 @@ import ext.API
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
-import icu.samnyan.aqua.sega.ongeki.UserDataRepository
-import icu.samnyan.aqua.sega.ongeki.UserGeneralDataRepository
-import icu.samnyan.aqua.sega.ongeki.UserMusicDetailRepository
-import icu.samnyan.aqua.sega.ongeki.UserPlaylogRepository
+import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo
+import icu.samnyan.aqua.sega.ongeki.OgkUserGeneralDataRepo
+import icu.samnyan.aqua.sega.ongeki.OgkUserMusicDetailRepo
+import icu.samnyan.aqua.sega.ongeki.OgkUserPlaylogRepo
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserData
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController
 @API("api/v2/game/ongeki")
 class Ongeki(
     override val us: AquaUserServices,
-    override val playlogRepo: UserPlaylogRepository,
-    override val userDataRepo: UserDataRepository,
-    override val userMusicRepo: UserMusicDetailRepository,
-    val userGeneralDataRepository: UserGeneralDataRepository
+    override val playlogRepo: OgkUserPlaylogRepo,
+    override val userDataRepo: OgkUserDataRepo,
+    override val userMusicRepo: OgkUserMusicDetailRepo,
+    val userGeneralDataRepository: OgkUserGeneralDataRepo
 ): GameApiController<UserData>("ongeki", UserData::class) {
     override suspend fun trend(username: String) = us.cardByName(username) { card ->
         findTrend(playlogRepo.findByUser_Card_ExtId(card.extId)

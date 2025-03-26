@@ -1,8 +1,8 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserDataRepository;
-import icu.samnyan.aqua.sega.ongeki.UserRivalDataRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo;
+import icu.samnyan.aqua.sega.ongeki.OgkUserRivalDataRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.UserRivalData;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -25,11 +25,11 @@ public class GetUserRivalDataHandler implements BaseHandler {
     private static final Logger logger = LoggerFactory.getLogger(GetUserRivalDataHandler.class);
 
     private final BasicMapper mapper;
-    private final UserRivalDataRepository userRivalDataRepository;
-    private final UserDataRepository userDataRepository;
+    private final OgkUserRivalDataRepo userRivalDataRepository;
+    private final OgkUserDataRepo userDataRepository;
 
     @Autowired
-    public GetUserRivalDataHandler(BasicMapper mapper, UserRivalDataRepository userRivalDataRepository, UserDataRepository userDataRepository) {
+    public GetUserRivalDataHandler(BasicMapper mapper, OgkUserRivalDataRepo userRivalDataRepository, OgkUserDataRepo userDataRepository) {
         this.mapper = mapper;
         this.userRivalDataRepository = userRivalDataRepository;
         this.userDataRepository = userDataRepository;

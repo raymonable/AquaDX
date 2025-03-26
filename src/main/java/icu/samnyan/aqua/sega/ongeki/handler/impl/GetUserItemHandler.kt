@@ -2,8 +2,8 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl
 
 import ext.*
 import icu.samnyan.aqua.sega.general.BaseHandler
-import icu.samnyan.aqua.sega.ongeki.UserDataRepository
-import icu.samnyan.aqua.sega.ongeki.UserItemRepository
+import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo
+import icu.samnyan.aqua.sega.ongeki.OgkUserItemRepo
 import icu.samnyan.aqua.sega.ongeki.model.common.ItemType
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserItem
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component
 @Component("OngekiGetUserItemHandler")
 class GetUserItemHandler(
     val mapper: BasicMapper,
-    val userDataRepo: UserDataRepository,
-    val userItemRepo: UserItemRepository
+    val userDataRepo: OgkUserDataRepo,
+    val userItemRepo: OgkUserItemRepo
 ) : BaseHandler {
     val log = logger()
 

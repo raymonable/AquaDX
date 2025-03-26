@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserMusicDetailRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserMusicDetailRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.UserRivalMusic;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -23,10 +23,10 @@ public class GetUserRivalMusicHandler implements BaseHandler {
     private static final Logger logger = LoggerFactory.getLogger(GetUserRivalMusicHandler.class);
 
     private final BasicMapper mapper;
-    private final UserMusicDetailRepository userMusicDetailRepository;
+    private final OgkUserMusicDetailRepo userMusicDetailRepository;
 
     @Autowired
-    public GetUserRivalMusicHandler(BasicMapper mapper, UserMusicDetailRepository userMusicDetailRepository) {
+    public GetUserRivalMusicHandler(BasicMapper mapper, OgkUserMusicDetailRepo userMusicDetailRepository) {
         this.mapper = mapper;
         this.userMusicDetailRepository = userMusicDetailRepository;
     }

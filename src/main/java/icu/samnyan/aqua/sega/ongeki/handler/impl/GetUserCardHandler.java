@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserCardRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserCardRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserCard;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -25,10 +25,10 @@ public class GetUserCardHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserCardRepository userCardRepository;
+    private final OgkUserCardRepo userCardRepository;
 
     @Autowired
-    public GetUserCardHandler(BasicMapper mapper, UserCardRepository userCardRepository) {
+    public GetUserCardHandler(BasicMapper mapper, OgkUserCardRepo userCardRepository) {
         this.mapper = mapper;
         this.userCardRepository = userCardRepository;
     }

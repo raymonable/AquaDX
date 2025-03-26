@@ -1,8 +1,8 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserDataRepository;
-import icu.samnyan.aqua.sega.ongeki.UserOptionRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo;
+import icu.samnyan.aqua.sega.ongeki.OgkUserOptionRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.GetUserPreviewResp;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserData;
@@ -29,13 +29,13 @@ public class GetUserPreviewHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserDataRepository userDataRepository;
+    private final OgkUserDataRepo userDataRepository;
 
-    private final UserOptionRepository userOptionRepository;
+    private final OgkUserOptionRepo userOptionRepository;
 
     @Autowired
     public GetUserPreviewHandler(BasicMapper mapper,
-                                 UserDataRepository userDataRepository, UserOptionRepository userOptionRepository) {
+                                 OgkUserDataRepo userDataRepository, OgkUserOptionRepo userOptionRepository) {
         this.mapper = mapper;
         this.userDataRepository = userDataRepository;
         this.userOptionRepository = userOptionRepository;

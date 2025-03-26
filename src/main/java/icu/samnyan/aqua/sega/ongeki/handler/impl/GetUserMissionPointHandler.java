@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserMissionPointRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserMissionPointRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserMissionPoint;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -24,10 +24,10 @@ public class GetUserMissionPointHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserMissionPointRepository userMissionPointRepository;
+    private final OgkUserMissionPointRepo userMissionPointRepository;
 
     @Autowired
-    public GetUserMissionPointHandler(BasicMapper mapper, UserMissionPointRepository userMissionPointRepository) {
+    public GetUserMissionPointHandler(BasicMapper mapper, OgkUserMissionPointRepo userMissionPointRepository) {
         this.mapper = mapper;
         this.userMissionPointRepository = userMissionPointRepository;
     }

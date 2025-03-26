@@ -2,7 +2,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import icu.samnyan.aqua.sega.ongeki.UserTradeItemRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserTradeItemRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserTradeItem;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -25,10 +25,10 @@ public class GetUserTradeItemHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserTradeItemRepository userTradeItemRepository;
+    private final OgkUserTradeItemRepo userTradeItemRepository;
 
     @Autowired
-    public GetUserTradeItemHandler(BasicMapper mapper, UserTradeItemRepository userTradeItemRepository) {
+    public GetUserTradeItemHandler(BasicMapper mapper, OgkUserTradeItemRepo userTradeItemRepository) {
         this.mapper = mapper;
         this.userTradeItemRepository = userTradeItemRepository;
     }

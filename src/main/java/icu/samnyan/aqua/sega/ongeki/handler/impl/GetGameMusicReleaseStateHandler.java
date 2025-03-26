@@ -2,7 +2,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import icu.samnyan.aqua.sega.ongeki.UserKopRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserKopRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class GetGameMusicReleaseStateHandler implements BaseHandler {
     private final BasicMapper mapper;
 
     @Autowired
-    public GetGameMusicReleaseStateHandler(BasicMapper mapper, UserKopRepository userKopRepository) {
+    public GetGameMusicReleaseStateHandler(BasicMapper mapper, OgkUserKopRepo userKopRepository) {
         this.mapper = mapper;
     }
 

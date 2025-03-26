@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserEventPointRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserEventPointRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserEventPoint;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -24,10 +24,10 @@ public class GetUserEventPointHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserEventPointRepository userEventPointRepository;
+    private final OgkUserEventPointRepo userEventPointRepository;
 
     @Autowired
-    public GetUserEventPointHandler(BasicMapper mapper, UserEventPointRepository userEventPointRepository) {
+    public GetUserEventPointHandler(BasicMapper mapper, OgkUserEventPointRepo userEventPointRepository) {
         this.mapper = mapper;
         this.userEventPointRepository = userEventPointRepository;
     }

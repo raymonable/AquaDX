@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserTrainingRoomRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserTrainingRoomRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserTrainingRoom;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -24,10 +24,10 @@ public class GetUserTrainingRoomByKeyHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserTrainingRoomRepository userTrainingRoomRepository;
+    private final OgkUserTrainingRoomRepo userTrainingRoomRepository;
 
     @Autowired
-    public GetUserTrainingRoomByKeyHandler(BasicMapper mapper, UserTrainingRoomRepository userTrainingRoomRepository) {
+    public GetUserTrainingRoomByKeyHandler(BasicMapper mapper, OgkUserTrainingRoomRepo userTrainingRoomRepository) {
         this.mapper = mapper;
         this.userTrainingRoomRepository = userTrainingRoomRepository;
     }

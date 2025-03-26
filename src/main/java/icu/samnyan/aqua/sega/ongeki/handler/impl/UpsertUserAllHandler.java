@@ -33,35 +33,35 @@ public class UpsertUserAllHandler implements BaseHandler {
 
     private final CardService cardService;
 
-    private final UserDataRepository userDataRepository;
-    private final UserOptionRepository userOptionRepository;
-    private final UserPlaylogRepository userPlaylogRepository;
-    private final UserActivityRepository userActivityRepository;
-    private final UserMusicDetailRepository userMusicDetailRepository;
-    private final UserCharacterRepository userCharacterRepository;
-    private final UserCardRepository userCardRepository;
-    private final UserDeckRepository userDeckRepository;
-    private final UserStoryRepository userStoryRepository;
-    private final UserChapterRepository userChapterRepository;
-    private final UserMemoryChapterRepository userMemoryChapterRepository;
-    private final UserItemRepository userItemRepository;
-    private final UserMusicItemRepository userMusicItemRepository;
-    private final UserLoginBonusRepository userLoginBonusRepository;
-    private final UserEventPointRepository userEventPointRepository;
-    private final UserMissionPointRepository userMissionPointRepository;
-    private final UserTrainingRoomRepository userTrainingRoomRepository;
-    private final UserGeneralDataRepository userGeneralDataRepository;
-    private final UserBossRepository userBossRepository;
-    private final UserScenarioRepository userScenarioRepository;
-    private final UserTechCountRepository userTechCountRepository;
-    private final UserTradeItemRepository userTradeItemRepository;
-    private final UserEventMusicRepository userEventMusicRepository;
-    private final UserTechEventRepository userTechEventRepository;
-    private final UserKopRepository userKopRepository;
+    private final OgkUserDataRepo userDataRepository;
+    private final OgkUserOptionRepo userOptionRepository;
+    private final OgkUserPlaylogRepo userPlaylogRepository;
+    private final OgkUserActivityRepo userActivityRepository;
+    private final OgkUserMusicDetailRepo userMusicDetailRepository;
+    private final OgkUserCharacterRepo userCharacterRepository;
+    private final OgkUserCardRepo userCardRepository;
+    private final OgkUserDeckRepo userDeckRepository;
+    private final OgkUserStoryRepo userStoryRepository;
+    private final OgkUserChapterRepo userChapterRepository;
+    private final OgkUserMemoryChapterRepo userMemoryChapterRepository;
+    private final OgkUserItemRepo userItemRepository;
+    private final OgkUserMusicItemRepo userMusicItemRepository;
+    private final OgkUserLoginBonusRepo userLoginBonusRepository;
+    private final OgkUserEventPointRepo userEventPointRepository;
+    private final OgkUserMissionPointRepo userMissionPointRepository;
+    private final OgkUserTrainingRoomRepo userTrainingRoomRepository;
+    private final OgkUserGeneralDataRepo userGeneralDataRepository;
+    private final OgkUserBossRepo userBossRepository;
+    private final OgkUserScenarioRepo userScenarioRepository;
+    private final OgkUserTechCountRepo userTechCountRepository;
+    private final OgkUserTradeItemRepo userTradeItemRepository;
+    private final OgkUserEventMusicRepo userEventMusicRepository;
+    private final OgkUserTechEventRepo userTechEventRepository;
+    private final OgkUserKopRepo userKopRepository;
 
     @Autowired
     public UpsertUserAllHandler(BasicMapper mapper,
-                                CardService cardService, UserDataRepository userDataRepository, UserOptionRepository userOptionRepository, UserPlaylogRepository userPlaylogRepository, UserActivityRepository userActivityRepository, UserMusicDetailRepository userMusicDetailRepository, UserCharacterRepository userCharacterRepository, UserCardRepository userCardRepository, UserDeckRepository userDeckRepository, UserStoryRepository userStoryRepository, UserChapterRepository userChapterRepository, UserItemRepository userItemRepository, UserMusicItemRepository userMusicItemRepository, UserLoginBonusRepository userLoginBonusRepository, UserEventPointRepository userEventPointRepository, UserMissionPointRepository userMissionPointRepository, UserTrainingRoomRepository userTrainingRoomRepository, UserGeneralDataRepository userGeneralDataRepository, UserBossRepository userBossRepository, UserScenarioRepository userScenarioRepository, UserTechCountRepository userTechCountRepository, UserTradeItemRepository userTradeItemRepository, UserEventMusicRepository userEventMusicRepository, UserTechEventRepository userTechEventRepository, UserKopRepository userKopRepository, UserMemoryChapterRepository userMemoryChapterRepository) {
+                                CardService cardService, OgkUserDataRepo userDataRepository, OgkUserOptionRepo userOptionRepository, OgkUserPlaylogRepo userPlaylogRepository, OgkUserActivityRepo userActivityRepository, OgkUserMusicDetailRepo userMusicDetailRepository, OgkUserCharacterRepo userCharacterRepository, OgkUserCardRepo userCardRepository, OgkUserDeckRepo userDeckRepository, OgkUserStoryRepo userStoryRepository, OgkUserChapterRepo userChapterRepository, OgkUserItemRepo userItemRepository, OgkUserMusicItemRepo userMusicItemRepository, OgkUserLoginBonusRepo userLoginBonusRepository, OgkUserEventPointRepo userEventPointRepository, OgkUserMissionPointRepo userMissionPointRepository, OgkUserTrainingRoomRepo userTrainingRoomRepository, OgkUserGeneralDataRepo userGeneralDataRepository, OgkUserBossRepo userBossRepository, OgkUserScenarioRepo userScenarioRepository, OgkUserTechCountRepo userTechCountRepository, OgkUserTradeItemRepo userTradeItemRepository, OgkUserEventMusicRepo userEventMusicRepository, OgkUserTechEventRepo userTechEventRepository, OgkUserKopRepo userKopRepository, OgkUserMemoryChapterRepo userMemoryChapterRepository) {
         this.mapper = mapper;
         this.cardService = cardService;
         this.userDataRepository = userDataRepository;

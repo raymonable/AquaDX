@@ -2,7 +2,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import icu.samnyan.aqua.sega.ongeki.UserTechEventRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserTechEventRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.UserTechEventRankingItem;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserTechEvent;
@@ -29,10 +29,10 @@ public class GetUserTechEventRankingHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserTechEventRepository userTechEventRepository;
+    private final OgkUserTechEventRepo userTechEventRepository;
 
     @Autowired
-    public GetUserTechEventRankingHandler(BasicMapper mapper, UserTechEventRepository userTechEventRepository) {
+    public GetUserTechEventRankingHandler(BasicMapper mapper, OgkUserTechEventRepo userTechEventRepository) {
         this.mapper = mapper;
         this.userTechEventRepository = userTechEventRepository;
     }

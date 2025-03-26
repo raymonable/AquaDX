@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserLoginBonusRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserLoginBonusRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserLoginBonus;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -24,10 +24,10 @@ public class GetUserLoginBonusHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserLoginBonusRepository userLoginBonusRepository;
+    private final OgkUserLoginBonusRepo userLoginBonusRepository;
 
     @Autowired
-    public GetUserLoginBonusHandler(BasicMapper mapper, UserLoginBonusRepository userLoginBonusRepository) {
+    public GetUserLoginBonusHandler(BasicMapper mapper, OgkUserLoginBonusRepo userLoginBonusRepository) {
         this.mapper = mapper;
         this.userLoginBonusRepository = userLoginBonusRepository;
     }

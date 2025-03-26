@@ -2,8 +2,8 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating;
-import icu.samnyan.aqua.sega.ongeki.UserGeneralDataRepository;
-import icu.samnyan.aqua.sega.ongeki.UserPlaylogRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserGeneralDataRepo;
+import icu.samnyan.aqua.sega.ongeki.OgkUserPlaylogRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserGeneralData;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserPlaylog;
@@ -30,11 +30,11 @@ public class GetUserRecentRatingHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserPlaylogRepository userPlaylogRepository;
-    private final UserGeneralDataRepository userGeneralDataRepository;
+    private final OgkUserPlaylogRepo userPlaylogRepository;
+    private final OgkUserGeneralDataRepo userGeneralDataRepository;
 
     @Autowired
-    public GetUserRecentRatingHandler(BasicMapper mapper, UserPlaylogRepository userPlaylogRepository, UserGeneralDataRepository userGeneralDataRepository) {
+    public GetUserRecentRatingHandler(BasicMapper mapper, OgkUserPlaylogRepo userPlaylogRepository, OgkUserGeneralDataRepo userGeneralDataRepository) {
         this.mapper = mapper;
         this.userPlaylogRepository = userPlaylogRepository;
         this.userGeneralDataRepository = userGeneralDataRepository;

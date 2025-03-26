@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.UserOptionRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserOptionRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserOption;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -24,10 +24,10 @@ public class GetUserOptionHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserOptionRepository userOptionRepository;
+    private final OgkUserOptionRepo userOptionRepository;
 
     @Autowired
-    public GetUserOptionHandler(BasicMapper mapper, UserOptionRepository userOptionRepository) {
+    public GetUserOptionHandler(BasicMapper mapper, OgkUserOptionRepo userOptionRepository) {
         this.mapper = mapper;
         this.userOptionRepository = userOptionRepository;
     }

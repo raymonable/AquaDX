@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.GamePresentRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkGamePresentRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.gamedata.GamePresent;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -24,10 +24,10 @@ public class GetGamePresentHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final GamePresentRepository gamePresentRepository;
+    private final OgkGamePresentRepo gamePresentRepository;
 
     @Autowired
-    public GetGamePresentHandler(BasicMapper mapper, GamePresentRepository gamePresentRepository) {
+    public GetGamePresentHandler(BasicMapper mapper, OgkGamePresentRepo gamePresentRepository) {
         this.mapper = mapper;
         this.gamePresentRepository = gamePresentRepository;
     }

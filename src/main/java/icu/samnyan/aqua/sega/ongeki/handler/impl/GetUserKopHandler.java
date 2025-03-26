@@ -2,7 +2,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import icu.samnyan.aqua.sega.ongeki.UserKopRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserKopRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserKop;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
@@ -25,10 +25,10 @@ public class GetUserKopHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserKopRepository userKopRepository;
+    private final OgkUserKopRepo userKopRepository;
 
     @Autowired
-    public GetUserKopHandler(BasicMapper mapper, UserKopRepository userKopRepository) {
+    public GetUserKopHandler(BasicMapper mapper, OgkUserKopRepo userKopRepository) {
         this.mapper = mapper;
         this.userKopRepository = userKopRepository;
     }
