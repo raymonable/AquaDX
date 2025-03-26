@@ -104,7 +104,7 @@ class UserData : IUserData {
     uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "kind", "activity_id"])]
 )
 @JsonPropertyOrder("kind", "id", "sortNumber", "param1", "param2", "param3", "param4")
-class UserActivity: OngekiUserEntity()  {
+class UserActivity : OngekiUserEntity()  {
     var kind = 0
     @JsonProperty("id")
     @Column(name = "activity_id")
@@ -118,7 +118,7 @@ class UserActivity: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserBoss")
 @Table(name = "ongeki_user_boss")
-class UserBoss: OngekiUserEntity()  {
+class UserBoss : OngekiUserEntity()  {
     var musicId = 0
     var damage = 0
     @JsonProperty("isClear")
@@ -128,7 +128,7 @@ class UserBoss: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserCard")
 @Table(name = "ongeki_user_card")
-class UserCard(): OngekiUserEntity()  {
+class UserCard: OngekiUserEntity()  {
     var cardId = -1
 
     var digitalStock = 1
@@ -148,22 +148,11 @@ class UserCard(): OngekiUserEntity()  {
     @JsonProperty("isAcquired")
     var isAcquired = true
     var created = "0000-00-00 00:00:00.0"
-
-    constructor(userData: UserData) : this() {
-        this.user = userData
-    }
-
-    constructor(userData: UserData, cardId: Int, skillId: Int, created: String) : this() {
-        this.user = userData
-        this.cardId = cardId
-        this.skillId = skillId
-        this.created = created
-    }
 }
 
 @Entity(name = "OngekiUserChapter")
 @Table(name = "ongeki_user_chapter")
-class UserChapter: OngekiUserEntity()  {
+class UserChapter : OngekiUserEntity()  {
     var chapterId = 0
     var jewelCount = 0
     var lastPlayMusicCategory = 0
@@ -179,7 +168,7 @@ class UserChapter: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserCharacter")
 @Table(name = "ongeki_user_character")
-class UserCharacter: OngekiUserEntity()  {
+class UserCharacter : OngekiUserEntity()  {
     var characterId = 0
     var costumeId = 0
     var attachmentId = 0
@@ -194,7 +183,7 @@ class UserCharacter: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserDeck")
 @Table(name = "ongeki_user_deck")
-class UserDeck: OngekiUserEntity()  {
+class UserDeck : OngekiUserEntity()  {
     var deckId = 0
     var cardId1 = 0
     var cardId2 = 0
@@ -203,7 +192,7 @@ class UserDeck: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserEventMusic")
 @Table(name = "ongeki_user_event_music")
-class UserEventMusic: OngekiUserEntity()  {
+class UserEventMusic : OngekiUserEntity()  {
     var eventId = 0
     var type = 0
     var musicId = 0
@@ -218,7 +207,7 @@ class UserEventMusic: OngekiUserEntity()  {
 @Entity(name = "OngekiUserEventPoint")
 @Table(name = "ongeki_user_event_point")
 
-class UserEventPoint: OngekiUserEntity()  {
+class UserEventPoint : OngekiUserEntity()  {
     var eventId = 0
     var point: Long = 0
     @JsonProperty("isRankingRewarded")
@@ -227,14 +216,15 @@ class UserEventPoint: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserGeneralData")
 @Table(name = "ongeki_user_general_data")
-class UserGeneralData(var propertyKey: String): OngekiUserEntity() {
+class UserGeneralData : OngekiUserEntity() {
+    var propertyKey = ""
     @Column(columnDefinition = "TEXT")
     var propertyValue = ""
 }
 
 @Entity(name = "OngekiUserItem")
 @Table(name = "ongeki_user_item")
-class UserItem: OngekiUserEntity()  {
+class UserItem : OngekiUserEntity()  {
     var itemKind = 0
     var itemId = 0
     var stock = 0
@@ -244,7 +234,7 @@ class UserItem: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserKop")
 @Table(name = "ongeki_user_kop")
-class UserKop: OngekiUserEntity()  {
+class UserKop : OngekiUserEntity()  {
     var authKey: String = ""
     var kopId = 0
     var areaId = 0
@@ -257,7 +247,7 @@ class UserKop: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserLoginBonus")
 @Table(name = "ongeki_user_login_bonus")
-class UserLoginBonus: OngekiUserEntity()  {
+class UserLoginBonus : OngekiUserEntity()  {
     var bonusId = 0
     var bonusCount = 0
     var lastUpdateDate: String = ""
@@ -265,7 +255,7 @@ class UserLoginBonus: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserMemoryChapter")
 @Table(name = "ongeki_user_memory_chapter")
-class UserMemoryChapter: OngekiUserEntity()  {
+class UserMemoryChapter : OngekiUserEntity()  {
     var chapterId = 0
     var jewelCount = 0
     var lastPlayMusicCategory = 0
@@ -285,14 +275,14 @@ class UserMemoryChapter: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserMissionPoint")
 @Table(name = "ongeki_user_mission_point")
-class UserMissionPoint: OngekiUserEntity()  {
+class UserMissionPoint : OngekiUserEntity()  {
     var eventId = 0
     var point: Long = 0
 }
 
 @Entity(name = "OngekiUserMusicDetail")
 @Table(name = "ongeki_user_music_detail")
-class UserMusicDetail: OngekiUserEntity(), IGenericUserMusic {
+class UserMusicDetail : OngekiUserEntity(), IGenericUserMusic {
     override var musicId: Int = 0
     var level = 0
     var playCount = 0
@@ -318,14 +308,14 @@ class UserMusicDetail: OngekiUserEntity(), IGenericUserMusic {
 
 @Entity(name = "OngekiUserMusicItem")
 @Table(name = "ongeki_user_music_item")
-class UserMusicItem: OngekiUserEntity()  {
+class UserMusicItem : OngekiUserEntity()  {
     var musicId = 0
     var status = 0
 }
 
 @Entity(name = "OngekiUserOption")
 @Table(name = "ongeki_user_option")
-class UserOption: OngekiUserEntity()  {
+class UserOption : OngekiUserEntity()  {
     var optionSet = 0
     var speed = 0
     var mirror = 0
@@ -449,7 +439,7 @@ class UserPlaylog : OngekiUserEntity(), IGenericGamePlaylog {
 
 @Entity(name = "OngekiUserRival")
 @Table(name = "ongeki_user_rival")
-class UserRival: OngekiUserEntity() {
+class UserRival : OngekiUserEntity() {
     @JoinColumn(name = "rival_user_ext_id")
     @JsonProperty("rivalUserId")
     var rivalUserExtId: Long = 0
@@ -457,14 +447,14 @@ class UserRival: OngekiUserEntity() {
 
 @Entity(name = "OngekiUserScenario")
 @Table(name = "ongeki_user_scenario")
-class UserScenario: OngekiUserEntity()  {
+class UserScenario : OngekiUserEntity()  {
     var scenarioId = 0
     var playCount = 0
 }
 
 @Entity(name = "OngekiUserStory")
 @Table(name = "ongeki_user_story")
-class UserStory: OngekiUserEntity()  {
+class UserStory : OngekiUserEntity()  {
     var storyId = 0
     var lastChapterId = 0
     var jewelCount = 0
@@ -475,7 +465,7 @@ class UserStory: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserTechCount")
 @Table(name = "ongeki_user_tech_count")
-class UserTechCount: OngekiUserEntity()  {
+class UserTechCount : OngekiUserEntity()  {
     var levelId = 0
     var allBreakCount = 0
     var allBreakPlusCount = 0
@@ -483,7 +473,7 @@ class UserTechCount: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserTechEvent")
 @Table(name = "ongeki_user_tech_event")
-class UserTechEvent: OngekiUserEntity()  {
+class UserTechEvent : OngekiUserEntity()  {
     var eventId = 0
     var totalTechScore = 0
     var totalPlatinumScore = 0
@@ -496,7 +486,7 @@ class UserTechEvent: OngekiUserEntity()  {
 
 @Entity(name = "OngekiUserTradeItem")
 @Table(name = "ongeki_user_trade_item")
-class UserTradeItem: OngekiUserEntity()  {
+class UserTradeItem : OngekiUserEntity()  {
     var chapterId = 0
     var tradeItemId = 0
     var tradeCount = 0
@@ -504,7 +494,7 @@ class UserTradeItem: OngekiUserEntity()  {
 
 @Entity(name = "OngekiTrainingRoom")
 @Table(name = "ongeki_user_training_room")
-class UserTrainingRoom: OngekiUserEntity()  {
+class UserTrainingRoom : OngekiUserEntity()  {
     var authKey: String = ""
     var roomId: Int = 0
     var cardId: Int = 0
