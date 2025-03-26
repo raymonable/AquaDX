@@ -6,8 +6,6 @@ import icu.samnyan.aqua.sega.general.model.response.UserRecentRating
 import icu.samnyan.aqua.sega.general.service.CardService
 import icu.samnyan.aqua.sega.ongeki.*
 import icu.samnyan.aqua.sega.ongeki.model.*
-import icu.samnyan.aqua.sega.ongeki.model.request.UpsertUserAll
-import icu.samnyan.aqua.sega.ongeki.model.response.CodeResp
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -61,7 +59,7 @@ class UpsertUserAllHandler @Autowired constructor(
             val userOptional = userDataRepository.findByCard_ExtId(userId)
 
             // UserData might be empty on later runs
-            if (userOptional.isEmpty && upsertUserAll.userData.isEmpty()) {
+            if (userOptional.isEmpty && upsertUserAll.userData.isNullOrEmpty()) {
                 return null
             }
 
@@ -74,7 +72,7 @@ class UpsertUserAllHandler @Autowired constructor(
             }
 
             // If new data exists, use new data. Otherwise, use old data
-            u = if (!upsertUserAll.userData.isEmpty()) upsertUserAll.userData[0] else userData
+            u = if (!upsertUserAll.userData.isNullOrEmpty()) upsertUserAll.userData!![0] else userData
 
             u.id = userData.id
             u.card = userData.card
@@ -82,12 +80,12 @@ class UpsertUserAllHandler @Autowired constructor(
             // Set eventWatchedDate with lastPlayDate, because client doesn't update it
             u.eventWatchedDate = userData.lastPlayDate
             u.cmEventWatchedDate = userData.lastPlayDate
-            userDataRepository.save<UserData>(u)
+            userDataRepository.save(u)
         }
 
 
         // UserOption
-        val newUserOption = upsertUserAll.userOption[0]
+        val newUserOption = upsertUserAll.userOption!![0]
 
         val userOptionOptional = userOptionRepository.findSingleByUser(u)
         val userOption = userOptionOptional.orElseGet { UserOption().apply { user = u } }
@@ -102,9 +100,11 @@ class UpsertUserAllHandler @Autowired constructor(
         val userPlaylogList = upsertUserAll.userPlaylogList
         val newUserPlaylogList: MutableList<UserPlaylog> = ArrayList()
 
-        for (newUserPlaylog in userPlaylogList) {
-            newUserPlaylog.user = u
-            newUserPlaylogList.add(newUserPlaylog)
+        if (userPlaylogList != null) {
+            for (newUserPlaylog in userPlaylogList) {
+                newUserPlaylog.user = u
+                newUserPlaylogList.add(newUserPlaylog)
+            }
         }
 
         userPlaylogRepository.saveAll(newUserPlaylogList)
@@ -117,19 +117,21 @@ class UpsertUserAllHandler @Autowired constructor(
         val userActivityList = upsertUserAll.userActivityList
         val newUserActivityList: MutableList<UserActivity> = ArrayList()
 
-        for (newUserActivity in userActivityList) {
-            val kind = newUserActivity.kind
-            val id = newUserActivity.activityId
+        if (userActivityList != null) {
+            for (newUserActivity in userActivityList) {
+                val kind = newUserActivity.kind
+                val id = newUserActivity.activityId
 
-            if (kind != 0 && id != 0) {
-                val activityOptional = userActivityRepository.findByUserAndKindAndActivityId(u, kind, id)
-                val userActivity = activityOptional.orElseGet {
-                    UserActivity().apply { user = u }
+                if (kind != 0 && id != 0) {
+                    val activityOptional = userActivityRepository.findByUserAndKindAndActivityId(u, kind, id)
+                    val userActivity = activityOptional.orElseGet {
+                        UserActivity().apply { user = u }
+                    }
+
+                    newUserActivity.id = userActivity.id
+                    newUserActivity.user = u
+                    newUserActivityList.add(newUserActivity)
                 }
-
-                newUserActivity.id = userActivity.id
-                newUserActivity.user = u
-                newUserActivityList.add(newUserActivity)
             }
         }
         newUserActivityList.sortWith { a, b -> b.sortNumber.compareTo(a.sortNumber) }
@@ -138,8 +140,7 @@ class UpsertUserAllHandler @Autowired constructor(
 
         // UserRecentRatingList
         // This thing still need to save to solve the rating drop
-        this.saveGeneralData(upsertUserAll.userRecentRatingList, u, "recent_rating_list")
-
+        upsertUserAll.userRecentRatingList?.let { this.saveGeneralData(it, u, "recent_rating_list") }
 
         /*
          * The rating and battle point calculation is little bit complex.
@@ -147,51 +148,52 @@ class UpsertUserAllHandler @Autowired constructor(
          * into a csv format for convenience
          */
         // UserBpBaseList (For calculating Battle point)
-        this.saveGeneralData(upsertUserAll.userBpBaseList, u, "battle_point_base")
+        upsertUserAll.userBpBaseList?.let { this.saveGeneralData(it, u, "battle_point_base") }
 
 
         // This is the best rating of all charts. Best 30 + 10 after that.
         // userRatingBaseBestList
-        this.saveGeneralData(upsertUserAll.userRatingBaseBestList, u, "rating_base_best")
+        upsertUserAll.userRatingBaseBestList?.let { this.saveGeneralData(it, u, "rating_base_best") }
 
 
         // userRatingBaseNextList
-        this.saveGeneralData(upsertUserAll.userRatingBaseNextList, u, "rating_base_next")
-
+        upsertUserAll.userRatingBaseNextList?.let { this.saveGeneralData(it, u, "rating_base_next") }
 
         // This is the best rating of new charts. Best 15 + 10 after that.
         // New chart means same version
         // userRatingBaseBestNewList
-        this.saveGeneralData(upsertUserAll.userRatingBaseBestNewList, u, "rating_base_new_best")
+        upsertUserAll.userRatingBaseBestNewList?.let { this.saveGeneralData(it, u, "rating_base_new_best") }
 
         // userRatingBaseNextNewList
-        this.saveGeneralData(upsertUserAll.userRatingBaseNextNewList, u, "rating_base_new_next")
+        upsertUserAll.userRatingBaseNextNewList?.let { this.saveGeneralData(it, u, "rating_base_new_next") }
 
         // This is the recent best
         // userRatingBaseHotList
-        this.saveGeneralData(upsertUserAll.userRatingBaseHotList, u, "rating_base_hot_best")
+        upsertUserAll.userRatingBaseHotList?.let { this.saveGeneralData(it, u, "rating_base_hot_best") }
 
         // userRatingBaseHotNextList
-        this.saveGeneralData(upsertUserAll.userRatingBaseHotNextList, u, "rating_base_hot_next")
+        upsertUserAll.userRatingBaseHotNextList?.let { this.saveGeneralData(it, u, "rating_base_hot_next") }
 
 
         // UserMusicDetailList
         val userMusicDetailList = upsertUserAll.userMusicDetailList
         val newUserMusicDetailList: MutableList<UserMusicDetail> = ArrayList()
 
-        for (newUserMusicDetail in userMusicDetailList) {
-            val musicId = newUserMusicDetail.musicId
-            val level = newUserMusicDetail.level
+        if (userMusicDetailList != null) {
+            for (newUserMusicDetail in userMusicDetailList) {
+                val musicId = newUserMusicDetail.musicId
+                val level = newUserMusicDetail.level
 
-            val musicDetailOptional =
-                userMusicDetailRepository.findByUserAndMusicIdAndLevel(u, musicId, level)
-            val userMusicDetail = musicDetailOptional.orElseGet {
-                UserMusicDetail().apply { user = u }
+                val musicDetailOptional =
+                    userMusicDetailRepository.findByUserAndMusicIdAndLevel(u, musicId, level)
+                val userMusicDetail = musicDetailOptional.orElseGet {
+                    UserMusicDetail().apply { user = u }
+                }
+
+                newUserMusicDetail.id = userMusicDetail.id
+                newUserMusicDetail.user = u
+                newUserMusicDetailList.add(newUserMusicDetail)
             }
-
-            newUserMusicDetail.id = userMusicDetail.id
-            newUserMusicDetail.user = u
-            newUserMusicDetailList.add(newUserMusicDetail)
         }
         userMusicDetailRepository.saveAll(newUserMusicDetailList)
 
@@ -200,17 +202,19 @@ class UpsertUserAllHandler @Autowired constructor(
         val userCharacterList = upsertUserAll.userCharacterList
         val newUserCharacterList: MutableList<UserCharacter> = ArrayList()
 
-        for (newUserCharacter in userCharacterList) {
-            val characterId = newUserCharacter.characterId
+        if (userCharacterList != null) {
+            for (newUserCharacter in userCharacterList) {
+                val characterId = newUserCharacter.characterId
 
-            val characterOptional = userCharacterRepository.findByUserAndCharacterId(u, characterId)
-            val userCharacter = characterOptional.orElseGet {
-                UserCharacter().apply { user = u }
+                val characterOptional = userCharacterRepository.findByUserAndCharacterId(u, characterId)
+                val userCharacter = characterOptional.orElseGet {
+                    UserCharacter().apply { user = u }
+                }
+
+                newUserCharacter.id = userCharacter.id
+                newUserCharacter.user = u
+                newUserCharacterList.add(newUserCharacter)
             }
-
-            newUserCharacter.id = userCharacter.id
-            newUserCharacter.user = u
-            newUserCharacterList.add(newUserCharacter)
         }
         userCharacterRepository.saveAll(newUserCharacterList)
 
@@ -218,15 +222,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userCardList = upsertUserAll.userCardList
         val newUserCardList: MutableList<UserCard> = ArrayList()
 
-        for (newUserCard in userCardList) {
-            val cardId = newUserCard.cardId
+        if (userCardList != null) {
+            for (newUserCard in userCardList) {
+                val cardId = newUserCard.cardId
 
-            val cardOptional = userCardRepository.findByUserAndCardId(u, cardId)
-            val userCard = cardOptional.orElseGet { UserCard().apply { user = u } }
+                val cardOptional = userCardRepository.findByUserAndCardId(u, cardId)
+                val userCard = cardOptional.orElseGet { UserCard().apply { user = u } }
 
-            newUserCard.id = userCard.id
-            newUserCard.user = u
-            newUserCardList.add(newUserCard)
+                newUserCard.id = userCard.id
+                newUserCard.user = u
+                newUserCardList.add(newUserCard)
+            }
         }
         userCardRepository.saveAll(newUserCardList)
 
@@ -235,15 +241,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userDeckList = upsertUserAll.userDeckList
         val newUserDeckList: MutableList<UserDeck> = ArrayList()
 
-        for (newUserDeck in userDeckList) {
-            val deckId = newUserDeck.deckId
+        if (userDeckList != null) {
+            for (newUserDeck in userDeckList) {
+                val deckId = newUserDeck.deckId
 
-            val deckOptional = userDeckRepository.findByUserAndDeckId(u, deckId)
-            val userDeck = deckOptional.orElseGet { UserDeck().apply { user = u } }
+                val deckOptional = userDeckRepository.findByUserAndDeckId(u, deckId)
+                val userDeck = deckOptional.orElseGet { UserDeck().apply { user = u } }
 
-            newUserDeck.id = userDeck.id
-            newUserDeck.user = u
-            newUserDeckList.add(newUserDeck)
+                newUserDeck.id = userDeck.id
+                newUserDeck.user = u
+                newUserDeckList.add(newUserDeck)
+            }
         }
         userDeckRepository.saveAll(newUserDeckList)
 
@@ -252,15 +260,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userTrainingRoomList = upsertUserAll.userTrainingRoomList
         val newUserTrainingRoomList: MutableList<UserTrainingRoom> = ArrayList()
 
-        for (newUserTrainingRoom in userTrainingRoomList) {
-            val roomId = newUserTrainingRoom.roomId
+        if (userTrainingRoomList != null) {
+            for (newUserTrainingRoom in userTrainingRoomList) {
+                val roomId = newUserTrainingRoom.roomId
 
-            val trainingRoomOptional = userTrainingRoomRepository.findByUserAndRoomId(u, roomId)
-            val trainingRoom = trainingRoomOptional.orElseGet { UserTrainingRoom().apply { user = u } }
+                val trainingRoomOptional = userTrainingRoomRepository.findByUserAndRoomId(u, roomId)
+                val trainingRoom = trainingRoomOptional.orElseGet { UserTrainingRoom().apply { user = u } }
 
-            newUserTrainingRoom.id = trainingRoom.id
-            newUserTrainingRoom.user = u
-            newUserTrainingRoomList.add(newUserTrainingRoom)
+                newUserTrainingRoom.id = trainingRoom.id
+                newUserTrainingRoom.user = u
+                newUserTrainingRoomList.add(newUserTrainingRoom)
+            }
         }
         userTrainingRoomRepository.saveAll(newUserTrainingRoomList)
 
@@ -269,15 +279,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userStoryList = upsertUserAll.userStoryList
         val newUserStoryList: MutableList<UserStory> = ArrayList()
 
-        for (newUserStory in userStoryList) {
-            val storyId = newUserStory.storyId
+        if (userStoryList != null) {
+            for (newUserStory in userStoryList) {
+                val storyId = newUserStory.storyId
 
-            val storyOptional = userStoryRepository.findByUserAndStoryId(u, storyId)
-            val userStory = storyOptional.orElseGet { UserStory().apply { user = u } }
+                val storyOptional = userStoryRepository.findByUserAndStoryId(u, storyId)
+                val userStory = storyOptional.orElseGet { UserStory().apply { user = u } }
 
-            newUserStory.id = userStory.id
-            newUserStory.user = u
-            newUserStoryList.add(newUserStory)
+                newUserStory.id = userStory.id
+                newUserStory.user = u
+                newUserStoryList.add(newUserStory)
+            }
         }
         userStoryRepository.saveAll(newUserStoryList)
 
@@ -286,15 +298,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userChapterList = upsertUserAll.userChapterList
         val newUserChapterList: MutableList<UserChapter> = ArrayList()
 
-        for (newUserChapter in userChapterList) {
-            val chapterId = newUserChapter.chapterId
+        if (userChapterList != null) {
+            for (newUserChapter in userChapterList) {
+                val chapterId = newUserChapter.chapterId
 
-            val chapterOptional = userChapterRepository.findByUserAndChapterId(u, chapterId)
-            val userChapter = chapterOptional.orElseGet { UserChapter().apply { user = u } }
+                val chapterOptional = userChapterRepository.findByUserAndChapterId(u, chapterId)
+                val userChapter = chapterOptional.orElseGet { UserChapter().apply { user = u } }
 
-            newUserChapter.id = userChapter.id
-            newUserChapter.user = u
-            newUserChapterList.add(newUserChapter)
+                newUserChapter.id = userChapter.id
+                newUserChapter.user = u
+                newUserChapterList.add(newUserChapter)
+            }
         }
         userChapterRepository.saveAll(newUserChapterList)
 
@@ -322,16 +336,18 @@ class UpsertUserAllHandler @Autowired constructor(
         val userItemList = upsertUserAll.userItemList
         val newUserItemList: MutableList<UserItem> = ArrayList()
 
-        for (newUserItem in userItemList) {
-            val itemKind = newUserItem.itemKind
-            val itemId = newUserItem.itemId
+        if (userItemList != null) {
+            for (newUserItem in userItemList) {
+                val itemKind = newUserItem.itemKind
+                val itemId = newUserItem.itemId
 
-            val itemOptional = userItemRepository.findByUserAndItemKindAndItemId(u, itemKind, itemId)
-            val userItem = itemOptional.orElseGet { UserItem().apply { user = u } }
+                val itemOptional = userItemRepository.findByUserAndItemKindAndItemId(u, itemKind, itemId)
+                val userItem = itemOptional.orElseGet { UserItem().apply { user = u } }
 
-            newUserItem.id = userItem.id
-            newUserItem.user = u
-            newUserItemList.add(newUserItem)
+                newUserItem.id = userItem.id
+                newUserItem.user = u
+                newUserItemList.add(newUserItem)
+            }
         }
         userItemRepository.saveAll(newUserItemList)
 
@@ -339,15 +355,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userMusicItemList = upsertUserAll.userMusicItemList
         val newUserMusicItemList: MutableList<UserMusicItem> = ArrayList()
 
-        for (newUserMusicItem in userMusicItemList) {
-            val musicId = newUserMusicItem.musicId
+        if (userMusicItemList != null) {
+            for (newUserMusicItem in userMusicItemList) {
+                val musicId = newUserMusicItem.musicId
 
-            val musicItemOptional = userMusicItemRepository.findByUserAndMusicId(u, musicId)
-            val userMusicItem = musicItemOptional.orElseGet { UserMusicItem().apply { user = u } }
+                val musicItemOptional = userMusicItemRepository.findByUserAndMusicId(u, musicId)
+                val userMusicItem = musicItemOptional.orElseGet { UserMusicItem().apply { user = u } }
 
-            newUserMusicItem.id = userMusicItem.id
-            newUserMusicItem.user = u
-            newUserMusicItemList.add(newUserMusicItem)
+                newUserMusicItem.id = userMusicItem.id
+                newUserMusicItem.user = u
+                newUserMusicItemList.add(newUserMusicItem)
+            }
         }
         userMusicItemRepository.saveAll(newUserMusicItemList)
 
@@ -356,17 +374,19 @@ class UpsertUserAllHandler @Autowired constructor(
         val userLoginBonusList = upsertUserAll.userLoginBonusList
         val newUserLoginBonusList: MutableList<UserLoginBonus> = ArrayList()
 
-        for (newUserLoginBonus in userLoginBonusList) {
-            val bonusId = newUserLoginBonus.bonusId
+        if (userLoginBonusList != null) {
+            for (newUserLoginBonus in userLoginBonusList) {
+                val bonusId = newUserLoginBonus.bonusId
 
-            val loginBonusOptional = userLoginBonusRepository.findByUserAndBonusId(u, bonusId)
-            val userLoginBonus = loginBonusOptional.orElseGet {
-                UserLoginBonus().apply { user = u }
+                val loginBonusOptional = userLoginBonusRepository.findByUserAndBonusId(u, bonusId)
+                val userLoginBonus = loginBonusOptional.orElseGet {
+                    UserLoginBonus().apply { user = u }
+                }
+
+                newUserLoginBonus.id = userLoginBonus.id
+                newUserLoginBonus.user = u
+                newUserLoginBonusList.add(newUserLoginBonus)
             }
-
-            newUserLoginBonus.id = userLoginBonus.id
-            newUserLoginBonus.user = u
-            newUserLoginBonusList.add(newUserLoginBonus)
         }
         userLoginBonusRepository.saveAll(newUserLoginBonusList)
 
@@ -375,15 +395,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userEventPointList = upsertUserAll.userEventPointList
         val newUserEventPointList: MutableList<UserEventPoint> = ArrayList()
 
-        for (newUserEventPoint in userEventPointList) {
-            val eventId = newUserEventPoint.eventId
+        if (userEventPointList != null) {
+            for (newUserEventPoint in userEventPointList) {
+                val eventId = newUserEventPoint.eventId
 
-            val eventPointOptional = userEventPointRepository.findByUserAndEventId(u, eventId)
-            val userEventPoint = eventPointOptional.orElseGet { UserEventPoint().apply { user = u } }
+                val eventPointOptional = userEventPointRepository.findByUserAndEventId(u, eventId)
+                val userEventPoint = eventPointOptional.orElseGet { UserEventPoint().apply { user = u } }
 
-            newUserEventPoint.id = userEventPoint.id
-            newUserEventPoint.user = u
-            newUserEventPointList.add(newUserEventPoint)
+                newUserEventPoint.id = userEventPoint.id
+                newUserEventPoint.user = u
+                newUserEventPointList.add(newUserEventPoint)
+            }
         }
         userEventPointRepository.saveAll(newUserEventPointList)
 
@@ -392,15 +414,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userMissionPointList = upsertUserAll.userMissionPointList
         val newUserMissionPointList: MutableList<UserMissionPoint> = ArrayList()
 
-        for (newUserMissionPoint in userMissionPointList) {
-            val eventId = newUserMissionPoint.eventId
+        if (userMissionPointList != null) {
+            for (newUserMissionPoint in userMissionPointList) {
+                val eventId = newUserMissionPoint.eventId
 
-            val userMissionPointOptional = userMissionPointRepository.findByUserAndEventId(u, eventId)
-            val userMissionPoint = userMissionPointOptional.orElseGet { UserMissionPoint().apply { user = u } }
+                val userMissionPointOptional = userMissionPointRepository.findByUserAndEventId(u, eventId)
+                val userMissionPoint = userMissionPointOptional.orElseGet { UserMissionPoint().apply { user = u } }
 
-            newUserMissionPoint.id = userMissionPoint.id
-            newUserMissionPoint.user = u
-            newUserMissionPointList.add(newUserMissionPoint)
+                newUserMissionPoint.id = userMissionPoint.id
+                newUserMissionPoint.user = u
+                newUserMissionPointList.add(newUserMissionPoint)
+            }
         }
         userMissionPointRepository.saveAll(newUserMissionPointList)
 
@@ -463,17 +487,19 @@ class UpsertUserAllHandler @Autowired constructor(
         val userTradeItemList = upsertUserAll.userTradeItemList
         val newUserTradeItemList: MutableList<UserTradeItem> = ArrayList()
 
-        for (newUserTradeItem in userTradeItemList) {
-            val chapterId = newUserTradeItem.chapterId
-            val tradeItemId = newUserTradeItem.tradeItemId
+        if (userTradeItemList != null) {
+            for (newUserTradeItem in userTradeItemList) {
+                val chapterId = newUserTradeItem.chapterId
+                val tradeItemId = newUserTradeItem.tradeItemId
 
-            val tradeItemOptional =
-                userTradeItemRepository.findByUserAndChapterIdAndTradeItemId(u, chapterId, tradeItemId)
-            val userTradeItem = tradeItemOptional.orElseGet { UserTradeItem().apply { user = u } }
+                val tradeItemOptional =
+                    userTradeItemRepository.findByUserAndChapterIdAndTradeItemId(u, chapterId, tradeItemId)
+                val userTradeItem = tradeItemOptional.orElseGet { UserTradeItem().apply { user = u } }
 
-            newUserTradeItem.id = userTradeItem.id
-            newUserTradeItem.user = u
-            newUserTradeItemList.add(newUserTradeItem)
+                newUserTradeItem.id = userTradeItem.id
+                newUserTradeItem.user = u
+                newUserTradeItemList.add(newUserTradeItem)
+            }
         }
         userTradeItemRepository.saveAll(newUserTradeItemList)
 
@@ -481,18 +507,20 @@ class UpsertUserAllHandler @Autowired constructor(
         val userEventMusicList = upsertUserAll.userEventMusicList
         val newUserEventMusicList: MutableList<UserEventMusic> = ArrayList()
 
-        for (newUserEventMusic in userEventMusicList) {
-            val eventId = newUserEventMusic.eventId
-            val type = newUserEventMusic.type
-            val musicId = newUserEventMusic.musicId
+        if (userEventMusicList != null) {
+            for (newUserEventMusic in userEventMusicList) {
+                val eventId = newUserEventMusic.eventId
+                val type = newUserEventMusic.type
+                val musicId = newUserEventMusic.musicId
 
-            val eventMusicOptional =
-                userEventMusicRepository.findByUserAndEventIdAndTypeAndMusicId(u, eventId, type, musicId)
-            val userEventMusic = eventMusicOptional.orElseGet { UserEventMusic().apply { user = u } }
+                val eventMusicOptional =
+                    userEventMusicRepository.findByUserAndEventIdAndTypeAndMusicId(u, eventId, type, musicId)
+                val userEventMusic = eventMusicOptional.orElseGet { UserEventMusic().apply { user = u } }
 
-            newUserEventMusic.id = userEventMusic.id
-            newUserEventMusic.user = u
-            newUserEventMusicList.add(newUserEventMusic)
+                newUserEventMusic.id = userEventMusic.id
+                newUserEventMusic.user = u
+                newUserEventMusicList.add(newUserEventMusic)
+            }
         }
         userEventMusicRepository.saveAll(newUserEventMusicList)
 
@@ -500,15 +528,17 @@ class UpsertUserAllHandler @Autowired constructor(
         val userTechEventList = upsertUserAll.userTechEventList
         val newUserTechEventList: MutableList<UserTechEvent> = ArrayList()
 
-        for (newUserTechEvent in userTechEventList) {
-            val eventId = newUserTechEvent.eventId
+        if (userTechEventList != null) {
+            for (newUserTechEvent in userTechEventList) {
+                val eventId = newUserTechEvent.eventId
 
-            val techEventOptional = userTechEventRepository.findByUserAndEventId(u, eventId)
-            val userTechEvent = techEventOptional.orElseGet { UserTechEvent().apply { user = u } }
+                val techEventOptional = userTechEventRepository.findByUserAndEventId(u, eventId)
+                val userTechEvent = techEventOptional.orElseGet { UserTechEvent().apply { user = u } }
 
-            newUserTechEvent.id = userTechEvent.id
-            newUserTechEvent.user = u
-            newUserTechEventList.add(newUserTechEvent)
+                newUserTechEvent.id = userTechEvent.id
+                newUserTechEvent.user = u
+                newUserTechEventList.add(newUserTechEvent)
+            }
         }
         userTechEventRepository.saveAll(newUserTechEventList)
 
@@ -516,16 +546,18 @@ class UpsertUserAllHandler @Autowired constructor(
         val userKopList = upsertUserAll.userKopList
         val newUserKopList: MutableList<UserKop> = ArrayList()
 
-        for (newUserKop in userKopList) {
-            val kopId = newUserKop.kopId
-            val areaId = newUserKop.areaId
+        if (userKopList != null) {
+            for (newUserKop in userKopList) {
+                val kopId = newUserKop.kopId
+                val areaId = newUserKop.areaId
 
-            val kopOptional = userKopRepository.findByUserAndKopIdAndAreaId(u, kopId, areaId)
-            val userKop = kopOptional.orElseGet { UserKop().apply { user = u } }
+                val kopOptional = userKopRepository.findByUserAndKopIdAndAreaId(u, kopId, areaId)
+                val userKop = kopOptional.orElseGet { UserKop().apply { user = u } }
 
-            newUserKop.id = userKop.id
-            newUserKop.user = u
-            newUserKopList.add(newUserKop)
+                newUserKop.id = userKop.id
+                newUserKop.user = u
+                newUserKopList.add(newUserKop)
+            }
         }
         userKopRepository.saveAll(newUserKopList)
 

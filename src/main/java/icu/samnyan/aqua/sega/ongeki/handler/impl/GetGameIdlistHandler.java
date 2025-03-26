@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.general.dao.PropertyEntryRepository;
 import icu.samnyan.aqua.sega.general.model.PropertyEntry;
 import icu.samnyan.aqua.sega.general.BaseHandler;
-import icu.samnyan.aqua.sega.ongeki.model.response.data.GameIdListItem;
+import icu.samnyan.aqua.sega.ongeki.model.GameIdListItem;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

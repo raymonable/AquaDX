@@ -1,7 +1,43 @@
-package icu.samnyan.aqua.sega.ongeki.model.response.data
+package icu.samnyan.aqua.sega.ongeki.model
 
 import ext.Bool
-import icu.samnyan.aqua.sega.ongeki.model.UserMusicDetail
+
+class CodeResp(
+    var returnCode: Int = 0,
+    var apiName: String? = null,
+)
+
+class GetGameSettingResp(
+    var gameSetting: GameSetting? = null,
+    var isDumpUpload: Bool = false,
+    var isAou: Bool = false,
+)
+
+class GetUserPreviewResp(
+    var userId: Long = 0,
+    var isLogin: Bool = false,
+    var lastLoginDate: String? = null,
+    var userName: String = "",
+    var reincarnationNum: Int = 0,
+    var level: Int = 0,
+    var exp: Long = 0,
+    var playerRating: Long = 0,
+    var lastGameId: String = "",
+    var lastRomVersion: String = "",
+    var lastDataVersion: String = "",
+    var lastPlayDate: String? = null,
+    var nameplateId: Int = 0,
+    var trophyId: Int = 0,
+    var cardId: Int = 0,
+    var dispPlayerLv: Int = 0,
+    var dispRating: Int = 0,
+    var dispBP: Int = 0,
+    var headphone: Int = 0,
+    var banStatus: Int = 0,
+    var isWarningConfirmed: Bool = false,
+    var lastEmoneyBrand: Int = 0,
+    var lastEmoneyCredit: Int = 0,
+)
 
 class GameEventItem(
     var id: Long = 0,

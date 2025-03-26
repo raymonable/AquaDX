@@ -9,7 +9,7 @@ import icu.samnyan.aqua.sega.maimai2.model.request.Mai2UserAll
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserFavorite
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserItem
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserMusicDetail
-import icu.samnyan.aqua.sega.ongeki.model.request.UpsertUserAll
+import icu.samnyan.aqua.sega.ongeki.model.UpsertUserAll
 import icu.samnyan.aqua.sega.ongeki.model.UserItem
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import icu.samnyan.aqua.sega.util.jackson.IMapper
