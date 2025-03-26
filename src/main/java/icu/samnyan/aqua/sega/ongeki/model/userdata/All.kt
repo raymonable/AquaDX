@@ -180,9 +180,7 @@ class UserData : IUserData {
     var rivalScoreCategorySetting = 0
     var playedTutorialBit = 0
     var firstTutorialCancelNum = 0
-    final override var totalScore: Long = 0
-        private set
-
+    var sumTechHighScore: Long = 0
     var sumTechBasicHighScore: Long = 0
     var sumTechAdvancedHighScore: Long = 0
     var sumTechExpertHighScore: Long = 0
@@ -215,6 +213,8 @@ class UserData : IUserData {
     var lastUsedDeckId = 0
     var lastPlayMusicLevel = 0
     var lastEmoneyBrand = 0
+
+    override val totalScore get() = sumTechHighScore
 }
 
 
@@ -515,8 +515,7 @@ class UserPlaylog : IGenericGamePlaylog {
     var bossLevel = 0
     var bossAttribute = 0
     var clearStatus = 0
-    override var achievement: Int = 0
-
+    var techScore = 0
     var techScoreRank = 0
     var battleScore = 0
     var battleScoreRank = 0
@@ -546,14 +545,15 @@ class UserPlaylog : IGenericGamePlaylog {
     @JsonProperty("isFullBell")
     var isFullBell = false
     @JsonProperty("isAllBreak")
-    override var isAllPerfect: Boolean = false
-
-    // TODO: Get before rating
-    override var beforeRating: Int = 0
+    var isAllBreak: Boolean = false
+    var playerRating: Int = 0
 
     var battlePoint = 0
 
-    override val afterRating: Int get() = 0
+    override val isAllPerfect get() = isAllBreak
+    override val beforeRating get() = playerRating
+    override val afterRating get() = playerRating
+    override val achievement get() = techScore
 }
 
 
