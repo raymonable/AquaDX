@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.NoRepositoryBean
+import org.springframework.stereotype.Component
 import java.util.*
 
 
@@ -144,19 +145,60 @@ interface OgkUserTrainingRoomRepo : OngekiUserLinked<UserTrainingRoom> {
     fun findByUserAndRoomId(user: UserData, roomId: Int): Optional<UserTrainingRoom>
 }
 
-
 interface OgkGameCardRepo : JpaRepository<GameCard, Long>
-
 interface OgkGameCharaRepo : JpaRepository<GameChara, Long>
-
 interface OgkGameEventRepo : JpaRepository<GameEvent, Long>
-
 interface OgkGameMusicRepo : JpaRepository<GameMusic, Long>
-
 interface OgkGamePointRepo : JpaRepository<GamePoint, Long>
-
 interface OgkGamePresentRepo : JpaRepository<GamePresent, Long>
-
 interface OgkGameRewardRepo : JpaRepository<GameReward, Long>
-
 interface OgkGameSkillRepo : JpaRepository<GameSkill, Long>
+
+@Component
+class OngekiUserRepos(
+    val data: OgkUserDataRepo,
+    val activity: OgkUserActivityRepo,
+    val boss: OgkUserBossRepo,
+    val card: OgkUserCardRepo,
+    val chapter: OgkUserChapterRepo,
+    val character: OgkUserCharacterRepo,
+    val deck: OgkUserDeckRepo,
+    val eventMusic: OgkUserEventMusicRepo,
+    val eventPoint: OgkUserEventPointRepo,
+    val generalData: OgkUserGeneralDataRepo,
+    val item: OgkUserItemRepo,
+    val kop: OgkUserKopRepo,
+    val loginBonus: OgkUserLoginBonusRepo,
+    val memoryChapter: OgkUserMemoryChapterRepo,
+    val missionPoint: OgkUserMissionPointRepo,
+    val musicDetail: OgkUserMusicDetailRepo,
+    val musicItem: OgkUserMusicItemRepo,
+    val option: OgkUserOptionRepo,
+    val playlog: OgkUserPlaylogRepo,
+    val rivalData: OgkUserRivalDataRepo,
+    val scenario: OgkUserScenarioRepo,
+    val story: OgkUserStoryRepo,
+    val techCount: OgkUserTechCountRepo,
+    val techEvent: OgkUserTechEventRepo,
+    val tradeItem: OgkUserTradeItemRepo,
+    val trainingRoom: OgkUserTrainingRoomRepo,
+)
+
+@Component
+class OngekiGameRepos(
+    val card: OgkGameCardRepo,
+    val chara: OgkGameCharaRepo,
+    val event: OgkGameEventRepo,
+    val music: OgkGameMusicRepo,
+    val point: OgkGamePointRepo,
+    val present: OgkGamePresentRepo,
+    val reward: OgkGameRewardRepo,
+    val skill: OgkGameSkillRepo,
+)
+
+@Component
+class OngekiRepos(
+    val u: OngekiUserRepos,
+    val g: OngekiGameRepos,
+)
+
