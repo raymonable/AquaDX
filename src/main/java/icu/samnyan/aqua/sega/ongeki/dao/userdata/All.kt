@@ -1,4 +1,5 @@
 @file:Suppress("FunctionName")
+package icu.samnyan.aqua.sega.ongeki.dao.userdata
 
 import icu.samnyan.aqua.net.games.GenericPlaylogRepo
 import icu.samnyan.aqua.net.games.GenericUserDataRepo
