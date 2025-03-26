@@ -2,7 +2,6 @@ package icu.samnyan.aqua.sega.ongeki.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.sega.general.model.Card

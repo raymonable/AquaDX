@@ -3,7 +3,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.ongeki.OgkGameEventRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
-import icu.samnyan.aqua.sega.ongeki.model.gamedata.GameEvent;
+import icu.samnyan.aqua.sega.ongeki.model.GameEvent;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.GameEventItem;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.slf4j.Logger;
