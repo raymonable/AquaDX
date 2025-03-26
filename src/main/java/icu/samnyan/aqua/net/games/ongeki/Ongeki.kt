@@ -8,7 +8,7 @@ import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserGeneralDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserMusicDetailRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserPlaylogRepo
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserData
+import icu.samnyan.aqua.sega.ongeki.model.UserData
 import org.springframework.web.bind.annotation.RestController
 
 @RestController

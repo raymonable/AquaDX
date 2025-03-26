@@ -1,4 +1,4 @@
-package icu.samnyan.aqua.sega.ongeki.model.userdata
+package icu.samnyan.aqua.sega.ongeki.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -102,7 +102,6 @@ class UserData : IUserData {
     name = "ongeki_user_activity",
     uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "kind", "activity_id"])]
 )
-@JsonPropertyOrder("kind", "id", "sortNumber", "param1", "param2", "param3", "param4")
 class UserActivity : OngekiUserEntity()  {
     var kind = 0
     @JsonProperty("id")

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import icu.samnyan.aqua.sega.ongeki.OgkUserTechEventRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserTechEvent;
+import icu.samnyan.aqua.sega.ongeki.model.UserTechEvent;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

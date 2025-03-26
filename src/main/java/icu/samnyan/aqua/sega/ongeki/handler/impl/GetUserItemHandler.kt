@@ -5,7 +5,7 @@ import icu.samnyan.aqua.sega.general.BaseHandler
 import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserItemRepo
 import icu.samnyan.aqua.sega.ongeki.model.common.ItemType
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserItem
+import icu.samnyan.aqua.sega.ongeki.model.UserItem
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component

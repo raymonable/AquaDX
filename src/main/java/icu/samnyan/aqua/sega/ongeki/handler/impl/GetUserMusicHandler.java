@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.ongeki.OgkUserMusicDetailRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.UserMusicListItem;
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserMusicDetail;
+import icu.samnyan.aqua.sega.ongeki.model.UserMusicDetail;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import icu.samnyan.aqua.spring.data.OffsetPageRequest;
 import org.slf4j.Logger;

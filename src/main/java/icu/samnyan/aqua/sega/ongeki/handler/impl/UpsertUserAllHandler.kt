@@ -5,9 +5,9 @@ import icu.samnyan.aqua.sega.general.BaseHandler
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating
 import icu.samnyan.aqua.sega.general.service.CardService
 import icu.samnyan.aqua.sega.ongeki.*
+import icu.samnyan.aqua.sega.ongeki.model.*
 import icu.samnyan.aqua.sega.ongeki.model.request.UpsertUserAll
 import icu.samnyan.aqua.sega.ongeki.model.response.CodeResp
-import icu.samnyan.aqua.sega.ongeki.model.userdata.*
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

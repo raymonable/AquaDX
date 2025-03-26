@@ -2,7 +2,7 @@ package icu.samnyan.aqua.sega.ongeki.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating;
-import icu.samnyan.aqua.sega.ongeki.model.userdata.*;
+import icu.samnyan.aqua.sega.ongeki.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

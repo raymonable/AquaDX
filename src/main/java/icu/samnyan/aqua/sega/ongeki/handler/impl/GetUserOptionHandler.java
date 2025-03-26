@@ -3,7 +3,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.ongeki.OgkUserOptionRepo;
 import icu.samnyan.aqua.sega.general.BaseHandler;
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserOption;
+import icu.samnyan.aqua.sega.ongeki.model.UserOption;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

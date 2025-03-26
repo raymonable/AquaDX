@@ -1,6 +1,6 @@
 package icu.samnyan.aqua.sega.ongeki.model.response.data
 
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserMusicDetail
+import icu.samnyan.aqua.sega.ongeki.model.UserMusicDetail
 import lombok.AllArgsConstructor
 import lombok.Data
 import lombok.NoArgsConstructor
