@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserEventPointRepository;
+import icu.samnyan.aqua.sega.ongeki.UserEventPointRepository;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.UserEventRankingItem;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserEventPoint;

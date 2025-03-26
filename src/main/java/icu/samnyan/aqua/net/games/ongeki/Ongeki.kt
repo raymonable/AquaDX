@@ -4,10 +4,10 @@ import ext.API
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserDataRepository
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserGeneralDataRepository
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserMusicDetailRepository
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserPlaylogRepository
+import icu.samnyan.aqua.sega.ongeki.UserDataRepository
+import icu.samnyan.aqua.sega.ongeki.UserGeneralDataRepository
+import icu.samnyan.aqua.sega.ongeki.UserMusicDetailRepository
+import icu.samnyan.aqua.sega.ongeki.UserPlaylogRepository
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserData
 import org.springframework.web.bind.annotation.RestController
 

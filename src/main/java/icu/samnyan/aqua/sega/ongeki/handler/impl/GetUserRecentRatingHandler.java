@@ -2,8 +2,8 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserGeneralDataRepository;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserPlaylogRepository;
+import icu.samnyan.aqua.sega.ongeki.UserGeneralDataRepository;
+import icu.samnyan.aqua.sega.ongeki.UserPlaylogRepository;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserGeneralData;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserPlaylog;

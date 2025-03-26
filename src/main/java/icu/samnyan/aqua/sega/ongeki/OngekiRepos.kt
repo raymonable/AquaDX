@@ -1,6 +1,7 @@
 @file:Suppress("FunctionName")
-package icu.samnyan.aqua.sega.ongeki.dao.userdata
+package icu.samnyan.aqua.sega.ongeki
 
+import icu.samnyan.aqua.sega.ongeki.model.gamedata.*
 import icu.samnyan.aqua.net.games.GenericPlaylogRepo
 import icu.samnyan.aqua.net.games.GenericUserDataRepo
 import icu.samnyan.aqua.net.games.GenericUserMusicRepo
@@ -313,3 +314,28 @@ interface UserTrainingRoomRepository : JpaRepository<UserTrainingRoom, Long> {
     @Transactional
     fun deleteByUser(user: UserData)
 }
+
+
+@Repository("OngekiGameCardRepository")
+interface GameCardRepository : JpaRepository<GameCard, Long>
+
+@Repository("OngekiGameCharaRepository")
+interface GameCharaRepository : JpaRepository<GameChara, Long>
+
+@Repository("OngekiGameEventRepository")
+interface GameEventRepository : JpaRepository<GameEvent, Long>
+
+@Repository("OngekiGameMusicRepository")
+interface GameMusicRepository : JpaRepository<GameMusic, Long>
+
+@Repository("OngekiGamePointRepository")
+interface GamePointRepository : JpaRepository<GamePoint, Long>
+
+@Repository("OngekiGamePresentRepository")
+interface GamePresentRepository : JpaRepository<GamePresent, Long>
+
+@Repository("OngekiGameRewardRepository")
+interface GameRewardRepository : JpaRepository<GameReward, Long>
+
+@Repository("OngekiGameSkillRepository")
+interface GameSkillRepository : JpaRepository<GameSkill, Long>

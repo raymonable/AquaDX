@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.dao.gamedata.GamePointRepository;
+import icu.samnyan.aqua.sega.ongeki.GamePointRepository;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.gamedata.GamePoint;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;

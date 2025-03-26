@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserBossRepository;
+import icu.samnyan.aqua.sega.ongeki.UserBossRepository;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserBoss;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;

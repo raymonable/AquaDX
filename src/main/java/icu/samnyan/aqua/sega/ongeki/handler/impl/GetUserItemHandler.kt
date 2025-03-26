@@ -2,8 +2,8 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl
 
 import ext.*
 import icu.samnyan.aqua.sega.general.BaseHandler
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserDataRepository
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserItemRepository
+import icu.samnyan.aqua.sega.ongeki.UserDataRepository
+import icu.samnyan.aqua.sega.ongeki.UserItemRepository
 import icu.samnyan.aqua.sega.ongeki.model.common.ItemType
 import icu.samnyan.aqua.sega.ongeki.model.userdata.UserItem
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper

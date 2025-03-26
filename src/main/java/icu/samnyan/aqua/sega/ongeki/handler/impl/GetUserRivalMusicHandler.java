@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserMusicDetailRepository;
+import icu.samnyan.aqua.sega.ongeki.UserMusicDetailRepository;
 import icu.samnyan.aqua.sega.general.BaseHandler;
 import icu.samnyan.aqua.sega.ongeki.model.response.data.UserRivalMusic;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
