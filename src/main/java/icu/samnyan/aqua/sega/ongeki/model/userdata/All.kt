@@ -4,136 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import icu.samnyan.aqua.net.games.IGenericGamePlaylog
-import icu.samnyan.aqua.net.games.IGenericUserMusic
-import icu.samnyan.aqua.net.games.IUserData
+import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.util.jackson.AccessCodeSerializer
 import jakarta.persistence.*
 
-@Entity(name = "OngekiUserActivity")
-@Table(
-    name = "ongeki_user_activity",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "kind", "activity_id"])]
-)
-@JsonPropertyOrder("kind", "id", "sortNumber", "param1", "param2", "param3", "param4")
-class UserActivity(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
-    var kind = 0
-    @JsonProperty("id")
-    @Column(name = "activity_id")
-    var activityId = 0
-    var sortNumber = 0
-    var param1 = 0
-    var param2 = 0
-    var param3 = 0
-    var param4 = 0
-}
-
-
-@Entity(name = "OngekiUserBoss")
-@Table(name = "ongeki_user_boss")
-class UserBoss(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
-    var musicId = 0
-    var damage = 0
-    @JsonProperty("isClear")
-    var isClear = false
-    var eventId = 0
-}
-
-
-@Entity(name = "OngekiUserCard")
-@Table(name = "ongeki_user_card")
-class UserCard  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+@MappedSuperclass
+class OngekiUserEntity : BaseEntity(), IUserEntity<UserData> {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    var user: UserData = UserData()
-    var cardId = -1
-
-    var digitalStock = 1
-    var analogStock = 0
-    var level = 0
-    var maxLevel = 10
-    var exp = 0
-    var printCount = 0
-    var useCount = 0
-    @JsonProperty("isNew")
-    var isNew = true
-    var kaikaDate = "0000-00-00 00:00:00.0"
-
-    var choKaikaDate = "0000-00-00 00:00:00.0"
-
-    var skillId = 0
-    @JsonProperty("isAcquired")
-    var isAcquired = true
-    var created = "0000-00-00 00:00:00.0"
-
-    constructor(userData: UserData) {
-        this.user = userData
-    }
-
-    constructor(userData: UserData, cardId: Int, skillId: Int, created: String) {
-        this.user = userData
-        this.cardId = cardId
-        this.skillId = skillId
-        this.created = created
-    }
-
-}
-
-
-@Entity(name = "OngekiUserChapter")
-@Table(name = "ongeki_user_chapter")
-
-class UserChapter(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
-    var chapterId = 0
-    var jewelCount = 0
-    var lastPlayMusicCategory = 0
-    var lastPlayMusicId = 0
-    var lastPlayMusicLevel = 0
-    @JsonProperty("isStoryWatched")
-    var isStoryWatched = false
-    @JsonProperty("isClear")
-    var isClear = false
-    var skipTiming1 = 0
-    var skipTiming2 = 0
-}
-
-
-@Entity(name = "OngekiUserCharacter")
-@Table(name = "ongeki_user_character")
-
-class UserCharacter(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
-    var characterId = 0
-    var costumeId = 0
-    var attachmentId = 0
-    var playCount = 0
-    var intimateLevel = 0
-    var intimateCount = 0
-    var intimateCountRewarded = 0
-    var intimateCountDate: String = ""
-    @JsonProperty("isNew")
-    var isNew = false
+    override var user: UserData = UserData()
 }
 
 
@@ -217,30 +98,112 @@ class UserData : IUserData {
     override val totalScore get() = sumTechHighScore
 }
 
+@Entity(name = "OngekiUserActivity")
+@Table(
+    name = "ongeki_user_activity",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "kind", "activity_id"])]
+)
+@JsonPropertyOrder("kind", "id", "sortNumber", "param1", "param2", "param3", "param4")
+class UserActivity: OngekiUserEntity()  {
+    var kind = 0
+    @JsonProperty("id")
+    @Column(name = "activity_id")
+    var activityId = 0
+    var sortNumber = 0
+    var param1 = 0
+    var param2 = 0
+    var param3 = 0
+    var param4 = 0
+}
+
+@Entity(name = "OngekiUserBoss")
+@Table(name = "ongeki_user_boss")
+class UserBoss: OngekiUserEntity()  {
+    var musicId = 0
+    var damage = 0
+    @JsonProperty("isClear")
+    var isClear = false
+    var eventId = 0
+}
+
+@Entity(name = "OngekiUserCard")
+@Table(name = "ongeki_user_card")
+class UserCard(): OngekiUserEntity()  {
+    var cardId = -1
+
+    var digitalStock = 1
+    var analogStock = 0
+    var level = 0
+    var maxLevel = 10
+    var exp = 0
+    var printCount = 0
+    var useCount = 0
+    @JsonProperty("isNew")
+    var isNew = true
+    var kaikaDate = "0000-00-00 00:00:00.0"
+
+    var choKaikaDate = "0000-00-00 00:00:00.0"
+
+    var skillId = 0
+    @JsonProperty("isAcquired")
+    var isAcquired = true
+    var created = "0000-00-00 00:00:00.0"
+
+    constructor(userData: UserData) : this() {
+        this.user = userData
+    }
+
+    constructor(userData: UserData, cardId: Int, skillId: Int, created: String) : this() {
+        this.user = userData
+        this.cardId = cardId
+        this.skillId = skillId
+        this.created = created
+    }
+}
+
+@Entity(name = "OngekiUserChapter")
+@Table(name = "ongeki_user_chapter")
+class UserChapter: OngekiUserEntity()  {
+    var chapterId = 0
+    var jewelCount = 0
+    var lastPlayMusicCategory = 0
+    var lastPlayMusicId = 0
+    var lastPlayMusicLevel = 0
+    @JsonProperty("isStoryWatched")
+    var isStoryWatched = false
+    @JsonProperty("isClear")
+    var isClear = false
+    var skipTiming1 = 0
+    var skipTiming2 = 0
+}
+
+@Entity(name = "OngekiUserCharacter")
+@Table(name = "ongeki_user_character")
+class UserCharacter: OngekiUserEntity()  {
+    var characterId = 0
+    var costumeId = 0
+    var attachmentId = 0
+    var playCount = 0
+    var intimateLevel = 0
+    var intimateCount = 0
+    var intimateCountRewarded = 0
+    var intimateCountDate: String = ""
+    @JsonProperty("isNew")
+    var isNew = false
+}
 
 @Entity(name = "OngekiUserDeck")
 @Table(name = "ongeki_user_deck")
-
-class UserDeck(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserDeck: OngekiUserEntity()  {
     var deckId = 0
     var cardId1 = 0
     var cardId2 = 0
     var cardId3 = 0
 }
 
-
 @Entity(name = "OngekiUserEventMusic")
 @Table(name = "ongeki_user_event_music")
-
-class UserEventMusic(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserEventMusic: OngekiUserEntity()  {
     var eventId = 0
     var type = 0
     var musicId = 0
@@ -252,55 +215,26 @@ class UserEventMusic(@field:JoinColumn(name = "user_id") @field:ManyToOne @field
     var isTechNewRecord: Boolean = false
 }
 
-
-/**
- * For chapter event.
- * @author samnyan (privateamusement@protonmail.com)
- */
 @Entity(name = "OngekiUserEventPoint")
 @Table(name = "ongeki_user_event_point")
 
-class UserEventPoint(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserEventPoint: OngekiUserEntity()  {
     var eventId = 0
     var point: Long = 0
     @JsonProperty("isRankingRewarded")
     var isRankingRewarded = false
 }
 
-
-/**
- * This is for storing some data only use in aqua
- * @author samnyan (privateamusement@protonmail.com)
- */
 @Entity(name = "OngekiUserGeneralData")
 @Table(name = "ongeki_user_general_data")
-
-class UserGeneralData(
-    @field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData,
-    var propertyKey: String
-)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserGeneralData(var propertyKey: String): OngekiUserEntity() {
     @Column(columnDefinition = "TEXT")
     var propertyValue = ""
-
 }
-
 
 @Entity(name = "OngekiUserItem")
 @Table(name = "ongeki_user_item")
-
-class UserItem(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserItem: OngekiUserEntity()  {
     var itemKind = 0
     var itemId = 0
     var stock = 0
@@ -308,15 +242,9 @@ class UserItem(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonI
     var isValid = false
 }
 
-
 @Entity(name = "OngekiUserKop")
 @Table(name = "ongeki_user_kop")
-
-class UserKop(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserKop: OngekiUserEntity()  {
     var authKey: String = ""
     var kopId = 0
     var areaId = 0
@@ -327,29 +255,17 @@ class UserKop(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIg
     var isTotalTechNewRecord = false
 }
 
-
 @Entity(name = "OngekiUserLoginBonus")
 @Table(name = "ongeki_user_login_bonus")
-
-class UserLoginBonus(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserLoginBonus: OngekiUserEntity()  {
     var bonusId = 0
     var bonusCount = 0
     var lastUpdateDate: String = ""
 }
 
-
 @Entity(name = "OngekiUserMemoryChapter")
 @Table(name = "ongeki_user_memory_chapter")
-
-class UserMemoryChapter(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserMemoryChapter: OngekiUserEntity()  {
     var chapterId = 0
     var jewelCount = 0
     var lastPlayMusicCategory = 0
@@ -369,24 +285,14 @@ class UserMemoryChapter(@field:JoinColumn(name = "user_id") @field:ManyToOne @fi
 
 @Entity(name = "OngekiUserMissionPoint")
 @Table(name = "ongeki_user_mission_point")
-class UserMissionPoint(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserMissionPoint: OngekiUserEntity()  {
     var eventId = 0
     var point: Long = 0
 }
 
-
 @Entity(name = "OngekiUserMusicDetail")
 @Table(name = "ongeki_user_music_detail")
-class UserMusicDetail(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData) :
-    IGenericUserMusic {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserMusicDetail: OngekiUserEntity(), IGenericUserMusic {
     override var musicId: Int = 0
     var level = 0
     var playCount = 0
@@ -410,28 +316,16 @@ class UserMusicDetail(@field:JoinColumn(name = "user_id") @field:ManyToOne @fiel
     var isStoryWatched = false
 }
 
-
 @Entity(name = "OngekiUserMusicItem")
 @Table(name = "ongeki_user_music_item")
-
-class UserMusicItem(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserMusicItem: OngekiUserEntity()  {
     var musicId = 0
     var status = 0
 }
 
-
 @Entity(name = "OngekiUserOption")
 @Table(name = "ongeki_user_option")
-
-class UserOption(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserOption: OngekiUserEntity()  {
     var optionSet = 0
     var speed = 0
     var mirror = 0
@@ -474,10 +368,7 @@ class UserOption(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:Jso
 
 @Entity(name = "OngekiUserPlaylog")
 @Table(name = "ongeki_user_playlog")
-class UserPlaylog : IGenericGamePlaylog {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
+class UserPlaylog : OngekiUserEntity(), IGenericGamePlaylog {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -556,20 +447,9 @@ class UserPlaylog : IGenericGamePlaylog {
     override val achievement get() = techScore
 }
 
-
 @Entity(name = "OngekiUserRival")
 @Table(name = "ongeki_user_rival")
-class UserRival {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "user_id")
-    var user: UserData? = null
-
+class UserRival: OngekiUserEntity() {
     @JoinColumn(name = "rival_user_ext_id")
     @JsonProperty("rivalUserId")
     var rivalUserExtId: Long = 0
@@ -577,23 +457,14 @@ class UserRival {
 
 @Entity(name = "OngekiUserScenario")
 @Table(name = "ongeki_user_scenario")
-class UserScenario(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserScenario: OngekiUserEntity()  {
     var scenarioId = 0
     var playCount = 0
 }
 
-
 @Entity(name = "OngekiUserStory")
 @Table(name = "ongeki_user_story")
-class UserStory(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserStory: OngekiUserEntity()  {
     var storyId = 0
     var lastChapterId = 0
     var jewelCount = 0
@@ -602,27 +473,17 @@ class UserStory(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:Json
     var lastPlayMusicLevel = 0
 }
 
-
 @Entity(name = "OngekiUserTechCount")
 @Table(name = "ongeki_user_tech_count")
-class UserTechCount(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserTechCount: OngekiUserEntity()  {
     var levelId = 0
     var allBreakCount = 0
     var allBreakPlusCount = 0
 }
 
-
 @Entity(name = "OngekiUserTechEvent")
 @Table(name = "ongeki_user_tech_event")
-class UserTechEvent(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserTechEvent: OngekiUserEntity()  {
     var eventId = 0
     var totalTechScore = 0
     var totalPlatinumScore = 0
@@ -633,29 +494,17 @@ class UserTechEvent(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:
     var isTotalTechNewRecord = false
 }
 
-
 @Entity(name = "OngekiUserTradeItem")
 @Table(name = "ongeki_user_trade_item")
-
-class UserTradeItem(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserTradeItem: OngekiUserEntity()  {
     var chapterId = 0
     var tradeItemId = 0
     var tradeCount = 0
 }
 
-
 @Entity(name = "OngekiTrainingRoom")
 @Table(name = "ongeki_user_training_room")
-
-class UserTrainingRoom(@field:JoinColumn(name = "user_id") @field:ManyToOne @field:JsonIgnore var user: UserData)  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    var id: Long = 0
+class UserTrainingRoom: OngekiUserEntity()  {
     var authKey: String = ""
     var roomId: Int = 0
     var cardId: Int = 0
