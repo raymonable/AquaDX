@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import icu.samnyan.aqua.sega.ongeki.model.common.GpProductID
 import icu.samnyan.aqua.sega.ongeki.model.common.ItemType
 import jakarta.persistence.*
-import java.io.Serializable
 
 @Entity(name = "OngekiGameCard")
 @Table(name = "ongeki_game_card")
@@ -67,12 +66,14 @@ class GameMusic {
 
 @Entity(name = "OngekiGamePoint")
 @Table(name = "ongeki_game_point", uniqueConstraints = [UniqueConstraint(columnNames = ["type"])])
-class GamePoint(@field:Enumerated(EnumType.ORDINAL) var type: GpProductID, var cost: Int) :
-    Serializable {
+class GamePoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     var id: Long = 0
+    @Enumerated(EnumType.ORDINAL)
+    var type: GpProductID = GpProductID.A_Credit1
+    var cost: Int = 0
     val startDate = "2000-01-01 05:00:00.0"
     val endDate = "2099-01-01 05:00:00.0"
 }
@@ -80,15 +81,13 @@ class GamePoint(@field:Enumerated(EnumType.ORDINAL) var type: GpProductID, var c
 
 @Entity(name = "OngekiGamePresent")
 @Table(name = "ongeki_game_present")
-class GamePresent(
-    presentId: Int, var presentName: String, var rewardId: Int, // count
-    var stock: Int, // acquisitionCondition
-    var message: String
-) :
-    Serializable {
+class GamePresent {
     @Id
-    @Column(name = "id")
-    var presentId = presentId.toLong()
+    var id: Long = 0
+    var presentName: String = ""
+    var rewardId: Int = 0 // count
+    var stock: Int = 0 // acquisitionCondition
+    var message: String = ""
     val startDate = "2000-01-01 05:00:00.0"
     val endDate = "2099-01-01 05:00:00.0"
 }
@@ -96,14 +95,13 @@ class GamePresent(
 
 @Entity(name = "OngekiGameReward")
 @Table(name = "ongeki_game_reward")
-class GameReward(
-    rewardId: Int,
-    @field:Enumerated(EnumType.ORDINAL) var itemKind: ItemType,
-    var itemId: Int
-) {
+class GameReward {
     @Id
-    @Column(name = "id")
-    var rewardId = rewardId.toLong()
+    var id: Long = 0
+
+    @Enumerated(EnumType.ORDINAL)
+    var itemKind: ItemType = ItemType.None
+    var itemId = 0
 }
 
 
