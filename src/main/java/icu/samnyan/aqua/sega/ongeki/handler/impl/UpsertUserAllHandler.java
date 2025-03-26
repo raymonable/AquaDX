@@ -134,7 +134,7 @@ public class UpsertUserAllHandler implements BaseHandler {
         // UserOption
         UserOption newUserOption = upsertUserAll.getUserOption().get(0);
 
-        Optional<UserOption> userOptionOptional = userOptionRepository.findByUser(newUserData);
+        Optional<UserOption> userOptionOptional = userOptionRepository.findSingleByUser(newUserData);
         UserOption userOption = userOptionOptional.orElseGet(() -> new UserOption(newUserData));
 
         newUserOption.setId(userOption.getId());

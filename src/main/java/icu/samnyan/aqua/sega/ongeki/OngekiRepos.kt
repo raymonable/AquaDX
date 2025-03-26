@@ -1,59 +1,26 @@
 @file:Suppress("FunctionName")
 package icu.samnyan.aqua.sega.ongeki
 
-import icu.samnyan.aqua.sega.ongeki.model.gamedata.*
 import icu.samnyan.aqua.net.games.GenericPlaylogRepo
 import icu.samnyan.aqua.net.games.GenericUserDataRepo
 import icu.samnyan.aqua.net.games.GenericUserMusicRepo
-import icu.samnyan.aqua.sega.general.model.Card
+import icu.samnyan.aqua.net.games.IUserRepo
+import icu.samnyan.aqua.sega.ongeki.model.gamedata.*
 import icu.samnyan.aqua.sega.ongeki.model.userdata.*
-import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.stereotype.Repository
 import java.util.*
 
-@Repository("OngekiUserActivityRepository")
-interface UserActivityRepository : JpaRepository<UserActivity, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserActivity>
 
-    fun findByUserAndKindAndActivityId(userData: UserData, kind: Int, activityId: Int): Optional<UserActivity>
-
-    fun findByUser_Card_ExtIdAndKindOrderBySortNumberDesc(userId: Long, kind: Int): List<UserActivity>
-}
-
-@Repository("OngekiUserBossRepository")
-interface UserBossRepository : JpaRepository<UserBoss, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserBoss>
-
-    fun findByUserAndMusicId(user: UserData, musicId: Int): Optional<UserBoss>
-}
-
-@Repository("OngekiUserCardRepository")
-interface UserCardRepository : JpaRepository<UserCard, Long> {
-    fun findByUserAndCardId(userData: UserData, cardId: Int): Optional<UserCard>
-
-    fun findByUser_Card_ExtId(userId: Long): List<UserCard>
-
-    fun findByUser_Card_ExtId(userId: Long, page: Pageable): Page<UserCard>
-}
-
-@Repository("OngekiUserChapterRepository")
-interface UserChapterRepository : JpaRepository<UserChapter, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserChapter>
-
-    fun findByUserAndChapterId(userData: UserData, chapterId: Int): Optional<UserChapter>
-}
-
-@Repository("OngekiUserCharacterRepository")
-interface UserCharacterRepository : JpaRepository<UserCharacter, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserCharacter>
-
-    fun findByUser_Card_ExtId(userId: Long, page: Pageable): Page<UserCharacter>
-
-    fun findByUserAndCharacterId(userData: UserData, characterId: Int): Optional<UserCharacter>
+@NoRepositoryBean
+interface OngekiUserLinked<T> : IUserRepo<UserData, T> {
+    fun findByUser_Card_ExtId(extId: Long): List<T>
+    fun findSingleByUser_Card_ExtId(extId: Long): Optional<T>
+    fun findByUser_Card_ExtId(extId: Long, pageable: Pageable): Page<T>
 }
 
 @Repository("OngekiUserDataRepository")
@@ -61,17 +28,39 @@ interface UserDataRepository : GenericUserDataRepo<UserData> {
     fun findByCard_ExtIdIn(userIds: Collection<Long>): List<UserData>
 }
 
-@Repository("OngekiUserDeckRepository")
-interface UserDeckRepository : JpaRepository<UserDeck, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserDeck>
+@Repository("OngekiUserActivityRepository")
+interface UserActivityRepository : OngekiUserLinked<UserActivity> {
+    fun findByUserAndKindAndActivityId(userData: UserData, kind: Int, activityId: Int): Optional<UserActivity>
+    fun findByUser_Card_ExtIdAndKindOrderBySortNumberDesc(userId: Long, kind: Int): List<UserActivity>
+}
 
+@Repository("OngekiUserBossRepository")
+interface UserBossRepository : OngekiUserLinked<UserBoss> {
+    fun findByUserAndMusicId(user: UserData, musicId: Int): Optional<UserBoss>
+}
+
+@Repository("OngekiUserCardRepository")
+interface UserCardRepository : OngekiUserLinked<UserCard> {
+    fun findByUserAndCardId(userData: UserData, cardId: Int): Optional<UserCard>
+}
+
+@Repository("OngekiUserChapterRepository")
+interface UserChapterRepository : OngekiUserLinked<UserChapter> {
+    fun findByUserAndChapterId(userData: UserData, chapterId: Int): Optional<UserChapter>
+}
+
+@Repository("OngekiUserCharacterRepository")
+interface UserCharacterRepository : OngekiUserLinked<UserCharacter> {
+    fun findByUserAndCharacterId(userData: UserData, characterId: Int): Optional<UserCharacter>
+}
+
+@Repository("OngekiUserDeckRepository")
+interface UserDeckRepository : OngekiUserLinked<UserDeck> {
     fun findByUserAndDeckId(userData: UserData, deckId: Int): Optional<UserDeck>
 }
 
 @Repository("OngekiUserEventMusicRepository")
-interface UserEventMusicRepository : JpaRepository<UserEventMusic, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserEventMusic>
-
+interface UserEventMusicRepository : OngekiUserLinked<UserEventMusic> {
     fun findByUserAndEventIdAndTypeAndMusicId(
         userData: UserData,
         eventId: Int,
@@ -81,9 +70,7 @@ interface UserEventMusicRepository : JpaRepository<UserEventMusic, Long> {
 }
 
 @Repository("OngekiUserEventPointRepository")
-interface UserEventPointRepository : JpaRepository<UserEventPoint, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserEventPoint>
-
+interface UserEventPointRepository : OngekiUserLinked<UserEventPoint> {
     fun findByUserAndEventId(userData: UserData, eventId: Int): Optional<UserEventPoint>
 
     //@Query(value = "SELECT rank from (SELECT user_id , DENSE_RANK() OVER (ORDER BY point DESC) as rank from ongeki_user_event_point where event_id = :eventId) where user_id == :userId limit 1", nativeQuery = true)
@@ -92,122 +79,79 @@ interface UserEventPointRepository : JpaRepository<UserEventPoint, Long> {
 }
 
 @Repository("OngekiUserGeneralDataRepository")
-interface UserGeneralDataRepository : JpaRepository<UserGeneralData, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserGeneralData>
-
+interface UserGeneralDataRepository : OngekiUserLinked<UserGeneralData> {
     fun findByUserAndPropertyKey(user: UserData, key: String): Optional<UserGeneralData>
 
     fun findByUser_Card_ExtIdAndPropertyKey(userId: Long, key: String): Optional<UserGeneralData>
 }
 
 @Repository("OngekiUserItemRepository")
-interface UserItemRepository : JpaRepository<UserItem, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserItem>
-
-    fun findByUser_Card_ExtId(userId: Long, page: Pageable): Page<UserItem>
-
+interface UserItemRepository : OngekiUserLinked<UserItem> {
     fun findByUserAndItemKindAndItemId(userData: UserData, itemKind: Int, itemId: Int): Optional<UserItem>
 
     fun findByUser_Card_ExtIdAndItemKind(userId: Long, kind: Int, page: Pageable): Page<UserItem>
 }
 
 @Repository("OngekiUserKopRepository")
-interface UserKopRepository : JpaRepository<UserKop, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserKop>
-
+interface UserKopRepository : OngekiUserLinked<UserKop> {
     fun findByUserAndKopIdAndAreaId(userData: UserData, kopId: Int, areaId: Int): Optional<UserKop>
 }
 
-interface UserLoginBonusRepository : JpaRepository<UserLoginBonus, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserLoginBonus>
-
+interface UserLoginBonusRepository : OngekiUserLinked<UserLoginBonus> {
     fun findByUserAndBonusId(userData: UserData, bonusId: Int): Optional<UserLoginBonus>
 }
 
 @Repository("OngekiUserMemoryChapterRepository")
-interface UserMemoryChapterRepository : JpaRepository<UserMemoryChapter, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserMemoryChapter>
-
+interface UserMemoryChapterRepository : OngekiUserLinked<UserMemoryChapter> {
     fun findByUserAndChapterId(userData: UserData, chapterId: Int): Optional<UserMemoryChapter>
 }
 
 @Repository("OngekiUserMissionPointRepository")
-interface UserMissionPointRepository : JpaRepository<UserMissionPoint, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserMissionPoint>
-
+interface UserMissionPointRepository : OngekiUserLinked<UserMissionPoint> {
     fun findByUserAndEventId(userData: UserData, eventId: Int): Optional<UserMissionPoint>
 }
 
 @Repository("OngekiUserMusicDetailRepository")
-interface UserMusicDetailRepository : JpaRepository<UserMusicDetail, Long>,
-    GenericUserMusicRepo<UserMusicDetail> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserMusicDetail>
-
-    fun findByUser_Card_ExtId(userId: Long, page: Pageable): Page<UserMusicDetail>
-
+interface UserMusicDetailRepository : OngekiUserLinked<UserMusicDetail>, GenericUserMusicRepo<UserMusicDetail> {
     fun findByUserAndMusicIdAndLevel(userData: UserData, musicId: Int, level: Int): Optional<UserMusicDetail>
 }
 
 @Repository("OngekiUserMusicItemRepository")
-interface UserMusicItemRepository : JpaRepository<UserMusicItem, Long> {
-    fun findByUser_Card_ExtId(aimeId: Long): List<UserMusicItem>
-
-    fun findByUser_Card_ExtId(userId: Long, page: Pageable): Page<UserMusicItem>
-
+interface UserMusicItemRepository : OngekiUserLinked<UserMusicItem> {
     fun findByUserAndMusicId(userData: UserData, musicId: Int): Optional<UserMusicItem>
 }
 
 @Repository("OngekiUserOptionRepository")
-interface UserOptionRepository : JpaRepository<UserOption, Long> {
-    fun findByUser(userData: UserData): Optional<UserOption>
-
-    fun findByUser_Card_ExtId(userId: Long): Optional<UserOption>
-}
+interface UserOptionRepository : OngekiUserLinked<UserOption>
 
 @Repository("OngekiUserPlaylogRepository")
-interface UserPlaylogRepository : GenericPlaylogRepo<UserPlaylog> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserPlaylog>
-
-    fun findByUser_Card_ExtId(userId: Long, page: Pageable): Page<UserPlaylog>
-}
+interface UserPlaylogRepository : OngekiUserLinked<UserPlaylog>, GenericPlaylogRepo<UserPlaylog>
 
 @Repository("OngekiUserRivalDataRepository")
-interface UserRivalDataRepository : JpaRepository<UserRival, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserRival>
-}
+interface UserRivalDataRepository : OngekiUserLinked<UserRival>
 
 @Repository("OngekiUserScenarioRepository")
-interface UserScenarioRepository : JpaRepository<UserScenario, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserScenario>
-
+interface UserScenarioRepository : OngekiUserLinked<UserScenario> {
     fun findByUserAndScenarioId(user: UserData, scenarioId: Int): Optional<UserScenario>
 }
 
 @Repository("OngekiUserStoryRepository")
-interface UserStoryRepository : JpaRepository<UserStory, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserStory>
-
+interface UserStoryRepository : OngekiUserLinked<UserStory> {
     fun findByUserAndStoryId(userData: UserData, storyId: Int): Optional<UserStory>
 }
 
 @Repository("OngekiUserTechCountRepository")
-interface UserTechCountRepository : JpaRepository<UserTechCount, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserTechCount>
-
+interface UserTechCountRepository : OngekiUserLinked<UserTechCount> {
     fun findByUserAndLevelId(user: UserData, levelId: Int): Optional<UserTechCount>
 }
 
 @Repository("OngekiUserTechEventRepository")
-interface UserTechEventRepository : JpaRepository<UserTechEvent, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserTechEvent>
-
+interface UserTechEventRepository : OngekiUserLinked<UserTechEvent> {
     fun findByUserAndEventId(userData: UserData, eventId: Int): Optional<UserTechEvent>
 }
 
 @Repository("OngekiUserTradeItemRepository")
-interface UserTradeItemRepository : JpaRepository<UserTradeItem, Long> {
-    fun findByUser_Card_ExtId(userId: Long): List<UserTradeItem>
-
+interface UserTradeItemRepository : OngekiUserLinked<UserTradeItem> {
     fun findByUser_Card_ExtIdAndChapterIdGreaterThanEqualAndChapterIdLessThanEqual(
         userId: Long,
         startChapterId: Int,
@@ -222,10 +166,8 @@ interface UserTradeItemRepository : JpaRepository<UserTradeItem, Long> {
 }
 
 @Repository("OngekiUserTrainingRoomRepository")
-interface UserTrainingRoomRepository : JpaRepository<UserTrainingRoom, Long> {
+interface UserTrainingRoomRepository : OngekiUserLinked<UserTrainingRoom> {
     fun findByUserAndRoomId(user: UserData, roomId: Int): Optional<UserTrainingRoom>
-
-    fun findByUser_Card_ExtId(userId: Long): List<UserTrainingRoom>
 }
 
 

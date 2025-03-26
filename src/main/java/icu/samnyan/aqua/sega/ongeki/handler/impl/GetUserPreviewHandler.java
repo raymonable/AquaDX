@@ -81,7 +81,7 @@ public class GetUserPreviewHandler implements BaseHandler {
             resp.setDispRating(1);
             resp.setDispBP(1);
             resp.setHeadphone(0);
-            userOptionRepository.findByUser(user).ifPresent(x -> {
+            userOptionRepository.findSingleByUser(user).ifPresent(x -> {
                 resp.setDispPlayerLv(x.getDispPlayerLv());
                 resp.setDispRating(x.getDispRating());
                 resp.setDispBP(x.getDispBP());

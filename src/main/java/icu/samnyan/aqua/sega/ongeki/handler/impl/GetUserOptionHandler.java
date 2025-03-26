@@ -37,7 +37,7 @@ public class GetUserOptionHandler implements BaseHandler {
     public String handle(Map<String, ?> request) throws JsonProcessingException {
         long userId = ((Number) request.get("userId")).longValue();
 
-        Optional<UserOption> userOptionOptional = userOptionRepository.findByUser_Card_ExtId(userId);
+        Optional<UserOption> userOptionOptional = userOptionRepository.findSingleByUser_Card_ExtId(userId);
 
         Map<String, Object> resultMap = new LinkedHashMap<>();
         resultMap.put("userId", userId);
