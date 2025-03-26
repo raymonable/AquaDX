@@ -47,7 +47,6 @@ class UserData : IUserData {
     var battlePoint = 0
     var bestBattlePoint = 0
     var overDamageBattlePoint = 0
-    @JsonProperty("isDialogWatchedSuggestMemory")
     var isDialogWatchedSuggestMemory = false
     var nameplateId = 0
     var trophyId = 0
@@ -121,7 +120,6 @@ class UserActivity : OngekiUserEntity()  {
 class UserBoss : OngekiUserEntity()  {
     var musicId = 0
     var damage = 0
-    @JsonProperty("isClear")
     var isClear = false
     var eventId = 0
 }
@@ -138,14 +136,12 @@ class UserCard: OngekiUserEntity()  {
     var exp = 0
     var printCount = 0
     var useCount = 0
-    @JsonProperty("isNew")
     var isNew = true
     var kaikaDate = "0000-00-00 00:00:00.0"
 
     var choKaikaDate = "0000-00-00 00:00:00.0"
 
     var skillId = 0
-    @JsonProperty("isAcquired")
     var isAcquired = true
     var created = "0000-00-00 00:00:00.0"
 }
@@ -158,9 +154,7 @@ class UserChapter : OngekiUserEntity()  {
     var lastPlayMusicCategory = 0
     var lastPlayMusicId = 0
     var lastPlayMusicLevel = 0
-    @JsonProperty("isStoryWatched")
     var isStoryWatched = false
-    @JsonProperty("isClear")
     var isClear = false
     var skipTiming1 = 0
     var skipTiming2 = 0
@@ -177,7 +171,6 @@ class UserCharacter : OngekiUserEntity()  {
     var intimateCount = 0
     var intimateCountRewarded = 0
     var intimateCountDate: String = ""
-    @JsonProperty("isNew")
     var isNew = false
 }
 
@@ -200,7 +193,6 @@ class UserEventMusic : OngekiUserEntity()  {
     var techScoreMax = 0
     var platinumScoreMax = 0
     var techRecordDate: String = ""
-    @JsonProperty("isTechNewRecord")
     var isTechNewRecord: Boolean = false
 }
 
@@ -210,7 +202,6 @@ class UserEventMusic : OngekiUserEntity()  {
 class UserEventPoint : OngekiUserEntity()  {
     var eventId = 0
     var point: Long = 0
-    @JsonProperty("isRankingRewarded")
     var isRankingRewarded = false
 }
 
@@ -228,7 +219,6 @@ class UserItem : OngekiUserEntity()  {
     var itemKind = 0
     var itemId = 0
     var stock = 0
-    @JsonProperty("isValid")
     var isValid = false
 }
 
@@ -241,7 +231,6 @@ class UserKop : OngekiUserEntity()  {
     var totalTechScore = 0
     var totalPlatinumScore = 0
     var techRecordDate: String = ""
-    @JsonProperty("isTotalTechNewRecord")
     var isTotalTechNewRecord = false
 }
 
@@ -261,13 +250,9 @@ class UserMemoryChapter : OngekiUserEntity()  {
     var lastPlayMusicCategory = 0
     var lastPlayMusicId = 0
     var lastPlayMusicLevel = 0
-    @JsonProperty("isDialogWatched")
     var isDialogWatched = false
-    @JsonProperty("isStoryWatched")
     var isStoryWatched = false
-    @JsonProperty("isBossWatched")
     var isBossWatched = false
-    @JsonProperty("isClear")
     var isClear = false
     var gaugeId = 0
     var gaugeNum = 0
@@ -294,13 +279,9 @@ class UserMusicDetail : OngekiUserEntity(), IGenericUserMusic {
     var maxComboCount = 0
     var maxOverKill = 0
     var maxTeamOverKill = 0
-    @JsonProperty("isFullBell")
     var isFullBell = false
-    @JsonProperty("isFullCombo")
     var isFullCombo = false
-    @JsonProperty("isAllBreake")
     var isAllBreake = false
-    @JsonProperty("isLock")
     var isLock = false
     var clearStatus = 0
     var isStoryWatched = false
@@ -415,17 +396,11 @@ class UserPlaylog : OngekiUserEntity(), IGenericGamePlaylog {
     var totalBellCount = 0
     var damageCount = 0
     var overDamage = 0
-    @JsonProperty("isTechNewRecord")
     var isTechNewRecord = false
-    @JsonProperty("isBattleNewRecord")
     var isBattleNewRecord = false
-    @JsonProperty("isOverDamageNewRecord")
     var isOverDamageNewRecord = false
-    @JsonProperty("isFullCombo")
     override var isFullCombo: Boolean = false
-    @JsonProperty("isFullBell")
     var isFullBell = false
-    @JsonProperty("isAllBreak")
     var isAllBreak: Boolean = false
     var playerRating: Int = 0
 
@@ -478,9 +453,7 @@ class UserTechEvent : OngekiUserEntity()  {
     var totalTechScore = 0
     var totalPlatinumScore = 0
     var techRecordDate: String = ""
-    @JsonProperty("isRankingRewarded")
     var isRankingRewarded = false
-    @JsonProperty("isTotalTechNewRecord")
     var isTotalTechNewRecord = false
 }
 

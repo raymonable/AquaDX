@@ -46,7 +46,7 @@ class UpsertUserAllHandler @Autowired constructor(
     private val userKopRepository: OgkUserKopRepo,
     private val userMemoryChapterRepository: OgkUserMemoryChapterRepo
 ) : BaseHandler {
-    override fun handle(request: Map<String, Any>): Any? {
+    override fun handle(request: Map<String, Any>): String? {
         val userId = (request["userId"] as Number).toLong()
         val upsertUserAll = mapper.convert(
             request["upsertUserAll"]!!,
