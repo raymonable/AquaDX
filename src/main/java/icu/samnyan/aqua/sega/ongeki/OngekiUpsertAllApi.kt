@@ -37,7 +37,11 @@ fun OngekiController.initUpsertAll() {
         all.run {
             // Set users
             listOfNotNull(
-                userOption, userPlaylogList, userActivityList, userMusicDetailList, userCharacterList
+                userOption, userPlaylogList, userActivityList, userMusicDetailList, userCharacterList, userCardList,
+                userDeckList, userTrainingRoomList, userStoryList, userChapterList, userMemoryChapterList, userItemList,
+                userMusicItemList, userLoginBonusList, userEventPointList, userMissionPointList, userBossList,
+                userTechCountList, userScenarioList, userTradeItemList, userEventMusicList, userTechEventList, userKopList,
+                userEventMap?.let { listOf(it) }
             ).flatten().forEach { it.user = u }
             
             // UserOption
@@ -54,11 +58,6 @@ fun OngekiController.initUpsertAll() {
             userPlaylogList?.let { db.playlog.saveAll(it) }
 
             // UserSessionlogList, UserJewelboostlogLost doesn't need to be saved for a private server
-
-            // UserActivityList
-            userActivityList?.let { list ->
-                db.activity.saveAll(list.distinctBy { it.activityId to it.kind }.mapApply { 
-                    id = db.activity.findByUserAndKindAndActivityId(u, kind, activityId)()?.id ?: 0 }) }
 
             // Ratings
             mapOf(
@@ -79,6 +78,11 @@ fun OngekiController.initUpsertAll() {
                 "new_rating_base_pscore" to userNewRatingBasePScoreList,
                 "new_rating_base_next_pscore" to userNewRatingBaseNextPScoreList
             ).forEach { (k, v) -> v?.let { saveGeneralData(it, u, k) } }
+
+            // UserActivityList
+            userActivityList?.let { list ->
+                db.activity.saveAll(list.distinctBy { it.activityId to it.kind }.mapApply {
+                    id = db.activity.findByUserAndKindAndActivityId(u, kind, activityId)()?.id ?: 0 }) }
 
             // UserMusicDetailList
             userMusicDetailList?.let { list ->
@@ -171,7 +175,7 @@ fun OngekiController.initUpsertAll() {
             userEventMusicList?.let { list ->
                 db.eventMusic.saveAll(list.distinctBy { it.eventId to it.type to it.musicId }.mapApply {
                     id = db.eventMusic.findByUserAndEventIdAndTypeAndMusicId(u, eventId, type, musicId)()?.id ?: 0 }) }
-            
+
             // UserTechEventList
             userTechEventList?.let { list ->
                 db.techEvent.saveAll(list.distinctBy { it.eventId }.mapApply {
