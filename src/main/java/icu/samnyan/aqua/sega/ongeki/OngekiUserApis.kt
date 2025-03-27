@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter
 
 fun OngekiController.initUser() {
     "GetUserData" { mapOf("userId" to uid, "userData" to db.data.findByCard_ExtId(uid)()) }
+
     "GetUserOption" { mapOf("userId" to uid, "userOption" to db.option.findSingleByUser_Card_ExtId(uid)()) }
     "GetUserEventMap" { mapOf("userId" to uid, "userEventMap" to db.eventMap.findSingleByUser_Card_ExtId(uid)()) }
 
@@ -25,6 +26,19 @@ fun OngekiController.initUser() {
     "GetUserLoginBonus".unpaged { db.loginBonus.findByUser_Card_ExtId(uid) }
     "GetUserMissionPoint".unpaged { db.missionPoint.findByUser_Card_ExtId(uid) }
     "GetUserMusicItem".unpaged { db.musicItem.findByUser_Card_ExtId(uid) }
+    "GetUserRival".unpaged { db.rivalData.findByUser_Card_ExtId(uid) }
+    "GetUserScenario".unpaged { db.scenario.findByUser_Card_ExtId(uid) }
+    "GetUserSkin".unpaged { db.skin.findByUser_Card_ExtId(uid) }
+    "GetUserStory".unpaged { db.story.findByUser_Card_ExtId(uid) }
+    "GetUserTechCount".unpaged { db.techCount.findByUser_Card_ExtId(uid) }
+    "GetUserTrainingRoomByKey".unpaged("userTrainingRoomList") { db.trainingRoom.findByUser_Card_ExtId(uid) }
+
+    "GetUserTradeItem".unpaged {
+        val start = parsing { data["startChapterId"]!!.int }
+        val end = parsing { data["endChapterId"]!!.int }
+
+        db.tradeItem.findByUser_Card_ExtIdAndChapterIdGreaterThanEqualAndChapterIdLessThanEqual(uid, start, end)
+    }
 
     val dtPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0")
 
@@ -59,4 +73,6 @@ fun OngekiController.initUser() {
     }
 
     "GetUserBpBase".unpaged { empty }
+    "GetUserRatinglog".unpaged { empty }
+    "GetUserRegion".unpaged { empty }
 }
