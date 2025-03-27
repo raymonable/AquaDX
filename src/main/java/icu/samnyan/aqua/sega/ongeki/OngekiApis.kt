@@ -4,7 +4,6 @@ import ext.empty
 import ext.int
 import ext.parsing
 import ext.plus
-import icu.samnyan.aqua.sega.ongeki.model.GameEventItem
 
 fun OngekiController.ongekiInit() {
     fun <T> List<T>.staticLst(key: String) = mapOf("length" to size, key to this)
@@ -14,8 +13,9 @@ fun OngekiController.ongekiInit() {
 
     // Has type, but type is always 1
     "GetGameEvent".static {
-        gdb.event.findAll().map { GameEventItem(it.id, 1, "2005-01-01 00:00:00.0", "2099-01-01 05:00:00.0") }
-            .staticLst("gameEventList") + mapOf("type" to 1)
+        gdb.event.findAll().map {
+            mapOf("id" to it.id, "type" to 1, "startDate" to "2005-01-01 00:00:00.0", "endDate" to "2099-01-01 05:00:00.0")
+        }.staticLst("gameEventList") + mapOf("type" to 1)
     }
 
     "GetGamePoint".static { gdb.point.findAll().staticLst("gamePointList") }

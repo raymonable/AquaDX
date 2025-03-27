@@ -3,7 +3,6 @@ package icu.samnyan.aqua.sega.ongeki
 import ext.invoke
 import ext.mapApply
 import ext.minus
-import icu.samnyan.aqua.sega.ongeki.model.CodeResp
 import icu.samnyan.aqua.sega.ongeki.model.OngekiUpsertUserAll
 import icu.samnyan.aqua.sega.ongeki.model.UserData
 import icu.samnyan.aqua.sega.ongeki.model.UserGeneralData
@@ -187,6 +186,6 @@ fun OngekiController.initUpsertAll() {
                     id = db.kop.findByUserAndKopIdAndAreaId(u, kopId, areaId)()?.id ?: 0 }) }
         }
 
-        CodeResp(1, "upsertUserAll")
+        null
     }
 }

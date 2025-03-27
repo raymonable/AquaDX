@@ -71,3 +71,14 @@ class OngekiUpsertUserAll {
     var userNewRatingBaseNextBestNewList: List<OngekiFumenScore>? = null
     var userEventMap: UserEventMap? = null
 }
+
+class OngekiFumenScore(
+    var musicId: Int = 0,
+    var difficultId: Int = 0,
+    var romVersionCode: String? = null,
+    var score: Int = 0,
+    var platinumScoreMax: Int = 0,
+    var platinumScoreStar: Int = 0,
+) {
+    override fun toString() = "${musicId}:${difficultId}:${score}:${platinumScoreStar}:${platinumScoreMax}"
+}
