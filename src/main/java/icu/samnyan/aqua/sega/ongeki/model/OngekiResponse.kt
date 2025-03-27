@@ -7,6 +7,15 @@ class CodeResp(
     var apiName: String? = null,
 )
 
+class OngekiFumenScore(
+    var musicId: Int = 0,
+    var difficultId: Int = 0,
+    var romVersionCode: String? = null,
+    var score: Int = 0,
+    var platinumScoreMax: Int = 0,
+    var platinumScoreStar: Int = 0,
+)
+
 class GetUserPreviewResp(
     var userId: Long = 0,
     var isLogin: Bool = false,
@@ -16,6 +25,7 @@ class GetUserPreviewResp(
     var level: Int = 0,
     var exp: Long = 0,
     var playerRating: Long = 0,
+    var newPlayerRating: Long = 0,
     var lastGameId: String = "",
     var lastRomVersion: String = "",
     var lastDataVersion: String = "",

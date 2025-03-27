@@ -93,6 +93,17 @@ class UserData : IUserData {
     var lastPlayMusicLevel = 0
     var lastEmoneyBrand = 0
 
+    // Re:Fresh
+    var shizukuCount = 0
+    var newPlayerRating = 0
+    var newHighestRating = 0
+    var sumPlatinumScoreStar = 0
+    var sumBasicPlatinumScoreStar = 0
+    var sumAdvancedPlatinumScoreStar = 0
+    var sumExpertPlatinumScoreStar = 0
+    var sumMasterPlatinumScoreStar = 0
+    var sumLunaticPlatinumScoreStar = 0
+
     override val totalScore get() = sumTechHighScore
 }
 
@@ -254,6 +265,9 @@ class UserMemoryChapter : OngekiUserEntity()  {
     var isClear = false
     var gaugeId = 0
     var gaugeNum = 0
+
+    // Re:Fresh
+    var isEndingWatched = false
 }
 
 @Entity(name = "OngekiUserMissionPoint")
@@ -283,6 +297,9 @@ class UserMusicDetail : OngekiUserEntity(), IGenericUserMusic {
     var isLock = false
     var clearStatus = 0
     var isStoryWatched = false
+
+    // Re:Fresh
+    var platinumScoreStar = 0
 }
 
 @Entity(name = "OngekiUserMusicItem")
@@ -332,6 +349,9 @@ class UserOption : OngekiUserEntity()  {
     var dispRating = 0
     var dispBP = 0
     var headphone = 0
+
+    // Re:Fresh
+    var effectAttack = 0
 }
 
 
@@ -470,4 +490,29 @@ class UserTrainingRoom : OngekiUserEntity()  {
     var roomId: Int = 0
     var cardId: Int = 0
     var valueDate: String = ""
+}
+
+// Re:Fresh
+@Entity(name = "OngekiUserEventMap")
+@Table(name = "ongeki_user_event_map")
+class UserEventMap : OngekiUserEntity() {
+    var eventId = 0
+    var mapId = 0
+    var mapData: String? = null
+    var totalPoint = 0
+    var totalUsePoint = 0
+}
+
+/**
+ * @author samnyan (privateamusement@protonmail.com)
+ */
+@Entity(name = "OngekiUserSkin")
+@Table(name = "ongeki_user_skin")
+class UserSkin : OngekiUserEntity() {
+    // TODO: should be updated on net when changing skin
+    var isValid = false
+    var deckId = 0
+    var cardId1 = 0
+    var cardId2 = 0
+    var cardId3 = 0
 }

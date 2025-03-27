@@ -2,7 +2,7 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.general.BaseHandler;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserEventMapRepository;
+import icu.samnyan.aqua.sega.ongeki.OgkUserEventMapRepo;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +22,10 @@ public class GetUserEventMapHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserEventMapRepository userEventMapRepository;
+    private final OgkUserEventMapRepo userEventMapRepository;
 
     @Autowired
-    public GetUserEventMapHandler(BasicMapper mapper, UserEventMapRepository userEventMapRepository) {
+    public GetUserEventMapHandler(BasicMapper mapper, OgkUserEventMapRepo userEventMapRepository) {
         this.mapper = mapper;
         this.userEventMapRepository = userEventMapRepository;
     }

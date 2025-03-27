@@ -8,6 +8,7 @@ class UpsertUserAll {
     var userJewelboostlogList: List<Map<String, Any>>? = null
     var userSessionlogList: List<Map<String, Any>>? = null
     var userActivityList: List<UserActivity>? = null
+
     var userRecentRatingList: List<UserRecentRating>? = null
     var userBpBaseList: List<UserRecentRating>? = null
     var userRatingBaseBestNewList: List<UserRecentRating>? = null
@@ -16,6 +17,7 @@ class UpsertUserAll {
     var userRatingBaseNextNewList: List<UserRecentRating>? = null
     var userRatingBaseNextList: List<UserRecentRating>? = null
     var userRatingBaseHotNextList: List<UserRecentRating>? = null
+
     var userMusicDetailList: List<UserMusicDetail>? = null
     var userCharacterList: List<UserCharacter>? = null
     var userCardList: List<UserCard>? = null
@@ -59,4 +61,13 @@ class UpsertUserAll {
     var isNewEventMusicList: String? = null
     var isNewTechEventList: String? = null
     var isNewKopList: String? = null
+
+    // Re:Fresh
+    var userNewRatingBasePScoreList: List<OngekiFumenScore>? = null
+    var userNewRatingBaseBestList: List<OngekiFumenScore>? = null
+    var userNewRatingBaseBestNewList: List<OngekiFumenScore>? = null
+    var userNewRatingBaseNextPScoreList: List<OngekiFumenScore>? = null
+    var userNewRatingBaseNextBestList: List<OngekiFumenScore>? = null
+    var userNewRatingBaseNextBestNewList: List<OngekiFumenScore>? = null
+    var userEventMap: UserEventMap? = null
 }

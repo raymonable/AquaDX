@@ -6,6 +6,8 @@ import icu.samnyan.aqua.net.games.GenericUserDataRepo
 import icu.samnyan.aqua.net.games.GenericUserMusicRepo
 import icu.samnyan.aqua.net.games.IUserRepo
 import icu.samnyan.aqua.sega.ongeki.model.*
+import icu.samnyan.aqua.sega.ongeki.model.UserEventMap
+import icu.samnyan.aqua.sega.ongeki.model.UserSkin
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -144,6 +146,10 @@ interface OgkUserTrainingRoomRepo : OngekiUserLinked<UserTrainingRoom> {
     fun findByUserAndRoomId(user: UserData, roomId: Int): Optional<UserTrainingRoom>
 }
 
+// Re:Fresh
+interface OgkUserEventMapRepo : OngekiUserLinked<UserEventMap>
+interface OgkUserSkinRepo : OngekiUserLinked<UserSkin>
+
 interface OgkGameCardRepo : JpaRepository<GameCard, Long>
 interface OgkGameCharaRepo : JpaRepository<GameChara, Long>
 interface OgkGameEventRepo : JpaRepository<GameEvent, Long>
@@ -181,6 +187,8 @@ class OngekiUserRepos(
     val techEvent: OgkUserTechEventRepo,
     val tradeItem: OgkUserTradeItemRepo,
     val trainingRoom: OgkUserTrainingRoomRepo,
+    val eventMap: OgkUserEventMapRepo,
+    val skin: OgkUserSkinRepo,
 )
 
 @Component

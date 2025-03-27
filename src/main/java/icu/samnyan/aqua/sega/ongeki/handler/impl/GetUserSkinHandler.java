@@ -2,8 +2,8 @@ package icu.samnyan.aqua.sega.ongeki.handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.general.BaseHandler;
-import icu.samnyan.aqua.sega.ongeki.dao.userdata.UserSkinRepository;
-import icu.samnyan.aqua.sega.ongeki.model.userdata.UserSkin;
+import icu.samnyan.aqua.sega.ongeki.OgkUserSkinRepo;
+import icu.samnyan.aqua.sega.ongeki.model.UserSkin;
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +24,10 @@ public class GetUserSkinHandler implements BaseHandler {
 
     private final BasicMapper mapper;
 
-    private final UserSkinRepository userSkinRepository;
+    private final OgkUserSkinRepo userSkinRepository;
 
     @Autowired
-    public GetUserSkinHandler(BasicMapper mapper, UserSkinRepository userSkinRepository) {
+    public GetUserSkinHandler(BasicMapper mapper, OgkUserSkinRepo userSkinRepository) {
         this.mapper = mapper;
         this.userSkinRepository = userSkinRepository;
     }
