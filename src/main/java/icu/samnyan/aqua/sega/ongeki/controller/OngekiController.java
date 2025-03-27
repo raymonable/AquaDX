@@ -18,25 +18,8 @@ import java.util.Map;
 @RequestMapping("/g/ongeki")
 @AllArgsConstructor
 public class OngekiController {
-    private final GetUserActivityHandler getUserActivityHandler;
-    private final GetUserBossHandler getUserBossHandler;
-    private final GetUserBpBaseHandler getUserBpBaseHandler;
-    private final GetUserCardHandler getUserCardHandler;
-    private final GetUserChapterHandler getUserChapterHandler;
-    private final GetUserMemoryChapterHandler getUserMemoryChapterHandler;
-    private final GetUserCharacterHandler getUserCharacterHandler;
-    private final GetUserDataHandler getUserDataHandler;
-    private final GetUserDeckByKeyHandler getUserDeckByKeyHandler;
-    private final GetUserEventMapHandler getUserEventMapHandler;
-    private final GetUserEventPointHandler getUserEventPointHandler;
-    private final GetUserEventRankingHandler getUserEventRankingHandler;
-    private final GetUserEventMusicHandler getUserEventMusicHandler;
     private final GetUserItemHandler getUserItemHandler;
-    private final GetUserLoginBonusHandler getUserLoginBonusHandler;
-    private final GetUserMissionPointHandler getUserMissionPointHandler;
     private final GetUserMusicHandler getUserMusicHandler;
-    private final GetUserMusicItemHandler getUserMusicItemHandler;
-    private final GetUserOptionHandler getUserOptionHandler;
     private final GetUserPreviewHandler getUserPreviewHandler;
     private final GetUserRatinglogListHandler getUserRatinglogListHandler;
     private final GetUserRecentRatingHandler getUserRecentRatingHandler;
@@ -48,93 +31,14 @@ public class OngekiController {
     private final GetUserSkinHandler getUserSkinHandler;
     private final GetUserStoryHandler getUserStoryHandler;
     private final GetUserTechCountHandler getUserTechCountHandler;
-    private final GetUserTechEventHandler getUserTechEventHandler;
-    private final GetUserTechEventRankingHandler getUserTechEventRankingHandler;
     private final GetUserTradeItemHandler getUserTradeItemHandler;
     private final GetUserTrainingRoomByKeyHandler getUserTrainingRoomByKeyHandler;
     private final GetUserKopHandler getUserKopHandler;
     private final UpsertUserAllHandler upsertUserAllHandler;
-    private final GetClientBookkeepingHandler getClientBookkeepingHandler;
-    private final GetClientTestmodeHandler getClientTestmodeHandler;
-
-    @PostMapping("GetUserTechEventApi")
-    public String getUserTechEvent(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserTechEventHandler.handle(request);
-    }
-
-    @PostMapping("GetUserTechEventRankingApi")
-    public String getUserTechEventRanking(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserTechEventRankingHandler.handle(request);
-    }
-
-    @PostMapping("GetUserActivityApi")
-    public String getUserActivity(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserActivityHandler.handle(request);
-    }
-
-    @PostMapping("GetUserBossApi")
-    public String getUserBoss(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserBossHandler.handle(request);
-    }
-
-    @PostMapping("GetUserBpBaseApi")
-    public String getUserBpBase(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserBpBaseHandler.handle(request);
-    }
-
-    @PostMapping("GetUserCardApi")
-    public String getUserCard(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserCardHandler.handle(request);
-    }
-
-    @PostMapping("GetUserChapterApi")
-    public String getUserChapter(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserChapterHandler.handle(request);
-    }
-
-    @PostMapping("GetUserMemoryChapterApi")
-    public String getUserMemoryChapter(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserMemoryChapterHandler.handle(request);
-    }
-
-    @PostMapping("GetUserCharacterApi")
-    public String getUserCharacter(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserCharacterHandler.handle(request);
-    }
-
-    @PostMapping("GetUserDataApi")
-    public String getUserData(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserDataHandler.handle(request);
-    }
-
-    @PostMapping("GetUserDeckByKeyApi")
-    public String getUserDeckByKey(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserDeckByKeyHandler.handle(request);
-    }
-
-    @PostMapping("GetUserEventMapApi")
-    public String getUserEventMap(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserEventMapHandler.handle(request);
-    }
-
-    @PostMapping("GetUserEventPointApi")
-    public String getUserEventPoint(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserEventPointHandler.handle(request);
-    }
-
-    @PostMapping("GetUserEventMusicApi")
-    public String getUserEventMusic(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserEventMusicHandler.handle(request);
-    }
 
     @PostMapping("GetUserTradeItemApi")
     public String getUserTradeItem(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return getUserTradeItemHandler.handle(request);
-    }
-
-    @PostMapping("GetUserEventRankingApi")
-    public String getUserEventRanking(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserEventRankingHandler.handle(request);
     }
 
     @PostMapping("GetUserItemApi")
@@ -142,29 +46,9 @@ public class OngekiController {
         return getUserItemHandler.handle(request);
     }
 
-    @PostMapping("GetUserLoginBonusApi")
-    public String getUserLoginBonus(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserLoginBonusHandler.handle(request);
-    }
-
-    @PostMapping("GetUserMissionPointApi")
-    public String getUserMissionPoint(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserMissionPointHandler.handle(request);
-    }
-
     @PostMapping("GetUserMusicApi")
     public String getUserMusic(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return getUserMusicHandler.handle(request);
-    }
-
-    @PostMapping("GetUserMusicItemApi")
-    public String getUserMusicItem(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserMusicItemHandler.handle(request);
-    }
-
-    @PostMapping("GetUserOptionApi")
-    public String getUserOption(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getUserOptionHandler.handle(request);
     }
 
     @PostMapping("GetUserPreviewApi")
@@ -230,16 +114,6 @@ public class OngekiController {
     @PostMapping("GetUserKopApi")
     public String getUserKop(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return getUserKopHandler.handle(request);
-    }
-
-    @PostMapping("GetClientBookkeepingApi")
-    public String getClientBookkeeping(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getClientBookkeepingHandler.handle(request);
-    }
-
-    @PostMapping("GetClientTestmodeApi")
-    public String getClientTestmode(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getClientTestmodeHandler.handle(request);
     }
 
     @PostMapping("UpsertUserAllApi")

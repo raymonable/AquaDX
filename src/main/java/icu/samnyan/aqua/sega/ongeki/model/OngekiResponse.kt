@@ -64,14 +64,6 @@ class GameRankingItem(
     var userName: String = "",
 )
 
-class UserEventRankingItem(
-    var eventId: Int = 0,
-    var type: Int = 0,
-    var date: String = "",
-    var rank: Int = 0,
-    var point: Long = 0,
-)
-
 class UserMusicListItem(
     var length: Int = 0,
     var userMusicDetailList: List<UserMusicDetail>? = null,
@@ -85,12 +77,4 @@ class UserRivalData(
 class UserRivalMusic(
     var userRivalMusicDetailList: List<UserMusicDetail>? = null,
     var length: Int = 0,
-)
-
-class UserTechEventRankingItem(
-    var eventId: Int = 0,
-    var date: String = "",
-    var rank: Int = 0,
-    var totalTechScore: Int = 0,
-    var totalPlatinumScore: Int = 0,
 )
