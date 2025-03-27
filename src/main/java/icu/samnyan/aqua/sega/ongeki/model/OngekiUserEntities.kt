@@ -16,7 +16,6 @@ class OngekiUserEntity : BaseEntity(), IUserEntity<UserData> {
     override var user: UserData = UserData()
 }
 
-
 @Entity(name = "OngekiUserData")
 @Table(name = "ongeki_user_data")
 class UserData : IUserData {
@@ -503,9 +502,6 @@ class UserEventMap : OngekiUserEntity() {
     var totalUsePoint = 0
 }
 
-/**
- * @author samnyan (privateamusement@protonmail.com)
- */
 @Entity(name = "OngekiUserSkin")
 @Table(name = "ongeki_user_skin")
 class UserSkin : OngekiUserEntity() {

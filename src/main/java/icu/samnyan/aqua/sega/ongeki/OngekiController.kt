@@ -38,19 +38,19 @@ class OngekiController(
         val ctx = RequestContext(req, data)
         version?.let { data["version"] = it }
 
-        val token = TokenChecker.getCurrentSession()?.token?.substring(0, 6) ?: "NO-TOKEN"
-        log.info("< $api : ${data.toJson()} : [$token]")
+        val token = TokenChecker.tokenShort()
+        log.info("$token : $api < ${data.toJson()}")
 
-        val noop = """{"returnCode":"1","apiName":"$api"}"""
+        val noop = """{"returnCode":"1","apiName":"${api.substringBefore("Api").firstCharLower()}"}"""
         if (api !in noopEndpoint && !handlers.containsKey(api)) {
-            log.warn("> $api not found")
+            log.warn("$token : $api > not found")
             return noop
         }
 
         // Only record the counter metrics if the API is known.
         Metrics.counter("aquadx_ongeki_api_call", "api" to api).increment()
         if (api in noopEndpoint) {
-            log.info("> $api no-op")
+            log.info("$token : $api > no-op")
             return noop
         }
 
@@ -58,14 +58,11 @@ class OngekiController(
             Metrics.timer("aquadx_ongeki_api_latency", "api" to api).recordCallable {
                 serialize(api, handlers[api]!!(ctx) ?: noop).also {
                     if (api !in setOf("GetUserItemApi", "GetGameEventApi"))
-                        log.info("> $api : $it")
+                        log.info("$token : $api > ${it.truncate(500)}")
                 }
             }
         } catch (e: Exception) {
-            Metrics.counter(
-                "aquadx_ongeki_api_error",
-                "api" to api, "error" to e.simpleDescribe()
-            ).increment()
+            Metrics.counter("aquadx_ongeki_api_error", "api" to api, "error" to e.simpleDescribe()).increment()
             throw e
         }
     }
