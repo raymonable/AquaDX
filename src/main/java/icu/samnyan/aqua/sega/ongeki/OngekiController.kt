@@ -33,17 +33,15 @@ class OngekiController(
     init { ongekiInit() }
     val handlers = initH
 
-    @API("/{endpoint}", "/MatchingServer/{endpoint}")
-    fun handle(@PV endpoint: Str, @RB data: MutableMap<Str, Any>, @PV version: Str, req: HttpServletRequest): Any {
+    @API("/{api}")
+    fun handle(@PV api: Str, @RB data: MutableMap<Str, Any>, @PV version: Str?, req: HttpServletRequest): Any {
         val ctx = RequestContext(req, data)
-        val api = endpoint
-        data["version"] = version
+        version?.let { data["version"] = it }
 
-//        if (api.startsWith("CM") && api !in handlers) api = api.removePrefix("CM")
         val token = TokenChecker.getCurrentSession()?.token?.substring(0, 6) ?: "NO-TOKEN"
         log.info("< $api : ${data.toJson()} : [$token]")
 
-        val noop = """{"returnCode":"1","apiName":"${api.substringBefore("Api").firstCharLower()}"}"""
+        val noop = """{"returnCode":"1","apiName":"$api"}"""
         if (api !in noopEndpoint && !handlers.containsKey(api)) {
             log.warn("> $api not found")
             return noop
