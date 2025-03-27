@@ -24,7 +24,7 @@ fun OngekiController.initUser() {
     "GetUserChapter".unpaged { db.chapter.findByUser_Card_ExtId(uid) }
     "GetUserMemoryChapter".unpaged { db.memoryChapter.findByUser_Card_ExtId(uid) }
     "GetUserCharacter".unpaged { db.character.findByUser_Card_ExtId(uid) }
-    "GetUserDeckByKey".unpaged { db.deck.findByUser_Card_ExtId(uid) }
+    "GetUserDeckByKey".unpaged("userDeckList") { db.deck.findByUser_Card_ExtId(uid) }
     "GetUserEventMusic".unpaged { db.eventMusic.findByUser_Card_ExtId(uid) }
     "GetUserEventPoint".unpaged { db.eventPoint.findByUser_Card_ExtId(uid) }
     "GetUserKop".unpaged { db.kop.findByUser_Card_ExtId(uid) }
