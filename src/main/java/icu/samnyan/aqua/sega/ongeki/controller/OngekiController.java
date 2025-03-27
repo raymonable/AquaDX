@@ -19,16 +19,6 @@ import java.util.Map;
 @RequestMapping("/g/ongeki")
 @AllArgsConstructor
 public class OngekiController {
-
-    private final GetGameEventHandler getGameEventHandler;
-    private final GetGameIdlistHandler getGameIdlistHandler;
-    private final GetGameMessageHandler getGameMessageHandler;
-    private final GetGamePointHandler getGamePointHandler;
-    private final GetGamePresentHandler getGamePresentHandler;
-    private final GetGameTechMusicHandler getGameTechMusicHandler;
-    private final GetGameRankingHandler getGameRankingHandler;
-    private final GetGameRewardHandler getGameRewardHandler;
-    private final GetGameSettingHandler getGameSettingHandler;
     private final GetUserActivityHandler getUserActivityHandler;
     private final GetUserBossHandler getUserBossHandler;
     private final GetUserBpBaseHandler getUserBpBaseHandler;
@@ -65,57 +55,6 @@ public class OngekiController {
     private final UpsertUserAllHandler upsertUserAllHandler;
     private final GetClientBookkeepingHandler getClientBookkeepingHandler;
     private final GetClientTestmodeHandler getClientTestmodeHandler;
-    private final GetGameMusicReleaseStateHandler getGameMusicReleaseStateHandler;
-
-    @PostMapping("ExtendLockTimeApi")
-    public String extendLockTime(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"extendLockTime\"}";
-    }
-
-    @PostMapping("GameLoginApi")
-    public String gameLogin(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"gameLogin\"}";
-    }
-
-    @PostMapping("GameLogoutApi")
-    public String gameLogout(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\": \"gameLogout\"}";
-    }
-
-    @PostMapping("GetGameEventApi")
-    public String getGameEvent(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameEventHandler.handle(request);
-    }
-
-    @PostMapping("GetGameIdlistApi")
-    public String getGameIdList(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameIdlistHandler.handle(request);
-    }
-
-    @PostMapping("GetGameMessageApi")
-    public String getGameMessage(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameMessageHandler.handle(request);
-    }
-
-    @PostMapping("GetGamePointApi")
-    public String getGamePoint(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGamePointHandler.handle(request);
-    }
-
-    @PostMapping("GetGamePresentApi")
-    public String getGamePresent(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGamePresentHandler.handle(request);
-    }
-
-    @PostMapping("GetGameTechMusicApi")
-    public String getGameTechMusic(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameTechMusicHandler.handle(request);
-    }
-
-    @PostMapping("GetGameMusicReleaseStateApi")
-    public String GetGameMusicReleaseState(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameMusicReleaseStateHandler.handle(request);
-    }
 
     @PostMapping("GetUserTechEventApi")
     public String getUserTechEvent(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
@@ -125,21 +64,6 @@ public class OngekiController {
     @PostMapping("GetUserTechEventRankingApi")
     public String getUserTechEventRanking(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return getUserTechEventRankingHandler.handle(request);
-    }
-
-    @PostMapping("GetGameRankingApi")
-    public String getGameRanking(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameRankingHandler.handle(request);
-    }
-
-    @PostMapping("GetGameRewardApi")
-    public String getGameReward(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameRewardHandler.handle(request);
-    }
-
-    @PostMapping("GetGameSettingApi")
-    public String getGameSetting(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
-        return getGameSettingHandler.handle(request);
     }
 
     @PostMapping("GetUserActivityApi")
@@ -307,49 +231,8 @@ public class OngekiController {
         return getClientTestmodeHandler.handle(request);
     }
 
-    @PostMapping("RegisterPromotionCardApi")
-    public String registerPromotionCard(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"registerPromotionCard\"}";
-    }
-
-    @PostMapping("UpsertClientBookkeepingApi")
-    public String upsertClientBookkeeping(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1},\"apiName\":\"upsertClientBookkeeping\"";
-    }
-
-    @PostMapping("UpsertClientDevelopApi")
-    public String upsertClientDevelop(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1},\"apiName\":\"upsertClientDevelop\"";
-    }
-
-    @PostMapping("UpsertClientErrorApi")
-    public String upsertClientError(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"upsertClientError\"}";
-    }
-
-    @PostMapping("UpsertClientSettingApi")
-    public String upsertClientSetting(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"upsertClientSetting\"}";
-    }
-
-    @PostMapping("UpsertClientTestmodeApi")
-    public String upsertClientTestmode(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"upsertClientTestmode\"}";
-    }
-
-    @PostMapping("UpsertUserGplogApi")
-    public String upsertUserGplog(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":1,\"apiName\":\"upsertUserGplog\"}";
-    }
-
     @PostMapping("UpsertUserAllApi")
     public String upsertUserAll(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return upsertUserAllHandler.handle(request);
     }
-
-    @PostMapping("Ping")
-    String ping(@ModelAttribute Map<String, Object> request) {
-        return "{\"returnCode\":\"1\"}";
-    }
-
 }

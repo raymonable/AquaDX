@@ -7,12 +7,6 @@ class CodeResp(
     var apiName: String? = null,
 )
 
-class GetGameSettingResp(
-    var gameSetting: GameSetting? = null,
-    var isDumpUpload: Bool = false,
-    var isAou: Bool = false,
-)
-
 class GetUserPreviewResp(
     var userId: Long = 0,
     var isLogin: Bool = false,
@@ -58,22 +52,6 @@ class GameRankingItem(
     // maybe for the future update like in game player ranking
     var point: Long = 0,
     var userName: String = "",
-)
-
-class GameSetting(
-    var dataVersion: String = "",
-    var onlineDataVersion: String = "",
-    var isMaintenance: Bool = false,
-    var requestInterval: Int = 0,
-    var rebootStartTime: String = "",
-    var rebootEndTime: String = "",
-    var isBackgroundDistribute: Bool = false,
-    var maxCountCharacter: Int = 0,
-    var maxCountCard: Int = 0,
-    var maxCountItem: Int = 0,
-    var maxCountMusic: Int = 0,
-    var maxCountMusicItem: Int = 0,
-    var maxCountRivalMusic: Int = 0,
 )
 
 class UserEventRankingItem(
