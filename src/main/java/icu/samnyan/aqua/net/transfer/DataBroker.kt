@@ -9,7 +9,7 @@ import icu.samnyan.aqua.sega.maimai2.model.request.Mai2UserAll
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserFavorite
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserItem
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserMusicDetail
-import icu.samnyan.aqua.sega.ongeki.model.UpsertUserAll
+import icu.samnyan.aqua.sega.ongeki.model.OngekiUpsertUserAll
 import icu.samnyan.aqua.sega.ongeki.model.UserItem
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import icu.samnyan.aqua.sega.util.jackson.IMapper
@@ -134,7 +134,7 @@ class OngekiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
     override fun pull(): String {
         val (userId, paged) = prePull()
 
-        return UpsertUserAll().apply {
+        return OngekiUpsertUserAll().apply {
             userData = ls("GetUserDataApi".get("userData", userId))
             userOption = ls("GetUserOptionApi".get("userOption", userId))
             userMusicItemList = "GetUserMusicItemApi".get("userMusicItemList", paged)

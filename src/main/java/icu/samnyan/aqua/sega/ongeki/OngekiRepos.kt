@@ -80,6 +80,7 @@ interface OgkUserItemRepo : OngekiUserLinked<UserItem> {
     fun findByUserAndItemKindAndItemId(userData: UserData, itemKind: Int, itemId: Int): Optional<UserItem>
 
     fun findByUser_Card_ExtIdAndItemKind(userId: Long, kind: Int, page: Pageable): Page<UserItem>
+    fun findByUser_Card_ExtIdAndItemKind(userId: Long, kind: Int): List<UserItem>
 }
 
 interface OgkUserKopRepo : OngekiUserLinked<UserKop> {

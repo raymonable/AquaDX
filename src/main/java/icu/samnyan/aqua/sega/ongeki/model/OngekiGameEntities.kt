@@ -1,8 +1,6 @@
 package icu.samnyan.aqua.sega.ongeki.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import icu.samnyan.aqua.sega.ongeki.model.common.GpProductID
-import icu.samnyan.aqua.sega.ongeki.model.common.ItemType
 import jakarta.persistence.*
 
 @Entity(name = "OngekiGameCard")
@@ -72,7 +70,7 @@ class GamePoint {
     @JsonIgnore
     var id: Long = 0
     @Enumerated(EnumType.ORDINAL)
-    var type: GpProductID = GpProductID.A_Credit1
+    var type: OgkGpProductID = OgkGpProductID.A_Credit1
     var cost: Int = 0
     val startDate = "2000-01-01 05:00:00.0"
     val endDate = "2099-01-01 05:00:00.0"
@@ -100,7 +98,7 @@ class GameReward {
     var id: Long = 0
 
     @Enumerated(EnumType.ORDINAL)
-    var itemKind: ItemType = ItemType.None
+    var itemKind: OgkItemType = OgkItemType.None
     var itemId = 0
 }
 

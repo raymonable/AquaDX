@@ -1,9 +1,13 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package icu.samnyan.aqua.sega.ongeki
 
-import ext.empty
-import ext.int
-import ext.invoke
-import ext.parsing
+import ext.*
+import icu.samnyan.aqua.sega.general.model.response.UserRecentRating
+import icu.samnyan.aqua.sega.ongeki.model.OgkItemType
+import icu.samnyan.aqua.sega.ongeki.model.UserItem
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -23,6 +27,7 @@ fun OngekiController.initUser() {
     "GetUserDeckByKey".unpaged { db.deck.findByUser_Card_ExtId(uid) }
     "GetUserEventMusic".unpaged { db.eventMusic.findByUser_Card_ExtId(uid) }
     "GetUserEventPoint".unpaged { db.eventPoint.findByUser_Card_ExtId(uid) }
+    "GetUserKop".unpaged { db.kop.findByUser_Card_ExtId(uid) }
     "GetUserLoginBonus".unpaged { db.loginBonus.findByUser_Card_ExtId(uid) }
     "GetUserMissionPoint".unpaged { db.missionPoint.findByUser_Card_ExtId(uid) }
     "GetUserMusicItem".unpaged { db.musicItem.findByUser_Card_ExtId(uid) }
@@ -32,6 +37,10 @@ fun OngekiController.initUser() {
     "GetUserStory".unpaged { db.story.findByUser_Card_ExtId(uid) }
     "GetUserTechCount".unpaged { db.techCount.findByUser_Card_ExtId(uid) }
     "GetUserTrainingRoomByKey".unpaged("userTrainingRoomList") { db.trainingRoom.findByUser_Card_ExtId(uid) }
+
+    "GetUserBpBase".unpaged { empty }
+    "GetUserRatinglog".unpaged { empty }
+    "GetUserRegion".unpaged { empty }
 
     "GetUserTradeItem".unpaged {
         val start = parsing { data["startChapterId"]!!.int }
@@ -72,7 +81,84 @@ fun OngekiController.initUser() {
             .take(if (kind == 1) 15 else 10) to mapOf("kind" to kind)
     }
 
-    "GetUserBpBase".unpaged { empty }
-    "GetUserRatinglog".unpaged { empty }
-    "GetUserRegion".unpaged { empty }
+    "GetUserItem" {
+        val kind = (parsing { data["nextIndex"]!!.long } / 10000000000L).toInt()
+        var dat = db.item.findByUser_Card_ExtIdAndItemKind(uid, kind)
+
+        // Check if user have infinite kaika
+        if (kind == OgkItemType.KaikaItem.ordinal) {
+            val u = db.data.findByCard_ExtId(uid)()
+            u?.card?.aquaUser?.gameOptions?.let {
+                if (it.ongekiInfiniteKaika) {
+                    dat = listOf(UserItem().apply {
+                        user = u
+                        itemKind = OgkItemType.KaikaItem.ordinal
+                        itemId = 1
+                        stock = 999
+                    })
+                }
+            }
+        }
+
+        mapOf("userId" to uid, "length" to dat.size, "nextIndex" to -1, "itemKind" to kind, "userItemList" to dat)
+    }
+
+    "GetUserMusic" {
+        val dat = db.musicDetail.findByUser_Card_ExtId(uid).groupBy { it.musicId }
+            .mapValues { mapOf("length" to it.value.size, "userMusicDetailList" to it.value) }
+            .values.toList()
+        mapOf("userId" to uid, "length" to dat.size, "nextIndex" to -1, "userMusicList" to dat)
+    }
+
+    "GetUserPreview" api@ {
+        val u = db.data.findByCard_ExtId(uid)() ?: return@api mapOf("userId" to uid, "lastPlayDate" to null)
+        val o = db.option.findSingleByUser(u)()
+
+        mapOf(
+            "userId" to uid, "isLogin" to false,
+
+            "userName" to u.userName, "reincarnationNum" to u.reincarnationNum,
+            "level" to u.level, "exp" to u.exp, "playerRating" to u.playerRating, "newPlayerRating" to u.newPlayerRating,
+            "lastGameId" to u.lastGameId, "lastRomVersion" to u.lastRomVersion, "lastDataVersion" to u.lastDataVersion,
+            "lastPlayDate" to u.lastPlayDate, "lastLoginDate" to u.lastPlayDate,
+            "nameplateId" to u.nameplateId, "trophyId" to u.trophyId, "cardId" to u.cardId,
+
+            "dispPlayerLv" to (o?.dispPlayerLv ?: 1),
+            "dispRating" to (o?.dispRating ?: 1),
+            "dispBP" to (o?.dispBP ?: 1),
+            "headphone" to (o?.headphone ?: 0),
+
+            "lastEmoneyBrand" to 4,
+            "lastEmoneyCredit" to 10000
+        )
+    }
+
+    "GetUserRecentRating".unpaged {
+        db.generalData.findByUser_Card_ExtIdAndPropertyKey(uid, "recent_rating_list")()?.let { recent ->
+            recent.propertyValue.split(',').dropLastWhile { it.isEmpty() }.map {
+                val (m, d, s) = it.split(':').map { it.int }
+                UserRecentRating(m, d, "1000000", s)
+            }
+        } ?: run {
+            db.playlog.findByUser_Card_ExtId(uid, PageRequest.of(0, 30, Sort.by(Sort.Direction.DESC, "id"))).content
+                .map { UserRecentRating(it.musicId, it.level, "1000000", it.techScore) }
+        }
+    }
+
+    "GetUserRivalData" {
+        val idList = (data["userRivalList"] as Collection<JDict>)
+            .map { it["rivalUserId"]!!.long }
+
+        db.data.findByCard_ExtIdIn(idList)
+            .map { mapOf("rivalUserId" to it.card!!.extId, "rivalUserName" to it.userName) }
+    }
+
+    "GetUserRivalMusic".unpagedExtra {
+        val rivalUserId = (data["rivalUserId"] as Number).toLong()
+
+        val l = db.musicDetail.findByUser_Card_ExtId(rivalUserId).groupBy { it.musicId }
+            .map { mapOf("userRivalMusicDetailList" to it.value, "length" to it.value.size) }
+
+        l to mapOf("rivalUserId" to rivalUserId)
+    }
 }

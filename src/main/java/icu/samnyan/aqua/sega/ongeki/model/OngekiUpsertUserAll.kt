@@ -1,7 +1,7 @@
 package icu.samnyan.aqua.sega.ongeki.model
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating
 
-class UpsertUserAll {
+class OngekiUpsertUserAll {
     var userData: List<UserData>? = null
     var userOption: List<UserOption>? = null
     var userPlaylogList: List<UserPlaylog>? = null
