@@ -4,7 +4,6 @@ package icu.samnyan.aqua.sega.ongeki.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.ongeki.handler.impl.*;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +27,7 @@ public class OngekiController {
     private final GetUserCharacterHandler getUserCharacterHandler;
     private final GetUserDataHandler getUserDataHandler;
     private final GetUserDeckByKeyHandler getUserDeckByKeyHandler;
+    private final GetUserEventMapHandler getUserEventMapHandler;
     private final GetUserEventPointHandler getUserEventPointHandler;
     private final GetUserEventRankingHandler getUserEventRankingHandler;
     private final GetUserEventMusicHandler getUserEventMusicHandler;
@@ -45,6 +45,7 @@ public class OngekiController {
     private final GetUserRivalMusicHandler getUserRivalMusicHandler;
     private final GetUserRivalDataHandler getUserRivalDataHandler;
     private final GetUserScenarioHandler getUserScenarioHandler;
+    private final GetUserSkinHandler getUserSkinHandler;
     private final GetUserStoryHandler getUserStoryHandler;
     private final GetUserTechCountHandler getUserTechCountHandler;
     private final GetUserTechEventHandler getUserTechEventHandler;
@@ -109,6 +110,11 @@ public class OngekiController {
     @PostMapping("GetUserDeckByKeyApi")
     public String getUserDeckByKey(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return getUserDeckByKeyHandler.handle(request);
+    }
+
+    @PostMapping("GetUserEventMapApi")
+    public String getUserEventMap(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
+        return getUserEventMapHandler.handle(request);
     }
 
     @PostMapping("GetUserEventPointApi")
@@ -199,6 +205,11 @@ public class OngekiController {
     @PostMapping("GetUserScenarioApi")
     public String getUserScenario(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
         return getUserScenarioHandler.handle(request);
+    }
+
+    @PostMapping("GetUserSkinApi")
+    public String getUserSkin(@ModelAttribute Map<String, Object> request) throws JsonProcessingException {
+        return getUserSkinHandler.handle(request);
     }
 
     @PostMapping("GetUserStoryApi")
