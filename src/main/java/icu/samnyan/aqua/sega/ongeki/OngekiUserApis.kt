@@ -129,7 +129,10 @@ fun OngekiController.initUser() {
             "headphone" to (o?.headphone ?: 0),
 
             "lastEmoneyBrand" to 4,
-            "lastEmoneyCredit" to 10000
+            "lastEmoneyCredit" to 10000,
+
+            "banStatus" to 0,
+            "isWarningConfirmed" to false,
         )
     }
 

@@ -41,7 +41,7 @@ class OngekiController(
         val token = TokenChecker.tokenShort()
         log.info("$token : $api < ${data.toJson()}")
 
-        val noop = """{"returnCode":"1","apiName":"${api.substringBefore("Api").firstCharLower()}"}"""
+        val noop = """{"returnCode":1,"apiName":"${api.substringBefore("Api").firstCharLower()}"}"""
         if (api !in noopEndpoint && !handlers.containsKey(api)) {
             log.warn("$token : $api > not found")
             return noop
