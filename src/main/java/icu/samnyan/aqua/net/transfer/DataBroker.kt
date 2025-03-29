@@ -131,6 +131,8 @@ class OngekiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
     override val mapper = BasicMapper()
     override val url by lazy { allNet.gameUrl.ensureNoEndingSlash() }
 
+    class UserMusicWrapper(var userMusicDetailList: List<icu.samnyan.aqua.sega.ongeki.model.UserMusicDetail>)
+
     override fun pull(): String {
         val (userId, paged) = prePull()
 
@@ -139,7 +141,8 @@ class OngekiDataBroker(allNet: AllNetClient, log: (String) -> Unit): DataBroker(
             userOption = ls("GetUserOptionApi".get("userOption", userId))
             userMusicItemList = "GetUserMusicItemApi".get("userMusicItemList", paged)
             userBossList = "GetUserBossApi".get("userBossList", userId)
-            userMusicDetailList = "GetUserMusicApi".get("userMusicList", paged)
+            userMusicDetailList = "GetUserMusicApi".get<List<UserMusicWrapper>>("userMusicList", paged)
+                .flatMap { it.userMusicDetailList }
             userTechCountList = "GetUserTechCountApi".get("userTechCountList", userId)
             userCardList = "GetUserCardApi".get("userCardList", paged)
             userCharacterList = "GetUserCharacterApi".get("userCharacterList", paged)
