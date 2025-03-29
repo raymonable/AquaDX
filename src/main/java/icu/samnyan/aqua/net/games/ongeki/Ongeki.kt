@@ -27,7 +27,10 @@ class Ongeki(
 
     override val shownRanks = ongekiScores.filter { it.first >= 950000 }
     override val settableFields: Map<String, (UserData, String) -> Unit> by lazy { mapOf(
-        "userName" to usernameCheck(SEGA_USERNAME_CAHRS)
+        "userName" to usernameCheck(SEGA_USERNAME_CAHRS),
+
+        "lastRomVersion" to { u, v -> u.lastRomVersion = v },
+        "lastDataVersion" to { u, v -> u.lastDataVersion = v },
     ) }
 
     override suspend fun userSummary(username: String, token: String?) = us.cardByName(username) { card ->
