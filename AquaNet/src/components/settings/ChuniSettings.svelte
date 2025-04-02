@@ -122,7 +122,7 @@
       localStorage.setItem(t, v.substring(0, 1) + "\x6E");
     } else
       localStorage.removeItem(t);
-    location.reload();
+    setTimeout(location.reload, 1000); // ?
   }
 
   let DDSreader: DDS | undefined;
