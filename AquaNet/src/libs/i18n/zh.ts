@@ -277,6 +277,7 @@ export const zhAquaTrans: typeof EN_REF_AQUATRANS = {
   'trans.btn.test': '测试连接',
   'trans.btn.export': '导出数据',
   'trans.btn.import': '导入数据',
+  'trans.blacklist': "这个服务器的服主把这个导出工具 ban 了，所以不能从这里导出",
 }
 
 

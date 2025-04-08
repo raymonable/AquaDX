@@ -270,6 +270,7 @@ export const EN_REF_AQUATRANS = {
   'trans.btn.test': 'Test Connection',
   'trans.btn.export': 'Export Data',
   'trans.btn.import': 'Import Data',
+  'trans.blacklist': "Your server's rules doesn't allow using this tool. You might get banned if you try (idk, ask them if you want to know why)",
 }
 
 export const EN_REF = { ...EN_REF_USER, ...EN_REF_Welcome, ...EN_REF_GENERAL,
