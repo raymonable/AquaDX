@@ -226,4 +226,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
         recommendedMusic = data
         logger.info("Recommender updated with ${data.size} users")
     }
+
+    @API("song-pop")
+    fun songPopRanking() = us.pop.ranking[name]
 }
