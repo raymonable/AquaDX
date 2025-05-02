@@ -228,5 +228,5 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     }
 
     @API("song-pop")
-    fun songPopRanking() = us.pop.ranking[name]
+    fun songPopRanking() = us.pop.ranking[tableName]
 }
