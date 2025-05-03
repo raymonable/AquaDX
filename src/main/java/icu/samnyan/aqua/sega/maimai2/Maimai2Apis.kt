@@ -121,7 +121,7 @@ fun Maimai2ServletController.initApis() {
     }
 
     "UserLogin" {
-        val d = db.userData.findByCardExtId(uid)() ?: (404 - "User not found")
+        val d = db.userData.findByCardExtId(uid)()
 
         val res = mutableMapOf(
             "returnCode" to 1, "loginCount" to 1,
@@ -130,7 +130,7 @@ fun Maimai2ServletController.initApis() {
             "Bearer" to "meow", "bearer" to "meow"
         )
 
-        if (d.card?.status == CardStatus.MIGRATED_TO_MINATO) {
+        if (d?.card?.status == CardStatus.MIGRATED_TO_MINATO) {
             res["returnCode"] = 0
         }
 
