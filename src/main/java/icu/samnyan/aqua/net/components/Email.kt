@@ -73,7 +73,7 @@ class EmailService(
         mailer.sendMail(EmailBuilder.startingBlank()
             .from(props.senderName, props.senderAddr)
             .to(user.computedName, user.email)
-            .withSubject("Verification Your Email Address for AquaNet")
+            .withSubject("Verify Your Email Address for AquaNet")
             .withHTMLText(confirmTemplate
                 .replace("{{name}}", user.computedName)
                 .replace("{{url}}", "https://${props.webHost}/verify?code=$token"))
