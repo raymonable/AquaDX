@@ -9,8 +9,12 @@ import icu.samnyan.aqua.sega.chusan.model.*
 import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3Team
 import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3TeamRequest
 import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserData
+import jakarta.annotation.PostConstruct
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
 
 @RestController
 @API("api/v2/game/chu3")
@@ -104,11 +108,18 @@ class Chusan(
         mapOf("user" to u, "items" to rp.userItem.findAllByUser(u))
     }
 
+    private var teamRankingCacheLock = ReentrantLock()
+    @PostConstruct
+    fun teamRankingCacheInit() = thread { teamRankingCacheRun() }
+    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
+    fun teamRankingCacheRun() = teamRankingCacheLock.maybeLock { calculateTeamRanking() }
+
     // Chusan Teams Rankings
     private var teamRankingCache: List<ChusanTeamRanking> = emptyList()
     private var teamUserList = mutableMapOf<Long, MutableList<ChusanTeamUser>>()
     fun calculateTeamRanking() {
         // Update teams within SQL
+        val time = millis()
         us.em.createNativeQuery(
             """
                 UPDATE chusan_teams j
@@ -148,7 +159,11 @@ class Chusan(
                 points = (it[4] ?: 0).int
             )
         }.sortedWith( compareBy{it.rank} )
+        updateTeamMembers()
+        logger.info("Chusan team rankings computed in ${millis() - time}ms")
+    }
 
+    fun updateTeamMembers() {
         // Read members of teams
         teamUserList = mutableMapOf<Long, MutableList<ChusanTeamUser>>()
         val allTeamedChusanUsers = us.em.createNativeQuery(
@@ -181,7 +196,6 @@ class Chusan(
     @API("teams")
     fun teamsOverview(@RP token: String?): Map<String, Any?> {
         // TODO: move to scheduled
-        calculateTeamRanking();
         val userData = token?.let { us.jwt.auth(it) }?.let {
             u -> userDataRepo.findByCard(u.ghostCard)
         };
