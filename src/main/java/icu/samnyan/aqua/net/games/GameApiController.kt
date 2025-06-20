@@ -4,6 +4,7 @@ import ext.*
 import icu.samnyan.aqua.net.BotProps
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.utils.SUCCESS
+import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserData
 import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.general.model.CardStatus
 import jakarta.annotation.PostConstruct
@@ -199,7 +200,8 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
             ratingComposition = ratingComp,
             recent = plays.sortedBy { it.userPlayDate.toString() }.takeLast(100).reversed(),
             lastPlayedHost = user.lastClientId?.let { us.userRepo.findByKeychip(it)?.username },
-            rival = rival
+            rival = rival,
+            team = (user as Chu3UserData).teamId
         )
     }
 
