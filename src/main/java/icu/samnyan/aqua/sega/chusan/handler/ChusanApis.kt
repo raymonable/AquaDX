@@ -279,13 +279,17 @@ fun ChusanController.chusanInit() {
 
     "GetUserTeam" {
         val playDate = parsing { data["playDate"] as String }
-        val team = db.userData.findByCard_ExtId(uid)()?.card?.aquaUser?.gameOptions?.chusanTeamName?.some
-            ?: props.teamName?.some ?:  "一緒に歌おう！"
 
-        mapOf(
-            "userId" to uid, "teamId" to 1, "teamRank" to 1, "teamName" to team,
-            "userTeamPoint" to mapOf("userId" to uid, "teamId" to 1, "orderId" to 1, "teamPoint" to 1, "aggrDate" to playDate)
-        )
+        val teamId = db.userData.findByCard_ExtId(uid)()?.teamId;
+        val team = if (teamId != null && teamId > 0) { db.teams.findTeam(teamId) } else {null};
+        if (team != null && team.ranking > 0) {
+            mapOf(
+                "userId" to uid, "teamId" to teamId, "teamRank" to team.ranking, "teamName" to team.name,
+                "userTeamPoint" to mapOf("userId" to uid, "teamId" to teamId, "orderId" to 1, "teamPoint" to 1, "aggrDate" to playDate)
+            )
+        } else {
+            """{"teamId":"0"}"""
+        }
     }
 
     // Game settings

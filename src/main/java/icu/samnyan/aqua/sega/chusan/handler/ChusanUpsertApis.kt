@@ -27,6 +27,11 @@ fun ChusanController.upsertApiInit() {
                 card = oldUser?.card ?: us.cardRepo.findByExtId(uid).expect("Card not found")
                 userName = userName.fromChusanUsername()
                 userNameEx = ""
+                teamId = oldUser?.teamId ?: 0
+                teamContribution = (oldUser?.teamContribution ?: 0) +
+                    (if (userTeamPoint?.isEmpty() == false && (oldUser?.teamId ?: 0) > 0) {
+                        (userTeamPoint?.get(0)?.teamPoint ?: 0).toInt()
+                    } else {0})
             }.also { db.userData.saveAndFlush(it) }
 
             versionHelper[u.lastClientId] = u.lastDataVersion

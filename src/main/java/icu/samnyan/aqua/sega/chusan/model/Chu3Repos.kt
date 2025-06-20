@@ -40,6 +40,40 @@ interface Chu3UserLoginBonusRepo : JpaRepository<UserLoginBonus, Long> {
     fun findLoginBonus(userId: Int, version: Int, presetId: Long): Optional<UserLoginBonus>
 }
 
+interface Chu3TeamsRepo : JpaRepository<Chu3Team, Long> {
+    @Query(
+        value = "select * from chusan_teams where team_id = ?1 limit 1",
+        nativeQuery = true
+    )
+    fun findTeam(teamId: Long): Chu3Team?
+
+    @Query(
+        value = "select * from chusan_teams where owner_au_id = ?1 limit 1",
+        nativeQuery = true
+    )
+    fun findTeamByOwnerAu(au: Long): Chu3Team?
+
+    @Query(
+        value = "select * from chusan_teams where name = ?1 limit 1",
+        nativeQuery = true
+    )
+    fun findTeamByName(au: String): Chu3Team?
+}
+
+interface Chu3TeamRequestsRepo : JpaRepository<Chu3TeamRequest, Long> {
+    @Query(
+        value = "select * from chusan_team_requests where request_au_id = ?1 limit 1",
+        nativeQuery = true
+    )
+    fun findRequestByRequesterId(id: Long): Chu3TeamRequest?
+
+    @Query(
+        value = "select * from chusan_team_requests where team_id = ?1",
+        nativeQuery = true
+    )
+    fun findTeamRequest(teamId: Long): List<Chu3TeamRequest>
+}
+
 interface Chu3UserActivityRepo : Chu3UserLinked<Chu3UserActivity> {
     fun findTopByUserAndActivityIdAndKindOrderByIdDesc(user: Chu3UserData, activityId: Int, kind: Int): Optional<Chu3UserActivity>
     fun findByUserAndActivityIdAndKind(user: Chu3UserData, activityId: Int, kind: Int): Chu3UserActivity?
@@ -201,5 +235,7 @@ class Chu3Repos(
     val gameGachaCard: Chu3GameGachaCardRepo,
     val gameGacha: Chu3GameGachaRepo,
     val gameLoginBonusPresets: Chu3GameLoginBonusPresetsRepo,
-    val gameLoginBonus: Chu3GameLoginBonusRepo
+    val gameLoginBonus: Chu3GameLoginBonusRepo,
+    val teams: Chu3TeamsRepo,
+    val teamRequests: Chu3TeamRequestsRepo
 )

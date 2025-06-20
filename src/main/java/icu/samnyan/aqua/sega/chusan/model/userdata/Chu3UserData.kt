@@ -129,6 +129,9 @@ class Chu3UserData : BaseEntity(), IUserData {
     var extLong1: Long = 0
     var extLong2: Long = 0
 
+    var teamId: Long = 0
+    var teamContribution: Int = 0
+
     @JsonInclude
     @Transient
     var rankUpChallengeResults: List<Any>? = null

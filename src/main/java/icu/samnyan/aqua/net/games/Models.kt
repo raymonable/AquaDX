@@ -61,6 +61,20 @@ data class GenericRankingPlayer(
     val lastSeen: String
 )
 
+data class ChusanTeamRanking(
+    var id: Int,
+    var rank: Int,
+    var name: String,
+    var memberCount: Int,
+    var points: Int
+)
+
+data class ChusanTeamUser(
+    var contribution: Int,
+    var username: String,
+    var name: String
+)
+
 @Serializable
 data class GenericMusicMeta(
     val name: String?,
