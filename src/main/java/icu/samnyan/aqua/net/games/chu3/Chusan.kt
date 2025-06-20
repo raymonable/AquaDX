@@ -206,7 +206,8 @@ class Chusan(
                 "minimum" to props.teamLevelMinimum,
                 "qualified" to if (props.teamLevelMinimum != null) {
                     props.teamLevelMinimum!! <= (userData?.level ?: 0)} else {true}
-            )
+            ),
+            "maximumMemberCount" to props.teamMaximum
         );
     }
 
@@ -254,12 +255,14 @@ class Chusan(
     fun manageTeamRequest(@RP token: String, @RP requestId: Long, @RP status: Boolean) = us.jwt.auth(token)  {
         val team = rp.teams.findTeamByOwnerAu(it.auId)
         if (team == null) (403 - "You do not manage a team");
+        if (teamUserList.isEmpty()) (500 - "Please wait a moment");
 
         val request = rp.teamRequests.findById(requestId)
         if (!request.isPresent) (400 - "Unknown request");
         if (request.get().team_id != team.id) (403 - "Invalid request");
 
-        if (status) {
+        val memberCount = teamUserList[team.id]?.size;
+        if (status && !(props.teamMaximum?.let{m -> m <= (memberCount ?: 0)} ?: false)) {
             val userData = us.userRepo.findByAuId(request.get().request_au_id)?.let{
                 user -> rp.userData.findByCard(user.ghostCard);
             };
@@ -270,6 +273,7 @@ class Chusan(
             }
         }
         rp.teamRequests.deleteById(requestId);
+        updateTeamMembers();
         mapOf("status" to "ok")
     }
     @API("team-join")
@@ -296,6 +300,8 @@ class Chusan(
         if (outgoing != null)
             rp.teamRequests.deleteById(outgoing.id);
 
+        val memberCount = teamUserList[teamId]?.size;
+        if (props.teamMaximum?.let{m -> m <= (memberCount ?: 0)} ?: false) (403 - "This team is full")
         if (teamId != null)
             rp.teamRequests.save(
                 Chu3TeamRequest().apply{
@@ -304,6 +310,7 @@ class Chusan(
                     request_time = LocalDateTime.now()
                 }
             )
+        mapOf("status" to "ok")
     }
     @API("create-team")
     fun createTeam(@RP token: String, @RP teamName: String) : Any = us.jwt.auth(token) {
@@ -326,5 +333,6 @@ class Chusan(
             team -> userData.teamId = team.id
         };
         rp.userData.save(userData)
+        mapOf("status" to "ok")
     }
 }
