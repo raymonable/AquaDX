@@ -53,6 +53,7 @@ class AquaNetUser(
     var profileLocation: String? = "",
     var profileBio: String? = "",
     var profilePicture: String? = "",
+    var profileBackground: String? = "",
     var optOutOfLeaderboard: Boolean = false,
 
     // Email confirmation
@@ -90,6 +91,7 @@ class AquaNetUser(
         "profileLocation" to profileLocation,
         "profileBio" to profileBio,
         "profilePicture" to profilePicture,
+        "profileBackground" to profileBackground
     )
 }
 

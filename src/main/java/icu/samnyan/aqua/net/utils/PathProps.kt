@@ -17,14 +17,20 @@ class PathProps {
     var mai2Plays: String = "data/upload/mai2/plays"
     var mai2Portrait: String = "data/upload/mai2/portrait"
     var aquaNetPortrait: String = "data/upload/net/portrait"
+    var aquaNetBackground: String = "data/upload/net/background"
     var futariRecruitLog: String = "data/futari/recruit.log"
     var futariRelayInfo: String = "data/futari/relays.json"
+    var aquaNetTempPortrait: String = "data/tmp/portrait"
+    var aquaNetTempBackground: String = "data/tmp/background"
 
     @PostConstruct
     fun init() {
         mai2Plays = mai2Plays.path().apply { toFile().mkdirs() }.toString()
         mai2Portrait = mai2Portrait.path().apply { toFile().mkdirs() }.toString()
         aquaNetPortrait = aquaNetPortrait.path().apply { toFile().mkdirs() }.toString()
+        aquaNetBackground = aquaNetBackground.path().apply { toFile().mkdirs() }.toString()
+        aquaNetTempPortrait = aquaNetTempPortrait.path().apply { toFile().mkdirs() }.toString()
+        aquaNetTempBackground = aquaNetTempBackground.path().apply { toFile().mkdirs() }.toString()
         futariRecruitLog = futariRecruitLog.path().apply { toFile().parentFile.mkdirs() }.toString()
         futariRelayInfo = futariRelayInfo.path()
             .apply { toFile().parentFile.mkdirs() }
@@ -38,6 +44,7 @@ class UploadStatic(val paths: PathProps): WebMvcConfigurer {
         println("Adding resource handlers")
         mapOf(
             "/uploads/net/portrait/**" to paths.aquaNetPortrait.ensureEndingSlash(),
+            "/uploads/net/background/**" to paths.aquaNetBackground.ensureEndingSlash(),
             "/uploads/mai2/portrait/**" to paths.mai2Portrait.ensureEndingSlash(),
             "/uploads/mai2/plays/**" to paths.mai2Plays.ensureEndingSlash()
         ).forEach { (k, v) ->

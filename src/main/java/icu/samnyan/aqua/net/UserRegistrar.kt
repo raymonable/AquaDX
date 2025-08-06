@@ -13,10 +13,12 @@ import icu.samnyan.aqua.sega.general.service.CardService
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.time.LocalDateTime
+import kotlin.io.path.deleteIfExists
 import kotlin.io.path.writeBytes
 
 @RestController
@@ -28,6 +30,7 @@ class UserRegistrar(
     val emailService: EmailService,
     val geoIP: GeoIP,
     val jwt: JWT,
+    val imageProcessing: ImageProcessing,
     val confirmationRepo: EmailConfirmationRepo,
     val resetPasswordRepo: ResetPasswordRepo,
     val cardRepo: CardRepository,
@@ -281,25 +284,53 @@ class UserRegistrar(
         mapOf("keychip" to new)
     }
 
+    // TODO: clean these up
+
     @API("/upload-pfp", consumes = ["multipart/form-data"])
     @Doc("Upload a profile picture for the user.", "Success message")
     suspend fun uploadPfp(@RP token: Str, @RP file: MultipartFile) = jwt.auth(token) { u ->
-        // Processing the image would lead to many open factors for attack
-        // (e.g. the JFIF Pixel Flood attack that ImageIO is vulnerable to)
-        // So we check file magic, then store the image without any processing
-        val bytes = file.bytes
-        val mime = TIKA.detect(bytes) ?: (400 - "Invalid file type")
+        val path = imageProcessing.suspendImage(file, u, paths.aquaNetTempPortrait.path())
+        if (path == null) 400 - "Invalid file type"
+        val name = "${u.auId}.webp"
 
-        // Check if the file is an image
-        if (!mime.startsWith("image/")) 400 - "Invalid file type"
-
-        // Save the image
-        val name = "${u.auId}${MIMES.forName(mime)?.extension ?: ".jpg"}"
         async {
-            (portraitPath / name).writeBytes(bytes)
+            imageProcessing.processImage(
+                "256x256/filters:format(webp)/portrait/" + path.fileName,
+                (paths.aquaNetPortrait.path() / name)
+            )
             userRepo.save(u.apply { profilePicture = name })
+            path.deleteIfExists()
         }
 
+        SUCCESS
+    }
+
+
+    @API("/upload-background", consumes = ["multipart/form-data"])
+    @Doc("Upload a background for the user.", "Success message")
+    suspend fun uploadBackground(@RP token: Str, @RP file: MultipartFile) = jwt.auth(token) { u ->
+        val path = imageProcessing.suspendImage(file, u, paths.aquaNetTempBackground.path())
+        if (path == null) 400 - "Invalid file type"
+        val name = "${u.auId}.webp"
+
+        async {
+            imageProcessing.processImage(
+                "trim/fit-in/1920x1920/filters:upscale():max_frames(1):blur(24):format(webp)/background/" + path.fileName,
+                (paths.aquaNetBackground.path() / name)
+            )
+            userRepo.save(u.apply { profileBackground = name })
+            path.deleteIfExists()
+        }
+
+        SUCCESS
+    }
+
+    @API("/remove-background")
+    @Doc("Remove the user's background", "Success message")
+    suspend fun removeBackground(@RP token: Str) = jwt.auth(token) { u ->
+        async {
+            userRepo.save(u.apply { profileBackground = null })
+        }
         SUCCESS
     }
 }
