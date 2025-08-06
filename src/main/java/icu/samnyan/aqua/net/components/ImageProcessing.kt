@@ -30,44 +30,6 @@ class ImageProcessing(
 ) {
     val log = LoggerFactory.getLogger(ImageProcessing::class.java)!!
 
-    var tempPortraitPath: Path = paths.aquaNetTempPortrait.path()
-    val portraitPath: Path = paths.aquaNetPortrait.path()
-    var tempBackgroundPath: Path = paths.aquaNetTempBackground.path()
-    val backgroundPath: Path = paths.aquaNetBackground.path()
-
-    /*
-    suspend fun generate(tempFileName: Str, target: Path, details: Str) {
-        // In the future, implementing a queue might be necessary.
-        // For now, this'll do, I think.
-        val url = props.baseUrl + "/unsafe/" + details + tempFileName
-        val response = HTTP.get(url).bodyAsBytes()
-        target.writeBytes(response)
-    }
-
-    suspend fun generateProfilePicture(user: AquaNetUser, bytes: ByteArray, extension: Str) {
-        val tempFileName = user.auId.toString() + extension
-        val tempPath = (tempPortraitPath / tempFileName)
-        tempPath.writeBytes(bytes)
-        generate(
-            tempFileName,
-            (portraitPath / (user.auId.toString() + ".webp")),
-            "256x256/filters:format(webp)/portrait/"
-        )
-        tempPath.deleteIfExists()
-    }
-
-    suspend fun generateProfileBackground(user: AquaNetUser, bytes: ByteArray, extension: Str) {
-        val tempFileName = user.auId.toString() + extension
-        val tempPath = (tempBackgroundPath / tempFileName)
-        tempPath.writeBytes(bytes)
-        generate(
-            tempFileName,
-            (backgroundPath / (user.auId.toString() + ".webp")),
-            "trim/fit-in/1920x1920/filters:upscale():blur(24):format(webp)/background/"
-        )
-        tempPath.deleteIfExists()
-    }*/
-
     suspend fun suspendImage(file: MultipartFile, user: AquaNetUser, path: Path): Path? {
         val bytes = file.bytes
         val mime = TIKA.detect(bytes) ?: (400 - "Invalid file type")
