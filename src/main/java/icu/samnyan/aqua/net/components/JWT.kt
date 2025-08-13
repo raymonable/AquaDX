@@ -6,6 +6,7 @@ import icu.samnyan.aqua.net.db.AquaNetUser
 import icu.samnyan.aqua.net.db.AquaNetUserRepo
 import icu.samnyan.aqua.net.db.SessionToken
 import icu.samnyan.aqua.net.db.SessionTokenRepo
+import icu.samnyan.aqua.net.db.getTokenExpiry
 import io.jsonwebtoken.JwtParser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -63,7 +64,7 @@ class JWT(
     @Transactional
     fun gen(user: AquaNetUser): Str {
         val activeTokens = sessionRepo.findByAquaNetUserAuId(user.auId)
-            .sortedByDescending { it.expiry }.drop(4) // the cap is 5, but we append a new token after the fact
+            .sortedByDescending { it.expiry }.drop(9) // the cap is 10, but we append a new token after the fact
         if (activeTokens.isNotEmpty()) {
             sessionRepo.deleteAll(activeTokens)
         }
@@ -96,6 +97,10 @@ class JWT(
                     sessionRepo.delete(token)
                     return null
                 }
+
+                sessionRepo.save(token.apply{
+                    expiry = getTokenExpiry()
+                })
             }
 
             return token?.aquaNetUser
