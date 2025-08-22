@@ -83,7 +83,6 @@ fun ChusanController.chusanInit() {
     "GetUserCtoCPlay" { """{"userId":"${data["userId"]}","orderBy":"0","count":"0","userCtoCPlayList":[]}""" }
     "GetUserRivalMusic" { """{"userId":"${data["userId"]}","rivalId":"0","length":"0","nextIndex":"0","userRivalMusicList":[]}""" }
     "GetUserRivalData" { """{"userId":"${data["userId"]}","length":"0","userRivalData":[]}""" }
-    "GetUserRegion" { """{"userId":"${data["userId"]}","length":"0","userRegionList":[]}""" }
     "GetUserPrintedCard" { """{"userId":"${data["userId"]}","length":0,"nextIndex":-1,"userPrintedCardList":[]}""" }
 
     // Net battle data
@@ -286,6 +285,12 @@ fun ChusanController.chusanInit() {
             "userId" to uid, "teamId" to 1, "teamRank" to 1, "teamName" to team,
             "userTeamPoint" to mapOf("userId" to uid, "teamId" to 1, "orderId" to 1, "teamPoint" to 1, "aggrDate" to playDate)
         )
+    }
+
+    "GetUserRegion" {
+        db.userRegions.findByUser_Card_ExtId(uid)
+            .map { mapOf("regionId" to it.regionId, "playCount" to it.playCount) }
+            .let { mapOf("userId" to uid, "userRegionList" to it) }
     }
 
     // Game settings
