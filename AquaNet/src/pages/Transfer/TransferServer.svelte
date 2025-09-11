@@ -84,7 +84,7 @@
     }).catch(err => error = err.message).finally(() => loading = false)
   }
 
-  $: isBlacklist = !!blacklist.filter(x => src.dns.includes(x))
+  $: isBlacklist = blacklist.filter(x => src.dns.includes(x)).length > 0
 </script>
 
 <StatusOverlays {loading} />
