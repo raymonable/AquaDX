@@ -33,13 +33,13 @@ Below is a list of games supported by this server.
 
 | Game                   | Ver  | Codename    | Thanks to                                            |
 |------------------------|------|-------------|------------------------------------------------------|
-| SDHD: CHUNITHM         | 2.30 | VERSE       |                                                      |
+| SDHD: CHUNITHM         | 2.31 | VERSE       |                                                      |
 | SDEZ: MaiMai DX        | 1.55 | PRiSM Plus  |                                                      |
-| SDGA: MaiMai DX (Intl) | 1.50 | PRiSM       | [@Clansty](https://github.com/clansty)               |
+| SDGA: MaiMai DX (Intl) | 1.55 | PRiSM       | [@Clansty](https://github.com/clansty)               |
 | SDED: Card Maker       | 1.39 |             | [@Becods](https://github.com/Becods)                 |
 | SDDT: O.N.G.E.K.I.     | 1.50 | Re:Fresh    | [@PenguinCaptain](https://github.com/PenguinCaptain) |
-| SBZV: Project DIVA     | 7.10 | Future Tone |                                                      |
-| SDFE: Wacca (*ALPHA)   | 3.07 | Reverse     |                                                      |
+| SBZV: Project DIVA     | All | Future Tone |                                                      |
+| SDFE: Wacca (*ALPHA)   | All | Reverse     |                                                      |
 
 Check out these docs for more information.
 * [Game specific notes](docs/game_specific_notes.md)
