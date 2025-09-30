@@ -25,7 +25,14 @@ fun ChusanController.upsertApiInit() {
             val u = (userData?.get(0) ?: return@api null).apply {
                 id = oldUser?.id ?: 0
                 card = oldUser?.card ?: us.cardRepo.findByExtId(uid).expect("Card not found")
-                userName = userName.fromChusanUsername()
+
+                val version = data["version"] as? String ?: "0.00"
+                val versionNumber = version.toDoubleOrNull() ?: 0.0
+                userName = if (versionNumber >= 2.40) {
+                    userName
+                } else {
+                    userName.fromChusanUsername()
+                }
                 userNameEx = ""
             }.also { db.userData.saveAndFlush(it) }
 
@@ -92,10 +99,15 @@ fun ChusanController.upsertApiInit() {
                     score = it.score
                 }
 
-                selectUserName = selectUserName.fromChusanUsername()
-                opponentUserName1 = opponentUserName1.fromChusanUsername()
-                opponentUserName2 = opponentUserName2.fromChusanUsername()
-                opponentUserName3 = opponentUserName3.fromChusanUsername()
+                val version = data["version"] as? String ?: "0.00"
+                val versionNumber = version.toDoubleOrNull() ?: 0.0
+                if (versionNumber < 2.40) {
+                    // 2.40以下版本需要转换编码
+                    selectUserName = selectUserName.fromChusanUsername()
+                    opponentUserName1 = opponentUserName1.fromChusanUsername()
+                    opponentUserName2 = opponentUserName2.fromChusanUsername()
+                    opponentUserName3 = opponentUserName3.fromChusanUsername()
+                }
             }) }
 
             // List data
