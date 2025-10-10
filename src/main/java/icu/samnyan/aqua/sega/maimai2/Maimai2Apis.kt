@@ -115,7 +115,7 @@ fun Maimai2ServletController.initApis() {
         )
 
         if (d.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            res["userName"] = "JiaQQqun / CardMigrated"
+            res["userName"] = "JiaQQqun / ChangeDNS"
             res["dispRate"] = 1
             res["playerRating"] = 66564
             res["totalAwake"] = 7114
