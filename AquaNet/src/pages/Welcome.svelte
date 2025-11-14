@@ -5,7 +5,6 @@
   import Icon from "@iconify/svelte";
   import { USER } from "../libs/sdk";
   import { t } from "../libs/i18n"
-  import MunetRegisterBanner from "../components/MunetRegisterBanner.svelte";
 
   let params = new URLSearchParams(window.location.search)
 
@@ -162,7 +161,7 @@
       return submitting = false
     }
 
-    // Send request to server 
+    // Send request to server
     await USER.changePassword({ token, password })
       .then(() => {
         state = 'verify'
@@ -221,9 +220,6 @@
                    on:turnstile-expired={_ => window.location.reload()}
                    on:turnstile-timeout={_ => console.log(error = t('welcome.turnstile-timeout'))} />
         {/if}
-        {#if isSignup}
-          <MunetRegisterBanner username={username} email={email}/>
-        {/if}
       </div>
     {:else if state === "submitreset"}
       <div class="login-form" transition:slide>
@@ -264,7 +260,7 @@
       {#if error}
         <span class="error">{error}</span>
       {/if}
-      <div class="login-form" transition:slide> 
+      <div class="login-form" transition:slide>
         <input type="password" placeholder={t('new-password')} bind:value={password}>
           <button on:click={changePassword}>
             {#if submitting}
