@@ -16,10 +16,10 @@ import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
 
 abstract class GameApiController<T : IUserData>(val name: String, userDataClass: KClass<T>) {
-    val musicMapping = resJson<Map<String, GenericMusicMeta>>("/meta/$name/music.json")
-        ?.mapKeys { it.key.toInt() } ?: emptyMap()
     val logger = LoggerFactory.getLogger(javaClass)
 
+    val musicMapping = resJson<Map<String, GenericMusicMeta>>("/meta/$name/music.json")
+        ?.mapKeys { it.key.toInt() } ?: emptyMap()
     val itemMapping = resJson<Map<String, Map<String, GenericItemMeta>>>("/meta/$name/items.json") ?: emptyMap()
 
     abstract val us: AquaUserServices

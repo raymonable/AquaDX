@@ -28,7 +28,6 @@ fun ChusanController.chusanInit() {
         mapOf("type" to type, "length" to 0, "gameRankingList" to lst)
     }
 
-    // VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE
     "GetGameCourseLevel" {
         // gameCourseLevelList: [{courseId: int, startDate: date, endDate: date}]
         mapOf("length" to 0, "gameCourseLevelList" to listOf(
@@ -73,7 +72,6 @@ fun ChusanController.chusanInit() {
 //        )
         empty
     }
-    // VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE
 
     // Stub handlers
     "GetGameIdlist" { """{"type":"${data["type"]}","length":"0","gameIdlistList":[]}""" }
@@ -341,7 +339,7 @@ fun ChusanController.chusanInit() {
     }
 
     // Static
-    "GetGameEvent" static { db.gameEvent.findByEnable(true).let { mapOf("type" to 1, "length" to it.size, "gameEventList" to it) } }
+    "GetGameEvent" static { eventMap.let { mapOf("type" to 1, "length" to it.size, "gameEventList" to it) } }
     "GetGameCharge" static { db.gameCharge.findAll().let { mapOf("length" to it.size, "gameChargeList" to it) } }
     "GetGameGacha" static { db.gameGacha.findAll().let { mapOf("length" to it.size, "gameGachaList" to it, "registIdList" to empty) } }
     "GetGameMapAreaCondition" static { ChusanData.mapAreaCondition }

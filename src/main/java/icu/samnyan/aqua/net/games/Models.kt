@@ -81,6 +81,12 @@ data class GenericItemMeta(
     val ver: String? = null
 )
 
+@Serializable
+data class GenericEventMeta(
+    val id: Int = 0,
+    val type: Int = 0
+)
+
 // Here are some interfaces to generalize across multiple games
 interface IUserData {
     val id: Long

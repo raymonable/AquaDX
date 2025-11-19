@@ -19,6 +19,7 @@ class PathProps {
     var aquaNetPortrait: String = "data/upload/net/portrait"
     var futariRecruitLog: String = "data/futari/recruit.log"
     var futariRelayInfo: String = "data/futari/relays.json"
+    var gameMetadata: String = "data/game"
 
     @PostConstruct
     fun init() {
@@ -29,6 +30,7 @@ class PathProps {
         futariRelayInfo = futariRelayInfo.path()
             .apply { toFile().parentFile.mkdirs() }
             .apply { if (!exists()) createFile() }.toString()
+        gameMetadata = gameMetadata.path().apply { toFile().mkdirs() }.toString()
     }
 }
 

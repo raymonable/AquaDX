@@ -2,7 +2,9 @@ package icu.samnyan.aqua.sega.chusan
 
 import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
+import icu.samnyan.aqua.net.games.GenericEventMeta
 import icu.samnyan.aqua.net.games.chu3.Chusan
+import icu.samnyan.aqua.net.utils.PathProps
 import icu.samnyan.aqua.net.utils.simpleDescribe
 import icu.samnyan.aqua.sega.allnet.TokenChecker
 import icu.samnyan.aqua.sega.chusan.handler.chusanInit
@@ -32,6 +34,7 @@ class ChusanController(
     val versionHelper: ChusanVersionHelper,
     val props: ChusanProps,
     val pop: GameMusicPopularity,
+    val paths: PathProps,
     val chusan: Chusan
 ): MeowApi({ api, resp ->
     if (resp is String) resp
@@ -43,6 +46,11 @@ class ChusanController(
         "UpsertClientSettingApi", "UpsertClientTestmodeApi", "CreateTokenApi", "RemoveTokenApi", "UpsertClientUploadApi",
         "PrinterLoginApi", "PrinterLogoutApi", "Ping", "GameLogoutApi", "RemoveMatchingMemberApi",
         "UpsertClientPlayTimeApi", "UpsertClientGameStartApi", "UpsertClientGameEndApi")
+
+    val baseEvent = mapOf("startDate" to "2019-01-01 00:00:00", "endDate" to "2029-01-01 00:00:00")
+    val eventMap = dataJson<List<GenericEventMeta>>(paths.gameMetadata.path() / "chu3/events.json")?.map {
+        mapOf("id" to it.id.int(), "type" to it.type.int()) + baseEvent
+    } ?: emptyList()
 
     init { chusanInit() }
     val handlers = initH
