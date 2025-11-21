@@ -4,6 +4,7 @@ import ext.API
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
+import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserGeneralDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserMusicDetailRepo
@@ -44,5 +45,10 @@ class Ongeki(
         )
 
         genericUserSummary(card, ratingComposition)
+    }
+
+    override fun getNaiveRating(user: IUserData): Int {
+        // TODO
+        return 0
     }
 }

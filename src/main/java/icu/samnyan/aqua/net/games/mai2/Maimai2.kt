@@ -4,6 +4,7 @@ import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
+import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.maimai2.handler.UploadUserPhotoHandler
 import icu.samnyan.aqua.sega.maimai2.model.*
 import icu.samnyan.aqua.sega.maimai2.model.userdata.*
@@ -67,6 +68,11 @@ class Maimai2(
         }
 
         genericUserSummary(card, ratingComposition, isMyRival, extra["favorite_music"]?.split(",")?.mapNotNull{it -> it.toIntOrNull()})
+    }
+
+    override fun getNaiveRating(user: IUserData): Int {
+        // TODO
+        return 0
     }
 
     @API("user-rating")

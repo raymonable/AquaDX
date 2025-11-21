@@ -20,6 +20,8 @@ data class TrendOut(val date: String, val rating: Int, val plays: Int)
 
 data class RankCount(val name: String, val count: Int)
 
+data class WeightedPlay(val weight: Float, val play: IGenericGamePlaylog)
+
 data class GenericGameSummary(
     val name: String,
 
@@ -29,6 +31,7 @@ data class GenericGameSummary(
     val accuracy: Double,
     val rating: Int,
     val ratingHighest: Int,
+    val naiveRating: Int,
     val ranks: List<RankCount>,
     val detailedRanks: Map<Int, Map<String, Int>>,
     val maxCombo: Int,
@@ -59,7 +62,8 @@ data class GenericRankingPlayer(
     val rating: Int,
     val allPerfect: Int,
     val fullCombo: Int,
-    val lastSeen: String
+    val lastSeen: String,
+    val naiveRating: Int
 )
 
 @Serializable
@@ -93,6 +97,7 @@ interface IUserData {
     var userName: String
     val playerRating: Int
     val highestRating: Int
+    var naiveRating: Int
     val firstPlayDate: Any
     val lastPlayDate: Any
     val lastRomVersion: String

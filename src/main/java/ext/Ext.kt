@@ -31,6 +31,7 @@ import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.locks.Lock
+import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -129,8 +130,8 @@ inline fun <reified T> resJson(name: Str, warn: Boolean = true) = resStr(name)?.
 } ?: run { if (warn) Ext.log.warn("Resource $name is not found"); null }
 
 // Files
-fun dataStr(path: Path) = path.readText()
-inline fun <reified T>dataJson(path: Path, warn: Boolean = true) = dataStr(path).let {
+fun dataStr(path: Path) = if (path.exists()) path.readText() else null
+inline fun <reified T>dataJson(path: Path, warn: Boolean = true) = dataStr(path)?.let {
     JSON.decodeFromString<T>(it)
 } ?: run { if (warn) Ext.log.warn("Data file $path is not found"); null }
 

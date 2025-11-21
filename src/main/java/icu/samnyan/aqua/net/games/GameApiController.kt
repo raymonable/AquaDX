@@ -3,6 +3,7 @@ package icu.samnyan.aqua.net.games
 import ext.*
 import icu.samnyan.aqua.net.BotProps
 import icu.samnyan.aqua.net.db.AquaUserServices
+import icu.samnyan.aqua.net.utils.PathProps
 import icu.samnyan.aqua.net.utils.SUCCESS
 import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.general.model.CardStatus
@@ -17,10 +18,11 @@ import kotlin.reflect.KClass
 
 abstract class GameApiController<T : IUserData>(val name: String, userDataClass: KClass<T>) {
     val logger = LoggerFactory.getLogger(javaClass)
+    val paths = PathProps()
 
-    val musicMapping = resJson<Map<String, GenericMusicMeta>>("/meta/$name/music.json")
+    val musicMapping = dataJson<Map<String, GenericMusicMeta>>(paths.gameMetadata.path() / "$name/all-music.json")
         ?.mapKeys { it.key.toInt() } ?: emptyMap()
-    val itemMapping = resJson<Map<String, Map<String, GenericItemMeta>>>("/meta/$name/items.json") ?: emptyMap()
+    val itemMapping = dataJson<Map<String, Map<String, GenericItemMeta>>>(paths.gameMetadata.path() / "$name/all-items.json") ?: emptyMap()
 
     abstract val us: AquaUserServices
     abstract val userDataRepo: GenericUserDataRepo<T>
@@ -38,6 +40,18 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     @API("recent")
     suspend fun recent(@RP username: String): List<IGenericGamePlaylog> = us.cardByName(username) { card ->
         playlogRepo.findByUserCardExtId(card.extId)
+    }
+
+    abstract fun getNaiveRating(user: IUserData): Int
+    fun getTrueNaiveRating(expectedNaiveRating: Int, id: Long): Int {
+        if (expectedNaiveRating < 0) {
+            val userData = userDataRepo.findById(id).get()
+            userDataRepo.save(userData.apply {
+                naiveRating = getNaiveRating(userData)
+            })
+            return userData.naiveRating
+        } else
+            return expectedNaiveRating
     }
 
     // List<Pair<should_hide, player>>>
@@ -73,7 +87,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     }
 
     @PostConstruct
-    fun rakingCacheInit() = thread { rankingCacheRun() }
+    fun rankingCacheInit() = thread { rankingCacheRun() }
 
     // Every 20 minutes
     @Scheduled(fixedRate = 20, timeUnit = TimeUnit.MINUTES)
@@ -88,6 +102,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
                     c.id,
                     u.user_name,
                     u.player_rating,
+                    u.naive_rating,
                     u.last_play_date,
                     AVG(p.achievement) / 10000.0 AS acc,
                     SUM(p.is_full_combo) AS fc,
@@ -106,11 +121,12 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
                 rank = i + 1,
                 name = it[1].toString(),
                 rating = it[2]!!.int,
-                lastSeen = it[3].toString(),
-                accuracy = it[4]!!.double,
-                fullCombo = it[5]!!.int,
-                allPerfect = it[6]!!.int,
-                username = it[8]?.toString() ?: "user${it[0]}"
+                naiveRating = getTrueNaiveRating(it[3]!!.int, it[0]!!.long),
+                lastSeen = it[4].toString(),
+                accuracy = it[5]!!.double,
+                fullCombo = it[6]!!.int,
+                allPerfect = it[7]!!.int,
+                username = it[9]?.toString() ?: "user${it[0]}",
             )
         }
         rankingSortedIndex = rankingCache.filter { !it.l }.map { it.r.rating }.reversed()
@@ -185,6 +201,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
             accuracy = plays.acc(),
             rating = user.playerRating,
             ratingHighest = user.highestRating,
+            naiveRating = getTrueNaiveRating(user.naiveRating, user.id),
             ranks = ranks.map { (k, v) -> RankCount(k, v) },
             detailedRanks = detailedRanks,
             maxCombo = plays.maxOfOrNull { it.maxCombo } ?: 0,

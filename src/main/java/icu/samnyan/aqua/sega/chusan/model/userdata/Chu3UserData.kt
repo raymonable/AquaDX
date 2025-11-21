@@ -51,6 +51,7 @@ class Chu3UserData : BaseEntity(), IUserData {
     var multiPlayCount = 0
 
     override var playerRating: Int = 0
+    override var naiveRating: Int = 0
 
     override var highestRating: Int = 0
     var nameplateId = 0

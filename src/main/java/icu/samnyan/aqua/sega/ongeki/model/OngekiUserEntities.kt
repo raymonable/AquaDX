@@ -44,6 +44,7 @@ class UserData : IUserData {
     var medalCount = 0
     override var playerRating: Int = 0
     override var highestRating: Int = 0
+    override var naiveRating: Int = 0
     var battlePoint = 0
     var bestBattlePoint = 0
     var overDamageBattlePoint = 0

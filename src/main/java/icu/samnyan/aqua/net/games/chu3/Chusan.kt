@@ -3,10 +3,15 @@ package icu.samnyan.aqua.net.games.chu3
 import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
-import icu.samnyan.aqua.net.utils.*
-import icu.samnyan.aqua.sega.chusan.model.*
+import icu.samnyan.aqua.net.utils.chu3Scores
+import icu.samnyan.aqua.sega.chusan.model.Chu3Repos
+import icu.samnyan.aqua.sega.chusan.model.Chu3UserDataRepo
+import icu.samnyan.aqua.sega.chusan.model.Chu3UserMusicDetailRepo
+import icu.samnyan.aqua.sega.chusan.model.Chu3UserPlaylogRepo
 import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserData
+import icu.samnyan.aqua.sega.general.model.Card
 import org.springframework.web.bind.annotation.RestController
+import kotlin.math.pow
 
 @RestController
 @API("api/v2/game/chu3")
@@ -63,6 +68,29 @@ class Chusan(
         val misc = rp.userMisc.findByUser_Card_ExtId(card.extId).firstOrNull()
 
         genericUserSummary(card, ratingComposition, null, misc?.favMusic)
+    }
+
+    override fun getNaiveRating(user: IUserData): Int {
+        fun getSongConstant(songRating: Float, score: Int): Float {
+            // https://github.com/MewoLab/AquaDX/blob/v1-dev/AquaNet/src/libs/scoring.ts#L91
+            val lv = songRating * 100;
+            if (score >= 1009000) return lv + 215; // SSS+
+            if (score >= 1007500) return lv + 200 + (score - 1007500) / 100; // SSS
+            if (score >= 1005000) return lv + 150 + (score - 1005000) / 50; // SS+
+            if (score >= 1000000) return lv + 100 + (score - 1000000) / 100; // SS
+            if (score >= 975000) return lv + (score - 975000) / 250; // S+, S
+            if (score >= 925000) return lv - 300 + (score - 925000) * 3 / 500; // AA
+            if (score >= 900000) return lv - 500 + (score - 900000) * 4 / 500; // A
+            if (score >= 800000) return ((lv - 500) / 2 + (score - 800000) * ((lv - 500) / 2) / (100000)); // BBB
+            return 0.0f;
+        }
+        val plays = rp.userPlaylog.findByUser(user as Chu3UserData)
+            .map { play ->
+                val musicLevels = musicMapping[play.musicId]?.notes
+                val songRating = if ((musicLevels?.size ?: 0) > play.level) musicLevels?.get(play.level)?.lv ?: 0 else 0
+                WeightedPlay(weight = getSongConstant(songRating.toFloat(), play.score), play)
+            }.sortedByDescending { it.weight }
+        return (plays.take(50).map{ it.weight }.sum() / 50).int()
     }
 
     /**

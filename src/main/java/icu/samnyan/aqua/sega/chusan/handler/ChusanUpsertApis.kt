@@ -34,6 +34,8 @@ fun ChusanController.upsertApiInit() {
                     userName.fromChusanUsername()
                 }
                 userNameEx = ""
+
+                naiveRating = -1 // Allow the Net APIs to update it
             }.also { db.userData.saveAndFlush(it) }
 
             // Only save if it is a valid region and the user has played at least a song

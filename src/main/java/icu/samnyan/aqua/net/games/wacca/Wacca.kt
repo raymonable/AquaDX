@@ -4,6 +4,7 @@ import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.waccaScores
+import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.wacca.model.db.WaccaUser
 import icu.samnyan.aqua.sega.wacca.model.db.WcUserBestScoreRepo
 import icu.samnyan.aqua.sega.wacca.model.db.WcUserPlayLogRepo
@@ -35,6 +36,11 @@ class Wacca(
         val data = userDataRepo.findByCard_ExtId(card.extId)
 
         genericUserSummary(card, mapOf(), null, if (data.isPresent) data.get().favoriteSongs else null)
+    }
+
+    override fun getNaiveRating(user: IUserData): Int {
+        // TODO
+        return 0
     }
 
     override val shownRanks: List<Pair<Int, String>> = waccaScores.filter { it.first > 85 * 10000 }

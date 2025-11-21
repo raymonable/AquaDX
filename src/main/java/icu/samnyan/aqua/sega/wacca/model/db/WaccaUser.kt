@@ -33,6 +33,7 @@ class WaccaUser : BaseEntity(), IUserData {
     var titles: MutableList<Int> = mutableListOf(0, 0, 0)
     override var playerRating = 0
     override var highestRating = 0
+    override var naiveRating = 0
     @Temporal(TemporalType.TIMESTAMP)
     var vipExpireTime: Date = Date(0)
     var alwaysVip = false
