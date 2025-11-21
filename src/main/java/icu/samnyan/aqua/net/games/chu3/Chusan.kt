@@ -90,6 +90,7 @@ class Chusan(
                 val songRating = if ((musicLevels?.size ?: 0) > play.level) musicLevels?.get(play.level)?.lv ?: 0 else 0
                 WeightedPlay(weight = getSongConstant(songRating.toFloat(), play.score), play)
             }.sortedByDescending { it.weight }
+        logger.info("Got rating for ${user.userName}")
         return (plays.take(50).map{ it.weight }.sum() / 50).int()
     }
 

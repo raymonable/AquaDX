@@ -43,9 +43,10 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     }
 
     abstract fun getNaiveRating(user: IUserData): Int
-    fun getTrueNaiveRating(expectedNaiveRating: Int, id: Long): Int {
+    fun getTrueNaiveRating(expectedNaiveRating: Int, cardId: Long): Int {
         if (expectedNaiveRating < 0) {
-            val userData = userDataRepo.findById(id).get()
+            val card = us.cardRepo.findById(cardId).getOrNull() ?: return expectedNaiveRating
+            val userData = userDataRepo.findByCard_ExtId(card.extId).get()
             userDataRepo.save(userData.apply {
                 naiveRating = getNaiveRating(userData)
             })
