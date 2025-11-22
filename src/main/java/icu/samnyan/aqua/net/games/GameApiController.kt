@@ -143,13 +143,9 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     }
 
     @API("user-option")
-    open suspend fun userOption(@RP token: String): Any {
-        400 - "Unsupported by this game"
-    }
+    open suspend fun userOption(@RP token: String): Any = 400 - "Unsupported by this game"
     @API("user-option-set")
-    open suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any {
-        400 - "Unsupported by this game"
-    }
+    open suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = 400 - "Unsupported by this game"
 
     @API("user-music-from-list")
     suspend fun userMusicFromList(@RP username: Str, @RB musicList: List<Int>) = us.cardByName(username) { card ->

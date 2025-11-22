@@ -106,15 +106,15 @@ class Chusan(
     }
     @API("user-option-set")
     override suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = us.jwt.auth(token) { u ->
-        val gameOptions = rp.userGameOption.findSingleByUser_Card_ExtId(u.ghostCard.extId).get()
+        val gameOptions = rp.userGameOption.findSingleByUser_Card_ExtId(u.ghostCard.extId).getOrNull()
         val property = UserGameOption::class.memberProperties.filterIsInstance<KMutableProperty1<Any, Any?>>().find{ it.name == field }
 
-        if (property != null) {
+        if (property != null && gameOptions != null) {
             property.setter.call(gameOptions, value)
             rp.userGameOption.save(gameOptions)
+            200 - "Success"
         } else
-            400 - "Invalid option"
-        200 - "Success"
+            400 - "Invalid parameters"
     }
 
     // UserBox related APIs
