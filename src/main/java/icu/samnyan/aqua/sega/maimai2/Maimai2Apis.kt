@@ -115,10 +115,7 @@ fun Maimai2ServletController.initApis() {
         )
 
         if (d.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            res["userName"] = "JiaQQqun / ChangeDNS"
-            res["dispRate"] = 1
-            res["playerRating"] = 66564
-            res["totalAwake"] = 7114
+            res["userName"] = "${res["userName"]}＠ＡｑｕａＤＸ"
         }
 
         res
@@ -133,10 +130,6 @@ fun Maimai2ServletController.initApis() {
             "consecutiveLoginCount" to 0, "loginId" to 1,
             "Bearer" to "meow", "bearer" to "meow"
         )
-
-        if (d?.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            res["returnCode"] = 0
-        }
 
         // Get regionId from request
         val region = data["regionId"] as? Int

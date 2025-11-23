@@ -5,7 +5,6 @@ import icu.samnyan.aqua.net.BotProps
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.utils.SUCCESS
 import icu.samnyan.aqua.sega.general.model.Card
-import icu.samnyan.aqua.sega.general.model.CardStatus
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,7 +55,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
 
         val reqUser = token?.let { us.jwt.auth(it) }?.let { u ->
             // Optimization: If the user is not banned, we don't need to process user information
-            if (!u.ghostCard.rankingBanned && !u.cards.any { it.rankingBanned } && u.ghostCard.status == CardStatus.NORMAL) null
+            if (!u.ghostCard.rankingBanned && !u.cards.any { it.rankingBanned } && u.ghostCard.status.isNormal) null
             else u
         }
 
