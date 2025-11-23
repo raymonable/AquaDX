@@ -13,9 +13,7 @@ enum class AdministrationLogType (val type: Int) {
     RANKINGBANSTATE(1),
     RESETUSERFIELD(2),
     PROMOTION(3),
-    CREATEANNOUNCEMENT(4),
-    MODIFYANNOUNCEMENT(5),
-    IMPORTDATA(6)
+    EXPORTDATA(4)
 }
 
 @Entity

@@ -89,4 +89,12 @@ class Administration (
         } else
             400 - "Invalid field"
     }
+
+    /*
+    * There's some things I'd still like to implement but haven't gotten around to because it requires game specific implementations or I'm unsure about
+    *  - Resetting usernames on games (moderator+)
+    *  - Removing tracks from users (moderator+)
+    *  - Exporting game data for users (admin+)
+    *  - Reloading game data cache when importing
+    * */
 }

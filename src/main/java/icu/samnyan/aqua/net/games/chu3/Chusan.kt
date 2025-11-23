@@ -52,6 +52,8 @@ class Chusan(
         val extra = rp.userGeneralData.findByUser_Card_ExtId(card.extId)
             .associate { it.propertyKey to it.propertyValue }
 
+        us.enforceRestrictions(card.aquaUser, token)
+
         val ratingComposition = mapOf(
             "recent10" to (extra["recent_rating_list"] ?: ""),
             "best30" to (extra["rating_base_list"] ?: ""),

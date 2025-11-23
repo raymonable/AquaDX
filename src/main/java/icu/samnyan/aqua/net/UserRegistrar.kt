@@ -35,10 +35,23 @@ class UserRegistrar(
     val cardRepo: CardRepository,
     val validator: AquaUserServices,
     val emailProps: EmailProperties,
+    val friendRepo: AquaNetFriendRepo,
+    val us: AquaUserServices,
     final val paths: PathProps
 ) {
     @Autowired @Lazy lateinit var fedy: Fedy
     val portraitPath = paths.aquaNetPortrait.path()
+
+    /*
+    *
+    * Note to all developers maintaining the AquaNet API:
+    * Please use the us.enforceRestrictions function against a token whenever you're accessing an AquaNetUser.
+    * There should be no way to view a profile or access any of someone's data that bypasses these restrictions.
+    *
+    * Thank you!
+    * - Raymond
+    *
+    * */
 
     companion object {
         // Random long with length 9-10
@@ -220,8 +233,8 @@ class UserRegistrar(
 
     @API("/user-info")
     @Doc("Get the information of a user by username.", "User information")
-    fun getUserInfo(@RP username: Str) =
-        userRepo.findByUsernameIgnoreCase(username)?.publicFields ?: (404 - "User not found")
+    fun getUserInfo(@RP username: Str, @RP token: Str?) =
+         us.enforceRestrictions(userRepo.findByUsernameIgnoreCase(username), token).publicFields
 
     @API("/setting")
     @Doc("Validate and set a user setting field.", "Success message")
@@ -290,5 +303,27 @@ class UserRegistrar(
         }
 
         SUCCESS
-        }
+    }
+
+    @API("/set-friend")
+    @Doc("Adds (or removes) someone as your friend.", "Success message")
+    suspend fun setFriendStatus(@RP token: Str, @RP username: Str, @RP isFriend: Bool) = jwt.auth(token) { u ->
+        val friendUser = us.enforceRestrictions(userRepo.findByUsernameIgnoreCase(username), token)
+        val existingFriendState = friendRepo.findByAquaNetUserAuIdAndFriendAquaNetUserAuId(u.auId, friendUser.auId)
+
+        if (existingFriendState != null && !isFriend)
+            friendRepo.delete(existingFriendState)
+        if (isFriend && existingFriendState == null)
+            friendRepo.save(AquaNetFriend(
+                friendAquaNetUser = friendUser, aquaNetUser = u
+            ))
+
+        SUCCESS
+    }
+
+    @API("/friends")
+    @Doc("Returns list of friends", "Success message")
+    fun getFriends(@RP username: Str) = us.getFriends(
+        userRepo.findByUsernameIgnoreCase(username) ?: (404 - "Not found")
+    )
 }

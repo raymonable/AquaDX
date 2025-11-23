@@ -47,8 +47,7 @@ data class GenericGameSummary(
 
     val recent: List<IGenericGamePlaylog>,
 
-    val rival: Boolean?, // Keeping this for backwards compatibility. Reference `friends` list for future implementations
-    val friends: List<Long>,
+    val rival: Boolean?,
     val favorites: List<Int>?
 )
 
