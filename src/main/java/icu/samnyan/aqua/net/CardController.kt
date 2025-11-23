@@ -1,6 +1,7 @@
 package icu.samnyan.aqua.net
 
 import ext.*
+import icu.samnyan.aqua.net.components.AquaNetSafetyService
 import icu.samnyan.aqua.net.components.JWT
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.GenericUserDataRepo

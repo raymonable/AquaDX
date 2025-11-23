@@ -66,6 +66,8 @@ class AquaNetUser(
     // Email confirmation
     var emailConfirmed: Boolean = false,
 
+    var permission: Int = 0,
+
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "ghostCard", unique = true, nullable = false)
     var ghostCard: Card = Card(),

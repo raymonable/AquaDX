@@ -1,4 +1,4 @@
-package icu.samnyan.aqua.net
+package icu.samnyan.aqua.net.components
 
 import ext.HTTP
 import ext.mut

@@ -1,0 +1,63 @@
+package icu.samnyan.aqua.net
+
+import ext.*
+import icu.samnyan.aqua.net.db.AquaNetLogRepo
+import icu.samnyan.aqua.net.db.AquaNetUser
+import icu.samnyan.aqua.net.db.AquaUserServices
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@API("api/v2/admin")
+class Administration (
+    val us: AquaUserServices,
+    val logs: AquaNetLogRepo
+) {
+    val resettableFields: Map<String, (AquaNetUser) -> Unit> by lazy { mapOf(
+        "username" to { u -> u.username = "aqua${u.auId}" },
+        "profilePfp" to { u -> u.profilePicture = null },
+        "profileBio" to { u -> u.profileBio = null },
+        "displayName" to { u -> u.displayName = "" }
+    ) }
+
+    @API("/ranking-ban")
+    @Doc("Bans a user from rankings. Moderators and higher.")
+    suspend fun rankingBan(@RP username: Str, @RP token: Str, @RP ban: Bool): Any = us.cardByName(username) { card ->
+        val actor = us.jwt.auth(token);
+        val user = us.userRepo.findByGhostCardExtId(card.extId)
+        if (user?.username != actor.username && actor.permission > 0 && actor.permission > (user?.permission ?: 0)) {
+            us.cardRepo.save(card.apply {
+                rankingBanned = ban
+            })
+            200 - "Success"
+        } else
+            403 - "Unauthorized"
+    }
+
+    @API("/promote")
+    @Doc("Promotes a user to a certain permission. For administrators.")
+    suspend fun promote(@RP username: Str, @RP token: Str, @RP role: Int): Any = us.byName(username) { user ->
+        val actor = us.jwt.auth(token);
+        if (user.username != actor.username && actor.permission > 1 && actor.permission > user.permission && role < actor.permission) {
+            us.userRepo.save(user.apply {
+                permission = role.coerceIn(0, 2)
+            })
+            200 - "Success"
+        } else
+            403 - "Unauthorized"
+    }
+
+    @API("/reset-field")
+    @Doc("Resets a field on a user's profile. For moderators and above.")
+    suspend fun resetField(@RP username: Str, @RP token: Str, @RP field: Str): Any = us.byName(username) { user ->
+        if (resettableFields.containsKey(field)) {
+            val actor = us.jwt.auth(token);
+            if (actor.username != user.username && actor.permission > 0 && actor.permission > user.permission) {
+                resettableFields[field]?.let { it(user) }
+                us.userRepo.save(user)
+                200 - "Success"
+            } else
+                403 - "Unauthorized"
+        } else
+            400 - "Invalid field"
+    }
+}
