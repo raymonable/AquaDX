@@ -15,6 +15,7 @@ enum class AdministrationLogType (val type: Int) {
     PROMOTION(3),
     CREATEANNOUNCEMENT(4),
     MODIFYANNOUNCEMENT(5),
+    IMPORTDATA(6)
 }
 
 @Entity
