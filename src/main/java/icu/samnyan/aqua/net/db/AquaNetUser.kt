@@ -97,9 +97,10 @@ class AquaNetUser(
         "displayName" to displayName,
         "country" to country,
         "regTime" to regTime,
+        "permission" to permission,
         "profileLocation" to profileLocation,
         "profileBio" to profileBio,
-        "profilePicture" to profilePicture,
+        "profilePicture" to profilePicture
     )
 }
 
