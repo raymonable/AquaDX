@@ -1,4 +1,5 @@
-ALTER TABLE aqua_net_user ADD COLUMN permission INTEGER;
+ALTER TABLE aqua_net_user ADD COLUMN permission INTEGER DEFAULT 0;
+ALTER TABLE aqua_net_user ADD COLUMN profile_view_restriction INTEGER DEFAULT 0;
 
 CREATE TABLE aqua_net_logs (
     id             BIGINT AUTO_INCREMENT NOT NULL,

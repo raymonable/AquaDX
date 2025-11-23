@@ -61,12 +61,14 @@ class AquaNetUser(
     var profileLocation: String? = "",
     var profileBio: String? = "",
     var profilePicture: String? = "",
+    var profileViewRestriction: ProfileViewRestriction = ProfileViewRestriction.NONE,
     var optOutOfLeaderboard: Boolean = false,
 
     // Email confirmation
     var emailConfirmed: Boolean = false,
 
-    var permission: Int = 0,
+    // User permission
+    var permission: AquaNetUserPermission = AquaNetUserPermission.USER,
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "ghostCard", unique = true, nullable = false)
@@ -110,6 +112,17 @@ interface AquaNetUserRepo : JpaRepository<AquaNetUser, Long> {
     fun findByUsernameIgnoreCase(username: String): AquaNetUser?
     fun findByKeychip(keychip: String): AquaNetUser?
     fun findByGhostCardExtId(extId: Long): AquaNetUser?
+}
+
+enum class ProfileViewRestriction(var restriction: Int) {
+    NONE(0),
+    RESTRICTED_LOGIN(1),
+    RESTRICTED_ALL(2)
+}
+enum class AquaNetUserPermission(var permission: Int) {
+    USER(0),
+    MODERATOR(1),
+    ADMINISTRATOR(2)
 }
 
 data class SettingField(

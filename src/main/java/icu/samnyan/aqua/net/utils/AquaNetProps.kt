@@ -9,6 +9,7 @@ import kotlin.io.path.createDirectories
 @Configuration
 @ConfigurationProperties(prefix = "aqua-net")
 class AquaNetProps {
+    val friendLimit: Int = 20
     var linkCardLimit: Int = 10
     var importBackupPath = "data/import-backups"
 
