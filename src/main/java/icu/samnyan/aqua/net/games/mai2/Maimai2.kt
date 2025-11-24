@@ -21,7 +21,8 @@ class Maimai2(
     override val userMusicRepo: Mai2UserMusicDetailRepo,
     val repos: Mai2Repos,
 ) : GameApiController<Mai2UserDetail>("mai2", Mai2UserDetail::class) {
-    override suspend fun trend(@RP username: Str): List<TrendOut> = us.cardByName(username) { card ->
+    override suspend fun trend(@RP username: String, @RP token: Str?) = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         findTrend(playlogRepo.findByUserCardExtId(card.extId)
             .map { TrendLog(it.playDate, it.afterRating) })
     }
@@ -47,6 +48,8 @@ class Maimai2(
         val extra = repos.userGeneralData.findByUser_Card_ExtId(card.extId)
             .associate { it.propertyKey to it.propertyValue }
 
+        us.enforceRestrictions(card.aquaUser, token)
+
         val ratingComposition = mapOf(
             "best35" to (extra["recent_rating"] ?: ""),
             "best15" to (extra["recent_rating_new"] ?: "")
@@ -70,11 +73,13 @@ class Maimai2(
     }
 
     @API("user-rating")
-    suspend fun userRating(@RP username: Str) = us.cardByName(username) { card ->
+    suspend fun userRating(@RP username: Str, @RP token: Str?) = us.cardByName(username) { card ->
         val extra = repos.userGeneralData.findByUser_Card_ExtId(card.extId)
             .associate { it.propertyKey to it.propertyValue }
         val b35Str = extra["recent_rating"] ?: (400 - "No rating found")
         val b15Str = extra["recent_rating_new"] ?: (400 - "No rating found")
+
+        us.enforceRestrictions(card.aquaUser, token)
 
         val b35 = b35Str.split(',').filterNot { it.isBlank() }.map { it.split(':') }
         val b15 = b15Str.split(',').filterNot { it.isBlank() }.map { it.split(':') }
@@ -96,7 +101,7 @@ class Maimai2(
 
     @API("user-name-plate")
     // legacy
-    suspend fun userNamePlate(@RP username: Str) = this.userDetail(username)
+    suspend fun userNamePlate(@RP username: Str, @RP token: Str?) = this.userDetail(username, token)
 
     @API("user-favorite")
     suspend fun userFavorite(@RP username: Str) = us.cardByName(username) { card ->

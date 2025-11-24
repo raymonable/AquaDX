@@ -233,8 +233,8 @@ class UserRegistrar(
 
     @API("/user-info")
     @Doc("Get the information of a user by username.", "User information")
-    fun getUserInfo(@RP username: Str, @RP token: Str?) =
-         us.enforceRestrictions(userRepo.findByUsernameIgnoreCase(username), token).publicFields
+    fun getUserInfo(@RP username: Str, @RP token: Str?) = userRepo.findByUsernameIgnoreCase(username)
+        ?.also { us.enforceRestrictions(it, token) }?.publicFields
 
     @API("/setting")
     @Doc("Validate and set a user setting field.", "Success message")
@@ -308,7 +308,8 @@ class UserRegistrar(
     @API("/set-friend")
     @Doc("Adds (or removes) someone as your friend.", "Success message")
     suspend fun setFriendStatus(@RP token: Str, @RP username: Str, @RP isFriend: Bool) = jwt.auth(token) { u ->
-        val friendUser = us.enforceRestrictions(userRepo.findByUsernameIgnoreCase(username), token)
+        val friendUser = userRepo.findByUsernameIgnoreCase(username)?.also { us.enforceRestrictions(it, token) }
+            ?: (404 - "User not found")
         val existingFriendState = friendRepo.findByAquaNetUserAuIdAndFriendAquaNetUserAuId(u.auId, friendUser.auId)
 
         if (existingFriendState != null && !isFriend)
@@ -323,7 +324,7 @@ class UserRegistrar(
 
     @API("/friends")
     @Doc("Returns list of friends", "Success message")
-    fun getFriends(@RP username: Str) = us.getFriends(
-        userRepo.findByUsernameIgnoreCase(username) ?: (404 - "Not found")
+    fun getFriends(@RP username: Str, @RP token: Str?) = us.getFriends(
+        userRepo.findByUsernameIgnoreCase(username)?.also { us.enforceRestrictions(it, token) } ?: (404 - "Not found")
     )
 }

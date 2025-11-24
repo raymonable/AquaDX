@@ -1,6 +1,6 @@
 package icu.samnyan.aqua.net.games.ongeki
 
-import ext.API
+import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.*
@@ -20,7 +20,8 @@ class Ongeki(
     override val userMusicRepo: OgkUserMusicDetailRepo,
     val userGeneralDataRepository: OgkUserGeneralDataRepo
 ): GameApiController<UserData>("ongeki", UserData::class) {
-    override suspend fun trend(username: String) = us.cardByName(username) { card ->
+    override suspend fun trend(@RP username: String, @RP token: Str?) = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         findTrend(playlogRepo.findByUser_Card_ExtId(card.extId)
             .map { TrendLog(it.playDate, it.playerRating) })
     }
@@ -36,6 +37,8 @@ class Ongeki(
     override suspend fun userSummary(username: String, token: String?) = us.cardByName(username) { card ->
         val extra = userGeneralDataRepository.findByUser_Card_ExtId(card.extId)
             .associate { it.propertyKey to it.propertyValue }
+
+        us.enforceRestrictions(card.aquaUser, token)
 
         val ratingComposition = mapOf(
             "best30" to (extra["rating_base_best"] ?: ""),

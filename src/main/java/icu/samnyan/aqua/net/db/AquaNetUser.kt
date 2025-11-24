@@ -199,25 +199,20 @@ class AquaUserServices(
         .sortedByDescending { friend -> friend.date }
         .map{ friend -> friend.friendAquaNetUser?.publicFields ?: emptyMap()
     }
-    fun enforceRestrictions(user: AquaNetUser?, token: Str?): AquaNetUser = run {
-        // TODO: this can probably be reorganized lmao
+    fun enforceRestrictions(user: AquaNetUser?, token: Str?): Any = run {
+        // https://i.imgur.com/7Rz79rO.png
         if (user != null) {
             if (user.profileViewRestriction > ProfileViewRestriction.NONE) {
                 if (token != null) {
                     val actor = jwt.auth(token);
-                    if (user.profileViewRestriction == ProfileViewRestriction.RESTRICTED_ALL) {
-                        if (actor.auId == user.auId) {
-                            user
-                        } else (404 - "User not found") // Make it seem as if there's no user at all
-                    } else user
-                } else
-                    if (user.profileViewRestriction == ProfileViewRestriction.RESTRICTED_ALL) {
+                    if (user.profileViewRestriction == ProfileViewRestriction.RESTRICTED_ALL && actor.auId != user.auId)
+                         (404 - "User not found") // Make it seem as if there's no user at all
+                } else if (user.profileViewRestriction == ProfileViewRestriction.RESTRICTED_ALL) {
                         (404 - "User not found") // Make it seem as if there's no user at all
                     } else (403 - "You must log in to view this page")
-            } else user
+            }
         } else (404 - "User not found")
     }
-    fun enforceRestrictionsCard(card: Card, token: Str?): AquaNetUser = enforceRestrictions(card.aquaUser, token)
 
     fun clearAllSessions(user: AquaNetUser) = sessionRepo.deleteAll(sessionRepo.findByAquaNetUserAuId(user.auId))
 
@@ -290,5 +285,7 @@ class AquaUserServices(
     }
 
     fun checkOptOutOfLeaderboard(optOutOfLeaderboard: Str) = optOutOfLeaderboard.toBoolean()
-    fun checkProfileViewRestriction(profileViewRestriction: Str) = ProfileViewRestriction.entries[profileViewRestriction.int.coerceIn(0, 2)]
+    fun checkProfileViewRestriction(profileViewRestriction: Str) = runCatching {
+            ProfileViewRestriction.valueOf(profileViewRestriction)
+        }.getOrNull() ?: ProfileViewRestriction.NONE
 }

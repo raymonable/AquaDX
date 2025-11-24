@@ -17,7 +17,8 @@ class Chusan(
     override val userMusicRepo: Chu3UserMusicDetailRepo,
     val rp: Chu3Repos
 ): GameApiController<Chu3UserData>("chu3", Chu3UserData::class) {
-    override suspend fun trend(@RP username: Str): List<TrendOut> = us.cardByName(username) { card ->
+    override suspend fun trend(@RP username: String, @RP token: Str?) = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         findTrend(playlogRepo.findByUserCardExtId(card.extId)
             .map { TrendLog(it.playDate.toString(), it.playerRating) })
     }

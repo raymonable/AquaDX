@@ -24,14 +24,15 @@ class Wacca(
         "lastRomVersion" to { u, v -> u.lastRomVersion = v },
     ) }
 
-    override suspend fun trend(@RP username: String) = us.cardByName(username) { card ->
+    override suspend fun trend(@RP username: String, @RP token: Str?) = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         findTrend(playlogRepo.findByUserCardExtId(card.extId)
             .map { TrendLog(it.userPlayDate.utc().isoDate(), it.afterRating) })
     }
 
     override suspend fun userSummary(@RP username: String, @RP token: String?) = us.cardByName(username) { card ->
         // TODO: Rating composition
-
+        us.enforceRestrictions(card.aquaUser, token)
         val data = userDataRepo.findByCard_ExtId(card.extId)
 
         genericUserSummary(card, mapOf(), null, if (data.isPresent) data.get().favoriteSongs else null)

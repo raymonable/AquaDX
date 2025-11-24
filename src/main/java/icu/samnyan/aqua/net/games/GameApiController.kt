@@ -31,12 +31,13 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     open val gettableFields: Set<String> = setOf()
 
     @API("trend")
-    abstract suspend fun trend(@RP username: String): List<TrendOut>
+    abstract suspend fun trend(@RP username: String, @RP token: Str?): List<TrendOut>
     @API("user-summary")
     abstract suspend fun userSummary(@RP username: String, @RP token: String?): GenericGameSummary
 
     @API("recent")
-    suspend fun recent(@RP username: String): List<IGenericGamePlaylog> = us.cardByName(username) { card ->
+    suspend fun recent(@RP username: String, @RP token: Str?): List<IGenericGamePlaylog> = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         playlogRepo.findByUserCardExtId(card.extId)
     }
 
@@ -126,7 +127,8 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     } }
 
     @API("user-detail")
-    suspend fun userDetail(@RP username: String) = us.cardByName(username) { card ->
+    suspend fun userDetail(@RP username: String, @RP token: Str?) = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         val u = userDataRepo.findByCard(card) ?: (404 - "User not found")
         userDetailFields.toList().associate { (k, f) -> k to f.invoke(u) }
     }
@@ -144,7 +146,8 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     }
 
     @API("user-music-from-list")
-    suspend fun userMusicFromList(@RP username: Str, @RB musicList: List<Int>) = us.cardByName(username) { card ->
+    suspend fun userMusicFromList(@RP username: Str, @RP token: Str?, @RB musicList: List<Int>) = us.cardByName(username) { card ->
+        us.enforceRestrictions(card.aquaUser, token)
         userMusicRepo.findByUser_Card_ExtIdAndMusicIdIn(card.extId, musicList)
     }
 
