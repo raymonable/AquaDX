@@ -224,9 +224,9 @@ fun WaccaServer.init() {
 
         val status = u.lStatus().toMutableList()
 
-        if (u.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            status[1] = "JiaQQqun / ChangeDNS"
-        }
+//        if (u.card?.status == CardStatus.MIGRATED_TO_MINATO) {
+//            status[1] = "${status[1]}@AquaDX"
+//        }
 
         u.run { ls(
             "0 status" - status,

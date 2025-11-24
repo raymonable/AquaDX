@@ -5,11 +5,14 @@ import ext.invoke
 import ext.mapApply
 import ext.unique
 import icu.samnyan.aqua.sega.general.BaseHandler
+import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.general.service.CardService
 import icu.samnyan.aqua.sega.maimai2.handler.UploadUserPlaylogHandler.Companion.playBacklog
-import icu.samnyan.aqua.sega.maimai2.model.*
+import icu.samnyan.aqua.sega.maimai2.model.Mai2Repos
 import icu.samnyan.aqua.sega.maimai2.model.request.Mai2UpsertUserAll
-import icu.samnyan.aqua.sega.maimai2.model.userdata.*
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserDetail
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserGeneralData
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserRate
 import icu.samnyan.aqua.sega.util.jackson.BasicMapper
 import lombok.AllArgsConstructor
 import org.slf4j.LoggerFactory
@@ -58,6 +61,12 @@ class UpsertUserAllHandler(
                 }
             }
         })
+
+        // If the user was previously migrated to Minato, saving would mark them "migrated and then cleared".
+        if (u.card?.status == CardStatus.MIGRATED_TO_MINATO) {
+            u.card?.status = CardStatus.NORMAL_MIGRATED_TO_MINATO_AND_THEN_CLEARED
+            cardService.cardRepo.save(u.card!!)
+        }
 
         // Check playlog backlog
         if (playBacklog.containsKey(userId)) playBacklog.remove(userId)?.forEach {

@@ -99,9 +99,6 @@
             state = 'verify'
             verifyMsg = t("welcome.verify-state-2")
           }
-          else if (e.message === 'Login not allowed: Card has been migrated to Minato.') {
-            location.href = `https://portal.mumur.net/login?username=${encodeURIComponent(email)}`
-          }
           else {
             error = e.message
             submitting = false // unnecessary? see line 113, same for both reset functions
