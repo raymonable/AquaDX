@@ -148,7 +148,7 @@ class Maimai2(
 
     @API("user-option")
     override suspend fun userOption(@RP token: String) = us.jwt.auth(token) { u ->
-        repos.userOption.findByUser_Card_ExtId(u.ghostCard.extId)
+        repos.userOption.findByUser_Card_ExtId(u.ghostCard.extId).getOrNull(0)
     }
     @API("user-option-set")
     override suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = us.jwt.auth(token) { u ->
