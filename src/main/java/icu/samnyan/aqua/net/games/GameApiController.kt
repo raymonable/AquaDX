@@ -27,6 +27,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     abstract val playlogRepo: GenericPlaylogRepo<*>
     abstract val userMusicRepo: GenericUserMusicRepo<*>
     abstract val shownRanks: List<Pair<Int, String>>
+
     abstract val settableFields: Map<String, (T, String) -> Unit>
     open val gettableFields: Set<String> = setOf()
 
@@ -126,13 +127,11 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
         (settableFields.keys.toSet() + gettableFields)
             .associateWith { k -> (vm[k] ?: error("Field $k not found")) }
     } }
-
     @API("user-detail")
     suspend fun userDetail(@RP username: String) = us.cardByName(username) { card ->
         val u = userDataRepo.findByCard(card) ?: (404 - "User not found")
         userDetailFields.toList().associate { (k, f) -> k to f.invoke(u) }
     }
-
     @API("user-detail-set")
     suspend fun userDetailSet(@RP token: String, @RP field: String, @RP value: String): Any {
         val prop = settableFields[field] ?: (400 - "Invalid field $field")
@@ -145,6 +144,11 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
             SUCCESS
         }
     }
+
+    @API("user-option")
+    open suspend fun userOption(@RP token: String): Any? = 400 - "Unsupported by this game"
+    @API("user-option-set")
+    open suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = 400 - "Unsupported by this game"
 
     @API("user-music-from-list")
     suspend fun userMusicFromList(@RP username: Str, @RB musicList: List<Int>) = us.cardByName(username) { card ->

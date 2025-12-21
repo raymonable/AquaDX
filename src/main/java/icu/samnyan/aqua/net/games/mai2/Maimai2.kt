@@ -11,6 +11,9 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
+import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.full.memberProperties
 
 @RestController
 @API("api/v2/game/mai2")
@@ -143,6 +146,24 @@ class Maimai2(
             cardService.updateCardTimestamp(card, "mai2")
         }
         SUCCESS
+    }
+
+    @API("user-option")
+    override suspend fun userOption(@RP token: String) = us.jwt.auth(token) { u ->
+        repos.userOption.findByUser_Card_ExtId(u.ghostCard.extId).getOrNull(0)
+    }
+    @API("user-option-set")
+    override suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = us.jwt.auth(token) { u ->
+        val gameOptions = repos.userOption.findSingleByUser_Card_ExtId(u.ghostCard.extId).getOrNull()
+        val property = Mai2UserOption::class.memberProperties.filterIsInstance<KMutableProperty1<Any, Any?>>().find{ it.name == field }
+
+        if (property != null && gameOptions != null) {
+            property.setter.call(gameOptions, value)
+            repos.userOption.save(gameOptions)
+            200 - "Success"
+        } else
+            400 - "Invalid parameters"
+
     }
 
     @API("owned-items")
