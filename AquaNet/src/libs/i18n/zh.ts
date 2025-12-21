@@ -156,7 +156,7 @@ const zhHome: typeof EN_REF_HOME = {
 const zhSettings: typeof EN_REF_SETTINGS = {
   'settings.title': '用户设置',
   'settings.tabs.profile': '个人资料',
-  'settings.tabs.game': '游戏设置',
+  'settings.tabs.global': '全局',
   'settings.tabs.chu3': '中二',
   'settings.tabs.mai2': '舞萌',
   'settings.tabs.ongeki': '音击',
@@ -220,9 +220,10 @@ const zhSettings: typeof EN_REF_SETTINGS = {
   'settings.export': '导出玩家数据',
   'settings.batchManualExport': "导出 Batch Manual 格式（用于 Tachi）",
   'settings.cabNotice': '注意：下面这些设置只会影响你自己的机器，如果你是在其他人的机器上玩的话，请联系机主来改设置',
-  'settings.gameNotice': "这些设置仅对舞萌和华卡生效。",
   // AI
-  'settings.regionNotice': "这些设置仅适用于舞萌、音击和中二。",
+  'settings.siteNotice': "这些设置仅适用于网站。",
+  // AI
+  'settings.regionNotice': "这些设置在舞萌、音击和中二节奏之间共享。",
   // AI
   'settings.regionSelector.title': "地区选择器",
   // AI

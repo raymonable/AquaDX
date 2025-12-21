@@ -144,7 +144,7 @@ export const EN_REF_HOME = {
 export const EN_REF_SETTINGS = {
   'settings.title': 'Settings',
   'settings.tabs.profile': 'Profile',
-  'settings.tabs.game': 'Game',
+  'settings.tabs.global': 'Global',
   'settings.tabs.chu3': 'Chuni',
   'settings.tabs.mai2': 'Mai',
   'settings.tabs.ongeki': 'Ongeki',
@@ -208,10 +208,10 @@ export const EN_REF_SETTINGS = {
   'settings.export': 'Export Player Data',
   'settings.batchManualExport': "Export in Batch Manual (for Tachi)",
   'settings.cabNotice': "Note: These settings will only affect your own cab/setup. If you're playing on someone else's setup, please contact them to change these settings.",
-  'settings.gameNotice': "These only apply to Mai and Wacca.",
-  'settings.regionNotice': "These only apply to Mai, Ongeki and Chuni.",
+  'settings.siteNotice': "These settings only apply to the website.",
+  'settings.regionNotice': "These settings are shared amongst Mai, Ongeki and Chuni.",
   'settings.regionSelector.title': "Prefecture Selector",
-  'settings.regionSelector.desc': "Select the region where you want the game to think you are playing",
+  'settings.regionSelector.desc': "Select the region where you want the game to identify you",
   'settings.regionSelector.select': "Select Prefecture",
 }
 

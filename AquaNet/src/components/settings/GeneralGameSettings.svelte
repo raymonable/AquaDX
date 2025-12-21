@@ -10,7 +10,7 @@
 
 <div out:fade={FADE_OUT} in:fade={FADE_IN} class="fields">
   <blockquote>
-    {ts("settings.gameNotice")}
+    {ts("settings.siteNotice")}
   </blockquote>
   <div class="field">
     <div class="bool">
