@@ -59,7 +59,7 @@ If you own a cab or controller and just want to play the game, follow the instru
 5. Pet your cat 🐱
 6. Link your card on the website. 
 
-If you encounter any issue, please report in the [issue tracker](https://MewoLab/AquaDX/issues).
+If you encounter any issue, please report in the [issue tracker](https://github.com/MewoLab/AquaDX/issues).
 
 > [!TIP]  
 > If you don't know your card ID, there's always a button on the login screen of the game that can read a card's access code.
