@@ -5,7 +5,7 @@ import ext.RP
 import ext.minus
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
-import icu.samnyan.aqua.net.utils.*
+import icu.samnyan.aqua.net.utils.ongekiScores
 import icu.samnyan.aqua.sega.ongeki.OgkUserDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserGeneralDataRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserMusicDetailRepo
@@ -13,7 +13,6 @@ import icu.samnyan.aqua.sega.ongeki.OgkUserOptionRepo
 import icu.samnyan.aqua.sega.ongeki.OgkUserPlaylogRepo
 import icu.samnyan.aqua.sega.ongeki.model.UserData
 import icu.samnyan.aqua.sega.ongeki.model.UserOption
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KMutableProperty1
@@ -61,7 +60,7 @@ class Ongeki(
     }
     @API("user-option-set")
     override suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = us.jwt.auth(token) { u ->
-        val gameOptions = userOptionRepo.findSingleByUser_Card_ExtId(u.ghostCard.extId).getOrNull()
+        val gameOptions = userOptionRepo.findSingleByUser_Card_ExtId(u.ghostCard.extId)
         val property = UserOption::class.memberProperties.filterIsInstance<KMutableProperty1<Any, Any?>>().find{ it.name == field }
 
         if (property != null && gameOptions != null) {

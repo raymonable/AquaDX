@@ -6,7 +6,7 @@ import icu.samnyan.aqua.sega.maimai2.model.Mai2Repos
 import icu.samnyan.aqua.sega.maimai2.model.UserRating
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserRate
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserUdemae
-import icu.samnyan.aqua.sega.util.jackson.BasicMapper
+import icu.samnyan.aqua.sega.util.BasicMapper
 import org.springframework.stereotype.Component
 
 /**
@@ -23,25 +23,25 @@ class GetUserRatingHandler(
 
         val ur = UserRating()
 
-        repos.userData.findByCardExtId(userId)()?.let {
+        repos.userData.findByCardExtId(userId)?.let {
             ur.rating = it.playerRating
         }
 
         // Old charts (standard) = 25
-        ur.ratingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating")()
+        ur.ratingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating")
             ?.let { loadRateData(it.propertyValue) } ?: empty
 
         // New charts (DX) = 15
-        ur.newRatingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating_new")()
+        ur.newRatingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating_new")
             ?.let { loadRateData(it.propertyValue) } ?: empty
 
-        ur.nextRatingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating_next")()
+        ur.nextRatingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating_next")
             ?.let { loadRateData(it.propertyValue) } ?: empty
 
-        ur.nextNewRatingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating_next_new")()
+        ur.nextNewRatingList = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(userId, "recent_rating_next_new")
             ?.let { loadRateData(it.propertyValue) } ?: empty
 
-        ur.udemae = repos.userUdemae.findSingleByUser_Card_ExtId(userId)() ?: Mai2UserUdemae()
+        ur.udemae = repos.userUdemae.findSingleByUser_Card_ExtId(userId) ?: Mai2UserUdemae()
 
         return mapOf(
             "userId" to userId,

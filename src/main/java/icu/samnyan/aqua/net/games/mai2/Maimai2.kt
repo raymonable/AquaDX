@@ -3,14 +3,20 @@ package icu.samnyan.aqua.net.games.mai2
 import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
-import icu.samnyan.aqua.net.utils.*
+import icu.samnyan.aqua.net.utils.SUCCESS
+import icu.samnyan.aqua.net.utils.mai2Scores
 import icu.samnyan.aqua.sega.maimai2.handler.UploadUserPhotoHandler
-import icu.samnyan.aqua.sega.maimai2.model.*
-import icu.samnyan.aqua.sega.maimai2.model.userdata.*
+import icu.samnyan.aqua.sega.maimai2.model.Mai2Repos
+import icu.samnyan.aqua.sega.maimai2.model.Mai2UserDataRepo
+import icu.samnyan.aqua.sega.maimai2.model.Mai2UserMusicDetailRepo
+import icu.samnyan.aqua.sega.maimai2.model.Mai2UserPlaylogRepo
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserDetail
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserGeneralData
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserLoginBonus
+import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserOption
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.full.memberProperties
@@ -61,9 +67,9 @@ class Maimai2(
             us.jwt.auth(t) { u ->
                 if (u.username == username) return@auth null
                 us.cardByName(u.username) { myCard ->
-                    val user = repos.userData.findByCardExtId(card.extId).orElse(null) ?: (404 - "User not found")
-                    val myRival = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(myCard.extId, "favorite_rival")
-                        .map { it.propertyValue.split(',') }.orElse(emptyList()).filter { it.isNotEmpty() }.map { it.long() }
+                    val user = repos.userData.findByCardExtId(card.extId) ?: (404 - "User not found")
+                    val myRival = (repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(myCard.extId, "favorite_rival")?.propertyValue?.split(',') ?: emptyList())
+                        .filter { it.isNotEmpty() }.map { it.long() }
                     myRival.contains(user.id)
                 }
             }
@@ -136,7 +142,7 @@ class Maimai2(
             if (loginBonus.none { it.bonusId == bonusId }) {
                 // create one
                 val newBonus = Mai2UserLoginBonus().apply {
-                    user = repos.userData.findByCardExtId(card.extId).orElse(null) ?: (404 - "User not found")
+                    user = repos.userData.findByCardExtId(card.extId) ?: (404 - "User not found")
                     this.bonusId = bonusId
                     isCurrent = true
                 }
@@ -154,7 +160,7 @@ class Maimai2(
     }
     @API("user-option-set")
     override suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = us.jwt.auth(token) { u ->
-        val gameOptions = repos.userOption.findSingleByUser_Card_ExtId(u.ghostCard.extId).getOrNull()
+        val gameOptions = repos.userOption.findSingleByUser_Card_ExtId(u.ghostCard.extId)
         val property = Mai2UserOption::class.memberProperties.filterIsInstance<KMutableProperty1<Any, Any?>>().find{ it.name == field }
 
         if (property != null && gameOptions != null) {
@@ -177,10 +183,10 @@ class Maimai2(
     suspend fun setRival(@RP token: String, @RP rivalUserName: String, @RP isAdd: Boolean) = us.jwt.auth(token) { u ->
         us.cardByName(u.username) { myCard ->
             val rivalCard = us.cardByName(rivalUserName) { it }
-            val rivalUser = repos.userData.findByCardExtId(rivalCard.extId).orElse(null) ?: (404 - "User not found")
-            val myRival = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(myCard.extId, "favorite_rival").orElse(null)
+            val rivalUser = repos.userData.findByCardExtId(rivalCard.extId) ?: (404 - "User not found")
+            val myRival = repos.userGeneralData.findByUser_Card_ExtIdAndPropertyKey(myCard.extId, "favorite_rival")
                 ?: Mai2UserGeneralData().apply {
-                    user = repos.userData.findByCardExtId(myCard.extId).orElse(null) ?: (404 - "User not found")
+                    user = repos.userData.findByCardExtId(myCard.extId) ?: (404 - "User not found")
                     propertyKey = "favorite_rival"
                 }
             val myRivalList = myRival.propertyValue.split(',').filter { it.isNotEmpty() }.mut

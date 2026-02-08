@@ -1,6 +1,9 @@
 package icu.samnyan.aqua.net.games.wacca
 
-import ext.*
+import ext.API
+import ext.RP
+import ext.isoDate
+import ext.utc
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
 import icu.samnyan.aqua.net.utils.waccaScores
@@ -34,7 +37,7 @@ class Wacca(
 
         val data = userDataRepo.findByCard_ExtId(card.extId)
 
-        genericUserSummary(card, mapOf(), null, if (data.isPresent) data.get().favoriteSongs else null)
+        genericUserSummary(card, mapOf(), null, data?.favoriteSongs)
     }
 
     override val shownRanks: List<Pair<Int, String>> = waccaScores.filter { it.first > 85 * 10000 }

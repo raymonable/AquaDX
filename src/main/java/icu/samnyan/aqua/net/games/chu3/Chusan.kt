@@ -3,8 +3,11 @@ package icu.samnyan.aqua.net.games.chu3
 import ext.*
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.games.*
-import icu.samnyan.aqua.net.utils.*
-import icu.samnyan.aqua.sega.chusan.model.*
+import icu.samnyan.aqua.net.utils.chu3Scores
+import icu.samnyan.aqua.sega.chusan.model.Chu3Repos
+import icu.samnyan.aqua.sega.chusan.model.Chu3UserDataRepo
+import icu.samnyan.aqua.sega.chusan.model.Chu3UserMusicDetailRepo
+import icu.samnyan.aqua.sega.chusan.model.Chu3UserPlaylogRepo
 import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserData
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserGameOption
 import org.springframework.web.bind.annotation.RestController
@@ -106,7 +109,7 @@ class Chusan(
     }
     @API("user-option-set")
     override suspend fun userOptionSet(@RP token: String, @RP field: String, @RP value: Int): Any = us.jwt.auth(token) { u ->
-        val gameOptions = rp.userGameOption.findSingleByUser_Card_ExtId(u.ghostCard.extId).getOrNull()
+        val gameOptions = rp.userGameOption.findSingleByUser_Card_ExtId(u.ghostCard.extId)
         val property = UserGameOption::class.memberProperties.filterIsInstance<KMutableProperty1<Any, Any?>>().find{ it.name == field }
 
         if (property != null && gameOptions != null) {

@@ -10,11 +10,10 @@ import icu.samnyan.aqua.sega.general.service.CardService
 import icu.samnyan.aqua.sega.maimai2.model.Mai2UserDataRepo
 import icu.samnyan.aqua.sega.maimai2.model.Mai2UserPlaylogRepo
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserPlaylog
-import icu.samnyan.aqua.sega.util.jackson.BasicMapper
+import icu.samnyan.aqua.sega.util.BasicMapper
 import icu.samnyan.aqua.spring.Metrics
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * @author samnyan (privateamusement@protonmail.com)
@@ -54,18 +53,15 @@ class UploadUserPlaylogHandler(
             uid,
             playlog.musicId,
             playlog.userPlayDate
-        ).size > 0
+        ).isNotEmpty()
         if (isDup) {
             log.info("Duplicate playlog detected")
             return """{"returnCode":1,"apiName":"com.sega.maimai2servlet.api.UploadUserPlaylogApi"}"""
         }
 
         // Save if the user is registered
-        val u = userDataRepository.findByCardExtId(uid).getOrNull()
-        if (u != null) {
-            playlogRepo.save(playlog.apply { user = u })
-            // u.card?.let { cardService.updateCardTimestamp(it, "mai2") } // No need: always followed by an UpsertUserAll
-        }
+        val u = userDataRepository.findByCardExtId(uid)
+        if (u != null) playlogRepo.save(playlog.apply { user = u })
 
         // If the user hasn't registered (first play), save the playlog to a backlog
         else {

@@ -10,7 +10,6 @@ import icu.samnyan.aqua.sega.maimai2.model.Mai2Repos
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2ItemKind
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserCharacter
 import org.springframework.stereotype.Component
-import kotlin.jvm.optionals.getOrNull
 
 @Component("Maimai2GetUserCharacterHandler")
 class GetUserCharacterHandler(
@@ -26,7 +25,7 @@ class GetUserCharacterHandler(
 
     override fun handle(request: Map<String, Any>): Any {
         val userId = (request["userId"] as Number).toLong()
-        val gameOptions = cardRepo.findByExtId(userId).getOrNull()?.aquaUser?.gameOptions
+        val gameOptions = cardRepo.findByExtId(userId)?.aquaUser?.gameOptions
         val userCharacterList = repos.userCharacter.findByUser_Card_ExtId(userId)
             .let { if (gameOptions?.mai2UnlockChara != true) it else (
                        charaIds.associateWith { Mai2UserCharacter().apply { characterId = it; level = 1 } } +

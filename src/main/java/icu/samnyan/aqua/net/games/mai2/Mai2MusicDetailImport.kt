@@ -1,6 +1,9 @@
 package icu.samnyan.aqua.net.games.mai2
 
-import ext.*
+import ext.API
+import ext.RB
+import ext.RP
+import ext.minus
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.utils.SUCCESS
 import icu.samnyan.aqua.sega.general.service.CardService
@@ -19,24 +22,18 @@ class Mai2MusicDetailImport(
     @PostMapping("import-music-detail")
     suspend fun importMusicDetail(@RP token: String, @RB data: List<Mai2UserMusicDetail>) = us.jwt.auth(token) { u ->
         us.cardByName(u.username) { card ->
-            val user = repos.userData.findByCardExtId(card.extId).orElse(null) ?: (404 - "User not found")
+            val user = repos.userData.findByCardExtId(card.extId) ?: (404 - "User not found")
             data.forEach { newMusic ->
-                val musicRec = repos.userMusicDetail.findByUserAndMusicIdAndLevel(user, newMusic.musicId, newMusic.level)
-                if (musicRec.isPresent) {
-                    val music = musicRec.get()
+                newMusic.user = user
+                repos.userMusicDetail.findByUserAndMusicIdAndLevel(user, newMusic.musicId, newMusic.level)?.let { m ->
                     newMusic.apply {
-                        id = music.id
-                        this.user = user
-                        achievement = achievement.coerceAtLeast(music.achievement)
-                        scoreRank = scoreRank.coerceAtLeast(music.scoreRank)
-                        comboStatus = comboStatus.coerceAtLeast(music.comboStatus)
-                        syncStatus = syncStatus.coerceAtLeast(music.syncStatus)
-                        deluxscoreMax = deluxscoreMax.coerceAtLeast(music.deluxscoreMax)
-                        playCount = playCount.coerceAtLeast(music.playCount)
-                    }
-                } else {
-                    newMusic.apply {
-                        this.user = user
+                        id = m.id
+                        achievement = achievement.coerceAtLeast(m.achievement)
+                        scoreRank = scoreRank.coerceAtLeast(m.scoreRank)
+                        comboStatus = comboStatus.coerceAtLeast(m.comboStatus)
+                        syncStatus = syncStatus.coerceAtLeast(m.syncStatus)
+                        deluxscoreMax = deluxscoreMax.coerceAtLeast(m.deluxscoreMax)
+                        playCount = playCount.coerceAtLeast(m.playCount)
                     }
                 }
             }
