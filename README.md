@@ -22,59 +22,61 @@ selling it on any platform is strictly prohibited as per the CC By-NC-SA license
 
 Multipurpose game server for ALL.Net games.
 
-### Related Projects
+## Related Projects
 
-* [AquaMai](https://github.com/MewoLab/AquaMai): A maimai DX mod that adds many features to the game.
-* [AquaNet](./AquaNet): A new web frontend for the modern age.
+* [AquaMai](https://github.com/MuNET-OSS/AquaMai): A maimai DX mod that adds many features to the game.
+* [AquaNet](./AquaNet): The primary AquaDX web frontend, hosted publically at [aquadx.net](https://aquadx.net/)
 
-### Supported Games
-
-Below is a list of games supported by this server. 
-
-| Game                   | Ver  | Codename    | Thanks to                                            |
-|------------------------|------|-------------|------------------------------------------------------|
-| SDHD: CHUNITHM         | 2.40 | X-VERSE     |                                                      |
-| SDEZ: MaiMai DX        | 1.60 |  CiRCLE     |                                                      |
-| SDGA: MaiMai DX (Intl) | 1.60 |  CiRCLE     | [@Clansty](https://github.com/clansty)               |
-| SDED: Card Maker       | 1.39 |             | [@Becods](https://github.com/Becods)                 |
-| SDDT: O.N.G.E.K.I.     | 1.50 | Re:Fresh    | [@PenguinCaptain](https://github.com/PenguinCaptain) |
-| SBZV: Project DIVA     | 7.10 | Future Tone |                                                      |
-| SDFE: Wacca (*ALPHA)   | 3.07 | Reverse     |                                                      |
-
-Check out these docs for more information.
-* [Game specific notes](docs/game_specific_notes.md)
-* [Frequently asked questions](docs/frequently_asked_questions.md)
+## Supported Games
 
 > [!WARNING]  
 > CHUNITHM pre-NEW!! and maimai pre-DX are no longer supported after February 6th, 2026 and all associated data will be removed.
 
+| Game                   | Latest Ver.         | Initial Ver.        | Notes                                                       |
+|------------------------|---------------------|---------------------|-------------------------------------------------------------|
+| SDHD: CHUNITHM         | 2.40 (X-VERSE)      | 2.00 (NEW)          | Missing some X-VERSE features                               |
+| SDEZ: MaiMai DX        | 1.60 (CiRCLE)       | 1.00 (DX)           | Missing circle (teams) support                              |
+| SDGA: MaiMai DX (Intl) | 1.60 (CiRCLE)       | 1.00 (DX)           | Thanks [@Clansty](https://github.com/clansty)               |
+| SDED: Card Maker       | 1.39                | N/A                 | Thanks [@Becods](https://github.com/Becods)                 |
+| SDDT: O.N.G.E.K.I.     | 1.50 (Re:Fresh)     | N/A                 | Thanks [@PenguinCaptain](https://github.com/PenguinCaptain) |
+| SBZV: Project DIVA     | 7.10                | N/A                 | No web interface provided                                   |
+| SDFE: Wacca            | 3.07 (Reverse)      | N/A                 | Later versions are EOS patches, network will not work       |
+
+<!-- A majority of them have been left as N/A for initial version as they do not appear to have restrictions -->
+
+Check out these docs for more information.
+* [Game specific notes](docs/game_specific_notes.md)
+* [Frequently asked questions](docs/frequently_asked_questions.md)
+  
 ## Usage
-If you own a cab or controller and just want to play the game, follow the instructions below:
 
-1. Make sure you have obtained game files on your own (we will not provide them).
-2. Go to [aquadx.net](https://aquadx.net) and make an account.
-3. Click on "Setup Connection" in the home page, and follow the instructions.
-4. Play a coin with your card.  
-   (Either a physical card or the `aime.txt` / `felica.txt` in your segatools)
-5. Pet your cat 🐱
-6. Link your card on the website. 
+### Public Instance
 
-If you encounter any issue, please report in the [issue tracker](https://github.com/MewoLab/AquaDX/issues).
+1. Ensure your game can boot to title screen.
+2. Go to [https://aquadx.net](https://aquadx.net) and sign up (or log in).
+3. Access the Setup Connection page and follow the instructions provided.
+
+If you encounter any issue, please report via Discord, QQ, (both available on the website) or the GitHub issue tracker.
 
 > [!TIP]  
-> If you don't know your card ID, there's always a button on the login screen of the game that can read a card's access code.
+> Your card's access code can be identified in all supported games on their title screen.<br>
+> Press the "access code" and scan your card to retrieve it.
 
-## Self Hosting (Advanced)
+### Self Hosting (Advanced)
 
-Please read the [self-hosting guide](docs/self-hosting.md) if you want to host your own server. This is only for advanced users and developers. Do not ask for support if you are not familiar with programming or networking.
+Please read the [self-hosting guide](docs/self-hosting.md) if you want to host your own server. 
+This is only for advanced users and developers. 
+Do not ask for support if you are not familiar with programming or networking.
 
-## License: [CC By-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)
+## License
+
+AquaDX uses the [CC By-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license:
 
 * **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
 * **NonCommercial** — You may not use the material for commercial purposes.
 * **ShareAlike** — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
 
-### Credit
+## Attributions
 * **samnyan**: The creator and developer of the original Aqua server
 * **Akasaka Ryuunosuke**: providing all the DIVA protocol information
 * **Dom Eori**: Developer of forked Aqua server, from v0.0.17 and up
