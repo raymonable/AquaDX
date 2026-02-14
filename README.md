@@ -34,8 +34,8 @@ Below is a list of games supported by this server.
 | Game                   | Ver  | Codename    | Thanks to                                            |
 |------------------------|------|-------------|------------------------------------------------------|
 | SDHD: CHUNITHM         | 2.40 | X-VERSE     |                                                      |
-| SDEZ: MaiMai DX        | 1.55 | PRiSM Plus  |                                                      |
-| SDGA: MaiMai DX (Intl) | 1.55 | PRiSM       | [@Clansty](https://github.com/clansty)               |
+| SDEZ: MaiMai DX        | 1.60 |  CiRCLE     |                                                      |
+| SDGA: MaiMai DX (Intl) | 1.60 |  CiRCLE     | [@Clansty](https://github.com/clansty)               |
 | SDED: Card Maker       | 1.39 |             | [@Becods](https://github.com/Becods)                 |
 | SDDT: O.N.G.E.K.I.     | 1.50 | Re:Fresh    | [@PenguinCaptain](https://github.com/PenguinCaptain) |
 | SBZV: Project DIVA     | 7.10 | Future Tone |                                                      |
