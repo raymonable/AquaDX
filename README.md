@@ -54,7 +54,7 @@ Check out these docs for more information.
 
 1. Ensure your game can boot to title screen.
 2. Go to [https://aquadx.net](https://aquadx.net) and sign up (or log in).
-3. Access the Setup Connection page and follow the instructions provided.
+3. Access the [Setup Connection page](https://aquadx.net/setup) and follow the instructions provided.
 
 If you encounter any issue, please report via Discord, QQ, (both available on the website) or the GitHub issue tracker.
 

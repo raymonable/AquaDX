@@ -17,9 +17,9 @@
     <Loading/>
   {:then photos}
     {#if photos.length === 0}
-      <blockquote>{t('maiphoto.none')}</blockquote>
+      <blockquote class="info">{t('maiphoto.none')}</blockquote>
     {:else}
-      <blockquote>{t('maiphoto.url_warning')}</blockquote>
+      <blockquote class="info">{t('maiphoto.url_warning')}</blockquote>
     {/if}
     <div class="pictures">
       {#each photos as photo}

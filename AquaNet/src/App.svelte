@@ -88,6 +88,7 @@
   <Route path="/support" component={Communities} />
   <Route path="/cards" component={LinkCard} />
   <Route path="/setup" component={SetupInstructions} />
+  <Route path="/ranking" component={Ranking} />
   <Route path="/ranking/:game" component={Ranking} />
   <Route path="/u/:username" component={UserHome} />
   <Route path="/u/:username/:game" component={UserHome} />

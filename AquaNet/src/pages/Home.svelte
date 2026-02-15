@@ -23,7 +23,7 @@
         <ActionCard isSmall={true} color="201, 135, 174" icon="fluent:games-16-filled" href={`/u/${me.username}`}>
           <h3>{t('home.user-profile')}</h3>
         </ActionCard>
-        <ActionCard isSmall={true} color="136, 99, 150" icon="fluent:text-bullet-list-square-16-filled" href={`/rankings`}>
+        <ActionCard isSmall={true} color="136, 99, 150" icon="fluent:text-bullet-list-square-16-filled" href={`/ranking`}>
           <h3>{t('home.rankings')}</h3>
         </ActionCard>
         <ActionCard isSmall={true} color="133, 199, 201" icon="fluent:settings-16-filled" href={`/settings`}>
@@ -44,7 +44,7 @@
       </ActionCard>
 
       <ImportDataAction/>
-      
+
       <ActionCard icon="uil:link-alt" href="/setup">
         <h3>{t('home.setup')}</h3>
         <span>{t('home.setup-description')}</span>
