@@ -55,19 +55,21 @@ id=${keychip}`.trim(), {
       <blockquote class="info">
         {t('setup.keychip-warning')}
       </blockquote>
-
-      <details>
-        <summary>{t('setup.type.automatic')}</summary>
-        {@html t('setup.automatic')}
-        {#if automaticSetupStatus != "none"}
-          <blockquote class={`keychip-status ${automaticSetupStatus}`}>
-            {t(`setup.automatic.${automaticSetupStatus}`)}
-          </blockquote>
-        {/if}
-        <div class="setup-btn">
-          <button on:click={patchSegatools}>{t('setup.automatic.select')}</button>
-        </div>
-      </details>
+      
+      {#if !!window.showOpenFilePicker}
+        <details>
+          <summary>{t('setup.type.automatic')}</summary>
+          {@html t('setup.automatic')}
+          {#if automaticSetupStatus != "none"}
+            <blockquote class={`keychip-status ${automaticSetupStatus}`}>
+              {t(`setup.automatic.${automaticSetupStatus}`)}
+            </blockquote>
+          {/if}
+          <div class="setup-btn">
+            <button on:click={patchSegatools}>{t('setup.automatic.select')}</button>
+          </div>
+        </details>
+      {/if}
 
       <details>
         <summary>{t('setup.type.manual')}</summary>
