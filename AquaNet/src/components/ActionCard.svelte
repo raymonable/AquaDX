@@ -5,6 +5,8 @@
 
   export let color: string = '179, 198, 255'
   export let icon: string
+  export let href: string | undefined
+  export let isSmall: boolean = false
 
   // Manually positioned icons
   const iconPos = [
@@ -19,7 +21,7 @@
   ]
 </script>
 
-<div class="action-card" style="--card-color: {color}" on:click role="button" tabindex="0" on:keydown>
+<a class="action-card" class:small={isSmall} style="--card-color: {color}" on:click {href} role="button" tabindex="0" on:keydown>
   <slot/>
 
   <div class="icons">
@@ -27,13 +29,14 @@
       <Icon icon={icon} style={`top: ${y}rem; right: ${x}rem; font-size: ${size || 1}em`} />
     {/each}
   </div>
-</div>
+</a>
 
 <style lang="sass">
   @use '../vars'
 
   .action-card
     overflow: hidden
+    display: block
     padding: 1rem
     border-radius: vars.$border-radius
     box-shadow: 0 5px 5px 1px vars.$c-shadow
@@ -43,6 +46,7 @@
     background: linear-gradient(45deg, transparent 20%, rgba(var(--card-color), 0.5) 100%)
     outline: 1px solid transparent
     filter: drop-shadow(0 0 12px rgba(var(--card-color), 0))
+    color: rgba(255, 255, 255, 0.78)
 
     &:hover
       box-shadow: 0 0 0.5rem 0.2rem vars.$c-shadow
@@ -52,10 +56,11 @@
       filter: drop-shadow(0 0 12px rgba(var(--card-color), 0.5))
       outline-color: rgba(var(--card-color), 0.5)
 
-    :global(span)
+    :global(span), &.small
       font-size: 1.2rem
       display: block
       margin-bottom: 0.5rem
+      color: color-mix(in oklab, rgb(var(--card-color)) 25%, rgba(255, 255, 255, 0.75))
 
     .icons
       position: absolute

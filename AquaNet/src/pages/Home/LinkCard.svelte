@@ -8,6 +8,7 @@
   import Icon from "@iconify/svelte"
   import StatusOverlays from "../../components/StatusOverlays.svelte"
   import { t } from "../../libs/i18n"
+  import DashboardTabs from "./DashboardTabs.svelte";
 
   // State
   let state: 'ready' | 'linking-AC' | 'linking-SN' | 'loading' = "loading"
@@ -262,125 +263,147 @@
         break
     }
   }
+
+  function generateRandom() {
+    inputAC = "";
+    while (inputAC.length < 20) {
+      let digit = Math.floor(Math.random() * 10);
+      if (!((digit == 5 || digit == 3) && inputAC.length == 0))
+        inputAC += digit;
+    };
+    inputACChange();
+  }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="link-card" on:drop={dropFile} on:dragover={(e) => e.preventDefault()}>
-  <h2>{t('home.linkcard.cards')}</h2>
-  <p>{t('home.linkcard.description')}:</p>
+<main class="content">
+  <DashboardTabs />
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div class="link-card" on:drop={dropFile} on:dragover={(e) => e.preventDefault()}>
 
-  {#if me}
-    <div class="existing-cards" transition:slide>
-      {#each me.cards as card (card.luid)}
-        <div class:ghost={card.isGhost} class='existing card' transition:fade|global>
-          <span class="type">{card.isGhost ? t('home.linkcard.account-card') : cardType(card.luid)}</span>
-          <span class="register">{t('home.linkcard.registered')}: {moment(card.registerTime).format("YYYY MMM DD")}</span>
-          <span class="last">{t('home.linkcard.lastused')}: {moment(card.accessTime).format("YYYY MMM DD")}</span>
-          <div></div>
-          <span class="id">{formatLUID(card.luid, card.isGhost)}</span>
+    {#if me && me.cards && me.cards.find(card => !card.isGhost)}
+      <h2>{t('home.linkcard.cards')}</h2>
+      <p>{t('home.linkcard.description')}:</p>
+
+      <div class="existing-cards" transition:slide>
+        {#each me.cards as card (card.luid)}
+          <!-- Hide account cards, they only cause confusion to a large majority of users -->
           {#if !card.isGhost}
-            <button class="icon error" on:click={() => unlink(card)}><Icon icon="tabler:trash-x-filled"/></button>
+            <div class:ghost={card.isGhost} class={`existing card ${cardType(card.luid) == "FeliCa SN" ? "sn" : "ac"}`} transition:fade|global>
+              <span class="type">{card.isGhost ? t('home.linkcard.account-card') : cardType(card.luid)}</span>
+              <span class="register">{t('home.linkcard.registered')}: {moment(card.registerTime).format("YYYY MMM DD")}</span>
+              <span class="last">{t('home.linkcard.lastused')}: {moment(card.accessTime).format("YYYY MMM DD")}</span>
+              <div></div>
+              <!-- Sorry, it's kind of ugly to do it like this, but it improves copiablity -->
+              <span class="id">{@html formatLUID(card.luid, card.isGhost)
+                .split(" ").map(v => `<i>${v}</i>`).join("")
+                .split(":").map((v, i, a) => `<i>${v}${i < a.length - 1 ? ":" : ""}</i>`).join("")}</span>
+              {#if !card.isGhost}
+                <button class="icon error" on:click={() => unlink(card)}><Icon icon="tabler:trash-x-filled"/></button>
+              {/if}
+            </div>
           {/if}
-        </div>
-      {/each}
-    </div>
-  {/if}
-
-  <h2>{t('home.link-card')}</h2>
-  <p>{t('home.linkcard.enter-info')}:</p>
-  {#if !inputSN}
-    <div out:slide={{ duration: 250 }}>
-  <p>{t('home.linkcard.access-code')}</p>
-  <label>
-    <!-- DO NOT change the order of bind:value and on:input. Their order determines the order of reactivity -->
-    <input bind:this={elemInputAC}
-           placeholder="e.g. 2408 1234 5678 9012 3456 / 0008 1234 5678 8765 4321"
-           on:keydown={(e) => {
-             e.key === "Enter" && link('AC')
-             // Ensure key is numeric
-             if (isInput(e) && !/[\d ]/.test(e.key)) e.preventDefault()
-           }}
-           bind:value={inputAC}
-           on:input={inputACChange}
-           class:error={inputAC && (!inputACRegex.test(inputAC) || errorAC)}
-           class:warning={inputAC && warningAC}>
-    {#if inputAC.length > 0}
-      <button transition:slide={{axis: 'x'}} on:click={() => link('AC')}>{t('home.linkcard.link')}</button>
-    {/if}
-  </label>
-  <blockquote>{t('home.linkcard.kdx-notice')}</blockquote>
-  {#if errorAC}
-    <p class="error" style={warningAC ? "margin-bottom: 0" : ""} transition:slide>{errorAC}</p>
-  {/if}
-  {#if warningAC}
-    <!-- Transition temporarily adds `overflow: hidden` which leads to BFC issue, breaking margin collapse -->
-    <div style="overflow: hidden" transition:slide>
-      {#each warningAC.trim().split("\n") as paragraph}
-        <p class="warning">{paragraph}</p>
-      {/each}
-    </div>
-  {/if}
-    </div>
-    {/if}
-
-  {#if !inputAC}
-    <div out:slide={{ duration: 250 }}>
-  <p>{t('home.linkcard.enter-sn1')}
-    (<a href="https://play.google.com/store/apps/details?id=com.wakdev.wdnfc">Android</a> /
-    <a href="https://apps.apple.com/us/app/nfc-tools/id1252962749">Apple</a>)
-    {t('home.linkcard.enter-sn2')}
-  </p>
-  <label>
-    <input bind:this={inputElemSN}
-           placeholder="e.g. 01:2E:1A:2B:3C:4D:5E:6F"
-           on:keydown={(e) => {
-             e.key === "Enter" && link('SN')
-             // Ensure key is hex or colon
-             if (isInput(e) && !/[0-9A-Fa-f:]/.test(e.key)) e.preventDefault()
-           }}
-           bind:value={inputSN}
-           on:input={inputSNChange}
-           class:error={inputSN && (!inputSNRegex.test(inputSN) || errorSN)}>
-    {#if inputSN.length > 0}
-      <button transition:slide={{axis: 'x'}} on:click={() => link('SN')}>{t('home.linkcard.link')}</button>
-    {/if}
-  </label>
-  {#if errorSN}
-    <p class="error" transition:slide>{errorSN}</p>
-  {/if}
-    </div>
-    {/if}
-
-  {#if conflictOld && conflictNew && me}
-    <div class="overlay" transition:fade>
-      <div>
-        <h2>{t('home.linkcard.data-conflict')}</h2>
-        <p></p>
-        <div class="conflict-cards">
-          <div class="old card clickable" on:click={() => linkConflictContinue('old')}
-               role="button" tabindex="0" on:keydown={e => e.key === "Enter" && linkConflictContinue('old')}>
-            <span class="type">{t('home.linkcard.account-card')}</span>
-            <span>{t('home.linkcard.name')}: {conflictOld.name}</span>
-            <span>{t('home.linkcard.rating')}: {conflictOld.rating}</span>
-            <span>{t('home.linkcard.last-login')}: {moment(conflictOld.lastLogin).format("YYYY MMM DD")}</span>
-            <span class="id">{formatLUID(me.ghostCard.luid, true)}</span>
-          </div>
-          <div class="new card clickable" on:click={() => linkConflictContinue('new')}
-               role="button" tabindex="0" on:keydown={e => e.key === "Enter" && linkConflictContinue('new')}>
-            <span class="type">{cardType(conflictCardID)}</span>
-            <span>{t('home.linkcard.name')}: {conflictNew.name}</span>
-            <span>{t('home.linkcard.rating')}: {conflictNew.rating}</span>
-            <span>{t('home.linkcard.last-login')}: {moment(conflictNew.lastLogin).format("YYYY MMM DD")}</span>
-            <span class="id">{conflictCardID}</span>
-          </div>
-        </div>
-        <button class="error" on:click={linkConflictCancel}>{t('action.cancel')}</button>
+        {/each}
       </div>
-    </div>
-  {/if}
+      <blockquote class="info">
+        {t('home.linkcard.card-security-warning')}
+      </blockquote>
+    {/if}
 
-  <StatusOverlays bind:confirm={showConfirm} bind:error={error} loading={!me} />
-</div>
+    <h2>{t('home.link-card')}</h2>
+    <p>{t('home.linkcard.enter-info')}</p>
+    {#if !inputSN}
+      <div out:slide={{ duration: 250 }}>
+    <p>{t('home.linkcard.access-code')}</p>
+    <label>
+      <!-- DO NOT change the order of bind:value and on:input. Their order determines the order of reactivity -->
+      <input bind:this={elemInputAC}
+            placeholder="Access Code (e.g. 0008 1234 5678 8765 4321)"
+            on:keydown={(e) => {
+              e.key === "Enter" && link('AC')
+              // Ensure key is numeric
+              if (isInput(e) && !/[\d ]/.test(e.key)) e.preventDefault()
+            }}
+            bind:value={inputAC}
+            on:input={inputACChange}
+            class:error={inputAC && (!inputACRegex.test(inputAC) || errorAC)}
+            class:warning={inputAC && warningAC}>
+      {#if inputAC.length > 0}
+        <button transition:slide={{axis: 'x'}} on:click={() => link('AC')}>{t('home.linkcard.link')}</button>
+      {:else}
+        <button on:click={() => generateRandom()}>Generate</button>
+      {/if}
+    </label>
+    
+    {#if errorAC}
+      <p class="error" style={warningAC ? "margin-bottom: 0" : ""} transition:slide>{errorAC}</p>
+    {/if}
+    {#if warningAC}
+      <!-- Transition temporarily adds `overflow: hidden` which leads to BFC issue, breaking margin collapse -->
+      <div style="overflow: hidden" transition:slide>
+        {#each warningAC.trim().split("\n") as paragraph}
+          <p class="warning">{paragraph}</p>
+        {/each}
+      </div>
+    {/if}
+      </div>
+      {/if}
+
+    {#if !inputAC}
+      <div out:slide={{ duration: 250 }}>
+      <p>{@html t('home.linkcard.enter-sn')}
+    </p>
+    <label>
+      <input bind:this={inputElemSN}
+            placeholder="Serial Number (e.g. 01:2E:1A:2B:3C:4D:5E:6F)"
+            on:keydown={(e) => {
+              e.key === "Enter" && link('SN')
+              // Ensure key is hex or colon
+              if (isInput(e) && !/[0-9A-Fa-f:]/.test(e.key)) e.preventDefault()
+            }}
+            bind:value={inputSN}
+            on:input={inputSNChange}
+            class:error={inputSN && (!inputSNRegex.test(inputSN) || errorSN)}>
+      {#if inputSN.length > 0}
+        <button transition:slide={{axis: 'x'}} on:click={() => link('SN')}>{t('home.linkcard.link')}</button>
+      {/if}
+    </label>
+    {#if errorSN}
+      <p class="error" transition:slide>{errorSN}</p>
+    {/if}
+      </div>
+      {/if}
+
+    {#if conflictOld && conflictNew && me}
+      <div class="overlay" transition:fade>
+        <div>
+          <h2>{t('home.linkcard.data-conflict')}</h2>
+          <p></p>
+          <div class="conflict-cards">
+            <div class="old card clickable" on:click={() => linkConflictContinue('old')}
+                role="button" tabindex="0" on:keydown={e => e.key === "Enter" && linkConflictContinue('old')}>
+              <span class="type">{t('home.linkcard.account-card')}</span>
+              <span>{t('home.linkcard.name')}: {conflictOld.name}</span>
+              <span>{t('home.linkcard.rating')}: {conflictOld.rating}</span>
+              <span>{t('home.linkcard.last-login')}: {moment(conflictOld.lastLogin).format("YYYY MMM DD")}</span>
+              <span class="id">{formatLUID(me.ghostCard.luid, true)}</span>
+            </div>
+            <div class="new card clickable" on:click={() => linkConflictContinue('new')}
+                role="button" tabindex="0" on:keydown={e => e.key === "Enter" && linkConflictContinue('new')}>
+              <span class="type">{cardType(conflictCardID)}</span>
+              <span>{t('home.linkcard.name')}: {conflictNew.name}</span>
+              <span>{t('home.linkcard.rating')}: {conflictNew.rating}</span>
+              <span>{t('home.linkcard.last-login')}: {moment(conflictNew.lastLogin).format("YYYY MMM DD")}</span>
+              <span class="id">{conflictCardID}</span>
+            </div>
+          </div>
+          <button class="error" on:click={linkConflictCancel}>{t('action.cancel')}</button>
+        </div>
+      </div>
+    {/if}
+
+  </div>
+</main>
+<StatusOverlays bind:confirm={showConfirm} bind:error={error} loading={!me} />
 
 <style lang="sass">
   @use "../../vars"
@@ -425,6 +448,23 @@
         right: 10px
         bottom: 10px
 
+      .id
+        overflow: hidden
+        :global(i)
+          display: inline-block
+          font-style: normal
+          transition: 350ms filter
+      &.ac
+        :global(i)
+          margin-right: 0.25em
+          &:nth-child(n+3)
+            filter: blur(8px)
+      &.sn
+        :global(i):nth-child(n+5)
+          filter: blur(8px)
+      &:hover :global(i)
+        filter: none !important
+
     .conflict-cards
       .card
         transition: vars.$transition
@@ -437,5 +477,4 @@
 
       .id
         opacity: 0.7
-
 </style>

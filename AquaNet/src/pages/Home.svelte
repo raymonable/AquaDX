@@ -1,43 +1,39 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
-  import LinkCard from "./Home/LinkCard.svelte";
-  import SetupInstructions from "./Home/SetupInstructions.svelte";
-  import { DISCORD_INVITE, FADE_IN, FADE_OUT } from "../libs/config";
   import { USER } from "../libs/sdk.js";
   import type { AquaNetUser } from "../libs/generalTypes";
   import StatusOverlays from "../components/StatusOverlays.svelte";
   import ActionCard from "../components/ActionCard.svelte";
   import { t } from "../libs/i18n";
   import ImportDataAction from "./Home/ImportDataAction.svelte";
-  import Communities from "./Home/Communities.svelte";
+  import DashboardTabs from "./Home/DashboardTabs.svelte";
 
   USER.ensureLoggedIn();
 
-  let me: AquaNetUser
-  let error = ""
-
-  let tab = 0;
-  let tabs = [t('home.nav.portal'), t('home.nav.link-card'), t('home.nav.game-setup')]
+  let me: AquaNetUser;
+  let error = "";
 
   USER.me().then((m) => me = m).catch(e => error = e.message)
 </script>
 
 <main class="content">
-<!--  <h2 class="outer-title">&nbsp;</h2>-->
-  <nav class="tabs">
-    {#each tabs as t, i}
-      <div class="clickable"
-           class:active={tab === i}
-           on:click={() => tab = i}
-           on:keydown={(e) => e.key === "Enter" && (tab = i)}
-           role="button" tabindex={i}>{t}
+  <DashboardTabs />
+  {#if me}
+    <div class="action-cards">
+      <div class="quick-action-cards">
+        <ActionCard isSmall={true} color="201, 135, 174" icon="fluent:games-16-filled" href={`/u/${me.username}`}>
+          <h3>{t('home.user-profile')}</h3>
+        </ActionCard>
+        <ActionCard isSmall={true} color="136, 99, 150" icon="fluent:text-bullet-list-square-16-filled" href={`/rankings`}>
+          <h3>{t('home.rankings')}</h3>
+        </ActionCard>
+        <ActionCard isSmall={true} color="133, 199, 201" icon="fluent:settings-16-filled" href={`/settings`}>
+          <h3>{t('home.settings')}</h3>
+        </ActionCard>
       </div>
-    {/each}
-  </nav>
 
-  {#if tab === 0}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN} class="action-cards">
-      <ActionCard color="255, 192, 203" icon="solar:card-bold-duotone" on:click={() => tab = 1}>
+      <div class="separator"></div>
+
+      <ActionCard color="255, 192, 203" icon="solar:card-bold-duotone" href="/cards">
         {#if me && me.cards.length > 1}
           <h3>{t('home.manage-cards')}</h3>
           <span>{t('home.manage-cards-description')}</span>
@@ -47,29 +43,17 @@
         {/if}
       </ActionCard>
 
-      <ActionCard color="82, 93, 233" icon="fluent:chat-12-filled" on:click={() => tab = 3}>
-        <h3>{t('home.join-community')}</h3>
-        <span>{t('home.join-community-description')}</span>
-      </ActionCard>
-
-      <ActionCard on:click={() => tab = 2} icon="uil:link-alt">
+      <ImportDataAction/>
+      
+      <ActionCard icon="uil:link-alt" href="/setup">
         <h3>{t('home.setup')}</h3>
         <span>{t('home.setup-description')}</span>
       </ActionCard>
 
-      <ImportDataAction/>
-    </div>
-  {:else if tab === 1}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN}>
-      <LinkCard/>
-    </div>
-  {:else if tab === 2}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN}>
-      <SetupInstructions/>
-    </div>
-  {:else if tab === 3}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN}>
-      <Communities/>
+      <ActionCard color="82, 93, 233" icon="fluent:chat-12-filled" href="/support">
+        <h3>{t('home.join-community')}</h3>
+        <span>{t('home.join-community-description')}</span>
+      </ActionCard>
     </div>
   {/if}
 </main>
@@ -95,4 +79,24 @@
     display: flex
     flex-direction: column
     gap: 1rem
+
+  .quick-action-cards
+    display: flex
+    flex-direction: row
+    gap: 1rem
+
+    :global(.action-card)
+      flex: 1
+      height: 2rem
+      display: flex
+      align-content: center
+      flex-wrap: wrap
+
+  .separator 
+    position: relative
+    left: 50%
+    transform: translate(-50%, 0)
+    width: 75%
+    height: 1px
+    background: vars.$ov-light
 </style>

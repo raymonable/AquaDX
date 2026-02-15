@@ -9,7 +9,7 @@
 </script>
 
 <div out:fade={FADE_OUT} in:fade={FADE_IN} class="fields">
-  <blockquote>
+  <blockquote class="info">
     {ts("settings.siteNotice")}
   </blockquote>
   <div class="field">
@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="divider"></div>
-  <blockquote>
+  <blockquote class="info">
     {ts("settings.regionNotice")}
   </blockquote>
   <RegionSelector/>

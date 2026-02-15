@@ -13,6 +13,9 @@
   import { t } from "./libs/i18n";
   import Transfer from "./pages/Transfer/Transfer.svelte";
   import { link } from "d3";
+  import Communities from "./pages/Home/Communities.svelte";
+  import LinkCard from "./pages/Home/LinkCard.svelte";
+  import SetupInstructions from "./pages/Home/SetupInstructions.svelte";
 
   console.log(`%c
 ┏━┓         ┳━┓━┓┏━
@@ -82,7 +85,9 @@
   <Route path="/verify" component={Welcome} /> <!-- For email verification only, backwards compatibility with AquaNet2 in the future -->
   <Route path="/reset-password" component={Welcome} />
   <Route path="/home" component={Home} />
-  <Route path="/ranking" component={Ranking} />
+  <Route path="/support" component={Communities} />
+  <Route path="/cards" component={LinkCard} />
+  <Route path="/setup" component={SetupInstructions} />
   <Route path="/ranking/:game" component={Ranking} />
   <Route path="/u/:username" component={UserHome} />
   <Route path="/u/:username/:game" component={UserHome} />

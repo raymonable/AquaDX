@@ -36,7 +36,7 @@ export function ts(key: string, variables?: { [index: string]: any }) {
  * @param key
  * @param variables
  */
-export function t(key: keyof LocalizedMessages, variables?: { [index: string]: any }) {
+export function t(key: keyof LocalizedMessages, variables?: { [index: string]: any }): string {
   // Check if the key exists
   let msg = msgs[lang][key]
   if (!msg) {

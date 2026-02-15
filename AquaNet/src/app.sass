@@ -55,6 +55,29 @@ blockquote
   border-left: solid #ff7c7c 3px
   border-radius: vars.$border-radius
 
+  &::before
+    content: "⚠"
+    margin-right: 1em
+  
+  &.success
+    $c1: rgba(156, 255, 149, 0.05)
+    $c2: rgba(152, 255, 174, 0.02)
+    background: repeating-linear-gradient(45deg, $c1, $c1 10px, $c2 10px, $c2 20px)
+    border-left: solid #97fa8c 3px
+
+    &::before
+      content: "✓"
+      margin-right: 1em
+
+  &.info
+    $c1: rgba(149, 183, 255, 0.05)
+    $c2: rgba(152, 186, 255, 0.02)
+    background: repeating-linear-gradient(45deg, $c1, $c1 10px, $c2 10px, $c2 20px)
+    border-left: solid #6e8bff 3px
+
+    &::before
+      content: "♢"
+      margin-right: 1em
 
 #app
   width: 100%
