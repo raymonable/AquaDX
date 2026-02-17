@@ -30,14 +30,12 @@
   registerChart()
 
   export let username: string;
-  export let game: GameName | "auto" = "auto"
+  export let game: GameName;
   let calElement: HTMLElement
   let error: string;
   let me: AquaNetUser
   title(`User ${username}`)
   const rounding = useLocalStorage("rounding", true);
-
-  const titleText = game != "auto" ? GAME_TITLE[game] : "?"
 
   interface MusicAndPlay extends MusicMeta, GenericGamePlaylog {}
 
@@ -57,7 +55,7 @@
     USER.isLoggedIn() && USER.me().then(u => me = u)
 
     CARD.userGames(username).then(games => {
-      if (game == "auto") {
+      if (!game) {
         let targetGames = Object.entries(games)
         .map(d => {
           if (d[1])
@@ -66,9 +64,7 @@
         }).sort((a,b) => {
           return b[1]?.lastLogin - a[1]?.lastLogin;
         });
-        if (targetGames[0])
-          window.location.href = `/u/${username}/${targetGames[0][0]}`
-        return;
+        game = targetGames[0][0] as GameName;
       }
       if (!games[game]) {
         // Find a valid game
@@ -118,11 +114,10 @@
     }).catch((e) => { error = e.message; console.error(e) } );
   }
 
-  if (Object.keys(GAME_TITLE).includes(game) || game == "auto") init()
+  if (Object.keys(GAME_TITLE).includes(game) || !game) init()
   else error = t("UserHome.InvalidGame", {game})
 
   const setRival = (isAdd: boolean) => {
-    if (game == "auto") return;
     isLoading = true
     GAME.setRival(game, username, isAdd).then(() => {
       d!.user.rival = isAdd
@@ -167,7 +162,7 @@
         {/each}
 
         {#if me && me.username === username}
-          <a class="setting-icon clickable" use:tooltip={t("UserHome.Settings")} href="/settings">
+          <a class="setting-icon clickable" use:tooltip={t("UserHome.Settings")} href={`/settings/${game}`}>
             <Icon icon="eos-icons:rotating-gear"/>
           </a>
         {/if}
@@ -188,7 +183,7 @@
     <ChuniUserboxDisplay {game} {username} bind:error={error} />
 
     <div>
-      <h2>{titleText} {t('UserHome.Statistics')}</h2>
+      <h2>{GAME_TITLE[game] ?? "?"} {t('UserHome.Statistics')}</h2>
       <div class="scoring-info">
         <div class="chart">
           <div class="info-top">
@@ -313,16 +308,16 @@
 
     <!-- I don't like doing this but it may be preferable to gaslighting the types -->
 
-    <RatingComposition title="B30" comp={d.user.ratingComposition.best30} {allMusics} game={game != "auto" ? game : "mai2"}/>
-    <RatingComposition title="B35" comp={d.user.ratingComposition.best35} {allMusics} game={game != "auto" ? game : "mai2"}/>
-    <RatingComposition title="B15" comp={d.user.ratingComposition.best15} {allMusics} game={game != "auto" ? game : "mai2"}/>
+    <RatingComposition title="B30" comp={d.user.ratingComposition.best30} {allMusics} {game}/>
+    <RatingComposition title="B35" comp={d.user.ratingComposition.best35} {allMusics} {game}/>
+    <RatingComposition title="B15" comp={d.user.ratingComposition.best15} {allMusics} {game}/>
     <!-- <RatingComposition title="Hot 10" comp={d.user.ratingComposition.hot10} {allMusics} {game}/> -->
     <!-- <RatingComposition title="N10" comp={d.user.ratingComposition.next10} {allMusics} {game}/> -->
      <!-- Chuni -->
     {#if d.user.ratingComposition.new}
       <RatingComposition title="New 20" comp={d.user.ratingComposition.new} {allMusics} game="chu3"/>
     {:else}
-      <RatingComposition title="Recent 10" comp={d.user.ratingComposition.recent10} {allMusics} game={game != "auto" ? game : "mai2"} top={10}/>
+      <RatingComposition title="Recent 10" comp={d.user.ratingComposition.recent10} {allMusics} {game} top={10}/>
     {/if}
 
     <div class="recent">
@@ -344,12 +339,12 @@
                     {r.notes?.[r.level === 10 ? 0 : r.level]?.lv?.toFixed(1) ?? r.worldsEndTag ?? '-'}
                   </span>
                 </span>
-                <span class={`rank-${getMult(r.achievement, game != "auto" ? game : "mai2")[2].toString()[0]}`}>
-                  <span class="rank-text">{("" + getMult(r.achievement, game != "auto" ? game : "mai2")[2]).replace("p", "+")}</span>
+                <span class={`rank-${getMult(r.achievement, game)[2].toString()[0]}`}>
+                  <span class="rank-text">{("" + getMult(r.achievement, game)[2]).replace("p", "+")}</span>
                   <span class="rank-num" use:tooltip={(r.achievement / 10000).toFixed(4)}>
                     {
                       rounding.value ?
-                        roundFloor(r.achievement, game != "auto" ? game : "mai2", 1) :
+                        roundFloor(r.achievement, game, 1) :
                         (r.achievement / 10000).toFixed(4)
                     }%
                   </span>

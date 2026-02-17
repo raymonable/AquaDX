@@ -77,17 +77,19 @@ export const EN_REF_GENERAL = {
   'game.ongeki': 'Ongeki',
   'game.wacca': 'Wacca',
   'status.error': 'Error',
-  'status.error.hint': 'Something went wrong, please try again later or ',
-  'status.error.hint.link': 'join our discord for support.',
+  'status.error.hint': 'Support',
   'status.detail': 'Detail: ${detail}',
-  'action.refresh': 'Refresh',
+  'action.refresh': 'Retry',
   'action.cancel': 'Cancel',
   'action.confirm': 'Confirm',
+  'action.home': 'Home',
   'navigation.profile': 'Profile',
   'navigation.maps': 'Maps',
   'navigation.home': 'Home',
   'navigation.rankings': 'Rankings',
-  'navigation.notice': 'Notice'
+  'navigation.notice': 'Notice',
+  'loading': `Please wait...`,
+  '404': 'Page not found (${pathname}). If this is in error, please report it via an appropriate support channel.'
 }
 
 export const EN_REF_HOME = {
@@ -102,7 +104,7 @@ export const EN_REF_HOME = {
   'home.manage-cards-description': 'Link, unlink, and manage your cards.',
   'home.link-card': 'Link Card',
   'home.link-cards-description': 'Link your Amusement IC / Aime card to play games.',
-  'home.join-community': 'Join Community',
+  'home.join-community': 'Community & Support',
   'home.join-community-description': 'Join our community for support and chatting with other players.',
   'home.setup': 'Setup Network Connection',
   'home.setup-description': 'Configure a game to connect to our servers.',
@@ -131,13 +133,13 @@ export const EN_REF_HOME = {
   'home.community.discord': 'Discord',
   'home.community.telegram': 'Telegram (Chinese)',
   'home.community.qq': 'QQ (Chinese)',
+  'home.community.github': 'GitHub Repository',
   'home.import.unknown-game': 'Unknown game type. Currently only Mai and Chuni are supported for importing.',
   'home.import.new-data': 'Data to import',
   'home.import.data-conflict': 'Proceed will override your current data',
 }
 
 export const EN_REF_SETUP = {
-  'loading': `Please wait...`,
   'setup.welcome': `Welcome! If you have a game set up, please follow the instructions below to set up the connection with AquaDX.`,
   'setup.keychip-warning': `Your keychip is linked to your account and should be kept secure. Do not give others your keychip.`,
   'setup.steps.one': `Pick a method of setting up network communications. Some browsers may not be able to do automatic setup.`,
@@ -157,6 +159,7 @@ export const EN_REF_SETUP = {
 
 export const EN_REF_SETTINGS = {
   'settings.title': 'Settings',
+  'settings.page-title': '${page} Settings',
   'settings.tabs.profile': 'Profile',
   'settings.tabs.global': 'Global',
   'settings.tabs.chu3': 'Chuni',

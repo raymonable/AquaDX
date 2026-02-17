@@ -4,6 +4,6 @@
   import GameSettingFields from "./GameSettingFields.svelte";
 </script>
 
-<div out:fade={FADE_OUT} in:fade={FADE_IN}>
+<div>
   <GameSettingFields game="ongeki"/>
 </div>

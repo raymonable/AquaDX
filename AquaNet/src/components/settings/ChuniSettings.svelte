@@ -242,16 +242,6 @@
     link.click();
   }
 
-  function g(v: string) {
-    if (v != ("\x63\x68\x75\x6E\x69\x74\x68\x6D ").repeat(3).trim()) return;
-    const t = v.substring(5, 6) + v.substring(1, 2) + "eme";
-    if (!localStorage.getItem(t)) {
-      localStorage.setItem(t, v.substring(0, 1) + "\x6E");
-    } else
-      localStorage.removeItem(t);
-    setTimeout(location.reload, 1000); // ?
-  }
-
   let DDSreader: DDS | undefined;
 
   let USERBOX_PROGRESS = 0;
@@ -316,8 +306,7 @@
 
 <StatusOverlays {error} loading={loading || !!submitting} />
 {#if !loading && !error}
-<div out:fade={FADE_OUT} in:fade={FADE_IN}>
-  <h2>{t("userbox.header.general")}</h2>
+<div>
   <div class="general-options">
     <GameSettingFields game="chu3"/>
 
@@ -476,10 +465,6 @@
 
 input
   width: 100%
-
-
-h2
-  margin-bottom: 0.5rem
 
 .general-options
   display: flex

@@ -4,7 +4,7 @@
   import { t } from "../../libs/i18n.js";
   import Icon from "@iconify/svelte";
   import StatusOverlays from "../StatusOverlays.svelte";
-  import { GAME } from "../../libs/sdk";
+  import { GAME, USER } from "../../libs/sdk";
   import GameSettingFields from "./GameSettingFields.svelte";
   import { download } from "../../libs/ui";
 
@@ -12,15 +12,15 @@
     ['name', t('settings.mai2.name')],
   ]
 
-  export let username: string;
   let error: string
   let submitting = ""
   let values = Array(profileFields.length).fill('')
   let changed: string[] = []
 
-  GAME.userSummary(username, 'mai2').then(({name}) => {
-    values = [name]
-  }).catch(e => error = e.message)
+  USER.me().then(me => 
+    GAME.userSummary(me.username, 'mai2').then(({name}) => {
+      values = [name]
+    }).catch(e => error = e.message));
 
   function submit(field: string, value: string) {
     if (submitting) return
@@ -112,14 +112,14 @@
     }
     try {
       musicData = await fetch(`${DATA_HOST}/d/mai2/00/all-music.json`).then(res => res.json())
-    } catch (e) {
+    } catch (e: any) {
       error = e.message;
       submitting = ""
       return;
     }
     try {
       data = await GAME.export('mai2');
-    } catch (e) {
+    } catch (e: any) {
       error = e.message;
       submitting = ""
       return;
@@ -208,7 +208,7 @@
   }
 </script>
 
-<div class="fields" out:fade={FADE_OUT} in:fade={FADE_IN}>
+<div class="fields">
   {#each profileFields as [field, name], i (field)}
     <div class="field">
       <label for={field}>{name}</label>

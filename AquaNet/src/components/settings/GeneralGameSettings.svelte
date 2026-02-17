@@ -8,7 +8,7 @@
   const rounding = useLocalStorage("rounding", true);
 </script>
 
-<div out:fade={FADE_OUT} in:fade={FADE_IN} class="fields">
+<div class="fields">
   <blockquote class="info">
     {ts("settings.siteNotice")}
   </blockquote>

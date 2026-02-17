@@ -5,7 +5,7 @@
   import ActionCard from "../components/ActionCard.svelte";
   import { t } from "../libs/i18n";
   import ImportDataAction from "./Home/ImportDataAction.svelte";
-  import DashboardTabs from "./Home/DashboardTabs.svelte";
+  import DashboardTabs from "../components/DashboardTabs.svelte";
 
   USER.ensureLoggedIn();
 

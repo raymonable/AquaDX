@@ -8,7 +8,7 @@
   import Icon from "@iconify/svelte"
   import StatusOverlays from "../../components/StatusOverlays.svelte"
   import { t } from "../../libs/i18n"
-  import DashboardTabs from "./DashboardTabs.svelte";
+  import DashboardTabs from "../../components/DashboardTabs.svelte";
 
   // State
   let state: 'ready' | 'linking-AC' | 'linking-SN' | 'loading' = "loading"

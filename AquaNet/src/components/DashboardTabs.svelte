@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { t } from "../../libs/i18n";
+    import { t } from "../libs/i18n";
 
     const tabs: Record<string, string> = {
         [t('home.nav.portal')]: `/home`,
@@ -22,7 +22,7 @@
 </nav>
 
 <style lang="sass">
-  @use "../../vars"
+  @use "../vars"
   .tabs
     display: flex
     gap: 1rem

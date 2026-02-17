@@ -10,6 +10,7 @@ export const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY
 export const DISCORD_INVITE = import.meta.env.VITE_DISCORD_INVITE
 export const TELEGRAM_INVITE = import.meta.env.VITE_TELEGRAM_INVITE
 export const QQ_INVITE = import.meta.env.VITE_QQ_INVITE
+export const GITHUB_REPOSITORY = import.meta.env.VITE_GITHUB_REPOSITORY
 
 // UI
 export const FADE_OUT = { duration: 200 }

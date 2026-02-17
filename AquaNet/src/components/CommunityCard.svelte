@@ -45,6 +45,7 @@
       font-size: 1.2rem
       display: block
       margin-bottom: 0.5rem
+      color: color-mix(in oklab, rgb(var(--card-color)) 25%, rgba(255, 255, 255, 0.75))
 
     .icon
       position: absolute

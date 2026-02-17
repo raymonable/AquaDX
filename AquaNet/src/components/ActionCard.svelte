@@ -5,7 +5,7 @@
 
   export let color: string = '179, 198, 255'
   export let icon: string
-  export let href: string | undefined
+  export let href: string | undefined = undefined
   export let isSmall: boolean = false
 
   // Manually positioned icons

@@ -7,7 +7,7 @@
   import { codeToHtml } from 'shiki'
   import { AQUA_CONNECTION, DISCORD_INVITE, FADE_IN, FADE_OUT } from "../../libs/config";
   import { t } from "../../libs/i18n";
-  import DashboardTabs from "./DashboardTabs.svelte";
+  import DashboardTabs from "../../components/DashboardTabs.svelte";
   import { patchUserSegatools } from "../../libs/setup";
 
   let user: AquaNetUser
