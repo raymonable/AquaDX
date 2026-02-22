@@ -31,7 +31,7 @@
   // Available (unlocked) options for each kind of item
   // In allItems: 'namePlate', 'frame', 'trophy', 'mapIcon', 'systemVoice', 'avatarAccessory'
   let allItems: Record<string, Record<string, { name: string }>> = {}
-  let iKinds = { namePlate: 1, frame: 2, trophy: 3, trophySub1: 4, trophySub2: 5, mapIcon: 8, systemVoice: 9, avatarAccessory: 11 }
+  let iKinds = { namePlate: 1, frame: 2, trophy: 3, trophySub1: 4, trophySub2: 5, mapIcon: 8, systemVoice: 9, avatarAccessory: 11, stage: 13 }
   // In userbox: 'nameplateId', 'frameId', 'trophyId', 'mapIconId', 'voiceId', 'avatar{Wear/Head/Face/Skin/Item/Front/Back}'
   let userbox: UserBox
   let avatarKinds = ['Wear', 'Head', 'Face', 'Skin', 'Item', 'Front', 'Back'] as const
@@ -256,7 +256,7 @@
 
   type OnlyNumberPropsOf<T extends Record<string, any>> = {[Prop in keyof T as (T[Prop] extends number ? Prop : never)]: T[Prop]}
   let userboxSelected: keyof OnlyNumberPropsOf<UserBox> = "avatarWear";
-  const userboxNewOptions = ["systemVoice", "frame", "trophy", "mapIcon"]
+  const userboxNewOptions = ["systemVoice", "frame", "trophy", "mapIcon", "stage"]
 
   async function userboxSafeDrop(event: Event & { currentTarget: EventTarget & HTMLInputElement; }) {
     if (!event.target) return null;
@@ -317,21 +317,23 @@
   {#if !USERBOX_ENABLED.value || !USERBOX_INSTALLED}
     <div class="fields">
       {#each userItems as { iKey, ubKey, items }, i}
-        <div class="field">
-          <label for={ubKey}>{ts(`userbox.${ubKey}`)}</label>
-          <div>
-            <select bind:value={userbox[ubKey]} id={ubKey} on:change={() => changed = [...changed, ubKey]}>
-              {#each items as option}
-                <option value={option.itemId}>{allItems[iKey][option.itemId]?.name || `(unknown ${option.itemId})`}</option>
-              {/each}
-            </select>
-            {#if changed.includes(ubKey)}
-              <button transition:slide={{axis: "x"}} on:click={() => submit(ubKey)} disabled={!!submitting}>
-                {t("settings.profile.save")}
-              </button>
-            {/if}
+        {#if items.length > 0}
+          <div class="field">
+            <label for={ubKey}>{ts(`userbox.${ubKey}`)}</label>
+            <div>
+              <select bind:value={userbox[ubKey]} id={ubKey} on:change={() => changed = [...changed, ubKey]}>
+                {#each items as option}
+                  <option value={option.itemId}>{allItems[iKey][option.itemId]?.name || `(unknown ${option.itemId})`}</option>
+                {/each}
+              </select>
+              {#if changed.includes(ubKey)}
+                <button transition:slide={{axis: "x"}} on:click={() => submit(ubKey)} disabled={!!submitting}>
+                  {t("settings.profile.save")}
+                </button>
+              {/if}
+            </div>
           </div>
-        </div>
+        {/if}
       {/each}
     </div>
   {:else}
@@ -372,21 +374,23 @@
     </div>
     <div class="fields">
       {#each userItems.filter(i => userboxNewOptions.includes(i.iKey)) as { iKey, ubKey, items }, i}
-        <div class="field">
-          <label for={ubKey}>{ts(`userbox.${ubKey}`)}</label>
-          <div>
-            <select bind:value={userbox[ubKey]} id={ubKey} on:change={() => changed = [...changed, ubKey]}>
-              {#each items as option}
-                <option value={option.itemId}>{allItems[iKey][option.itemId]?.name || `(unknown ${option.itemId})`}</option>
-              {/each}
-            </select>
-            {#if changed.includes(ubKey)}
-              <button transition:slide={{axis: "x"}} on:click={() => submit(ubKey)} disabled={!!submitting}>
-                {t("settings.profile.save")}
-              </button>
-            {/if}
+        {#if items.length > 0}
+          <div class="field">
+            <label for={ubKey}>{ts(`userbox.${ubKey}`)}</label>
+            <div>
+              <select bind:value={userbox[ubKey]} id={ubKey} on:change={() => changed = [...changed, ubKey]}>
+                {#each items as option}
+                  <option value={option.itemId}>{allItems[iKey][option.itemId]?.name || `(unknown ${option.itemId})`}</option>
+                {/each}
+              </select>
+              {#if changed.includes(ubKey)}
+                <button transition:slide={{axis: "x"}} on:click={() => submit(ubKey)} disabled={!!submitting}>
+                  {t("settings.profile.save")}
+                </button>
+              {/if}
+            </div>
           </div>
-        </div>
+        {/if}
       {/each}
     </div>
   {/if}

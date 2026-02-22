@@ -1,5 +1,5 @@
 ALTER TABLE aqua_game_options
-    ADD chusan_lv_difficulty INT NOT NULL DEFAULT 4;
+    ADD chusan_lv_difficulty INT NOT NULL DEFAULT 5;
 ALTER TABLE aqua_game_options
     ADD chusan_lv_unlock_all BOOLEAN DEFAULT FALSE;
 

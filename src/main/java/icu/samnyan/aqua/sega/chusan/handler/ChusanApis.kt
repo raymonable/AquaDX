@@ -9,6 +9,7 @@ import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserItem
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserMusicDetail
 import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.general.model.UserRecentRating
+import org.springframework.data.repository.findByIdOrNull
 import java.time.format.DateTimeFormatter
 
 @Suppress("UNCHECKED_CAST")
@@ -30,13 +31,14 @@ fun ChusanController.chusanInit() {
 
     "GetGameCourseLevel" {
         // gameCourseLevelList: [{courseId: int, startDate: date, endDate: date}]
-        val lst = mutableListOf(
+        val opts = TokenChecker.getCurrentSession()?.user?.gameOptions
+        val lst = listOf(
             // Unlock Challenge
             mapOf("courseId" to 300004, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14"),
             mapOf("courseId" to 300009, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14"),
         ) + (0..9).toList().map {
             // Linked Verse
-            mapOf("courseId" to 500005 + (it * 100), "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14")
+            mapOf("courseId" to 500000 + (opts?.chusanLvDifficulty ?: 5) + (it * 100), "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14")
         }
 
         mapOf("length" to lst.size, "gameCourseLevelList" to lst)
@@ -62,14 +64,24 @@ fun ChusanController.chusanInit() {
 
     // The implementation here isn't preferable, but it's functional
     // Condition checks if the user beat a song from a previous stage and unlocks it if so
-    fun getLinkedVerseCampaign() =
-        // TODO: this doesn't correctly show the linked gates
-        db.gameLinkedVerse.findAll().map { it -> mapOf("linkedVerseId" to it.id + 1, "length" to 1, "conditionList" to listOf(
-            mapOf("type" to 10, "conditionList" to it.musicId, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2077-01-01 11:45:14")
-        )) } + // ORIGIN is always left unlocked by default
+    fun getLinkedVerseCampaign(): List<Any> {
+        val opts = TokenChecker.getCurrentSession()?.user?.gameOptions
+        // No other conditions appear to work properly, so the request for the gates is pretty large. Sorry
+        fun getChartConditions(musicId: Int) =
+            if (opts != null && opts.chusanLvUnlockAll) {
+                listOf( mapOf("type" to 3, "conditionId" to 0, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2099-12-31 00:00:00") )
+            } else {
+                (0..5).toList().map {
+                    mapOf("type" to 26, "conditionId" to (musicId * 100) + it, "logicalOpe" to 2, "startDate" to "2024-03-08 01:00:00", "endDate" to "2099-12-31 00:00:00") }}
+
+        return db.gameLinkedVerse.findAll().map {
+            val lst = getChartConditions(it.musicId)
+            mapOf("linkedVerseId" to it.id + 1, "length" to lst.size, "conditionList" to lst)
+        } + // ORIGIN is always left unlocked by default
             listOf(mapOf("linkedVerseId" to 10001, "length" to 1, "conditionList" to listOf(
-                mapOf("type" to 3, "conditionId" to 0, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2077-01-01 11:45:14")
+                mapOf("type" to 3, "conditionId" to 0, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2099-12-31 00:00:00")
             )))
+    }
     "GetGameLVConditionOpen" {
         val lst = getLinkedVerseCampaign()
         mapOf("length" to lst.size, "gameLinkedVerseConditionOpenList" to lst)
@@ -81,7 +93,7 @@ fun ChusanController.chusanInit() {
 
     "GetUserLV" {
         val lst = db.userLinkedVerse.findByUser_Card_ExtId(uid)
-        mapOf("length" to lst.size, "userLinkedVerseList" to lst, "userId" to uid, "nextIndex" to -1)
+        mapOf("length" to lst.size, "userLinkedVerseList" to lst, "userId" to uid)
     }
 
     "GetUserRecMusic".paged("userRecMusicList") {
