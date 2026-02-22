@@ -34,7 +34,7 @@ Multipurpose game server for ALL.Net games.
 
 | Game                   | Latest Ver.         | Initial Ver.        | Notes                                                       |
 |------------------------|---------------------|---------------------|-------------------------------------------------------------|
-| SDHD: CHUNITHM         | 2.40 (X-VERSE)      | 2.00 (NEW)          | Missing some X-VERSE features                               |
+| SDHD: CHUNITHM         | 2.45 (X-VERSE-X)    | 2.00 (NEW)          |                                                             |
 | SDEZ: MaiMai DX        | 1.60 (CiRCLE)       | 1.00 (DX)           | Missing circle (teams) support                              |
 | SDGA: MaiMai DX (Intl) | 1.60 (CiRCLE)       | 1.00 (DX)           | Thanks [@Clansty](https://github.com/clansty)               |
 | SDED: Card Maker       | 1.39                | N/A                 | Thanks [@Becods](https://github.com/Becods)                 |
