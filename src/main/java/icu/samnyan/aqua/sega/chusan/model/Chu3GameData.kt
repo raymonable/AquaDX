@@ -96,7 +96,8 @@ class GameLoginBonusPreset : IdExposedEntity() {
 @Entity(name = "ChusanGameLinkedVerse")
 @Table(name = "chusan_game_linked_verse")
 class GameLinkedVerse: IdExposedEntity() {
-    val musicId = 0
-    val startDate: LocalDateTime? = null
-    val endDate: LocalDateTime? = null
+    var musicId = 0
+    var name: String? = null
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
 }

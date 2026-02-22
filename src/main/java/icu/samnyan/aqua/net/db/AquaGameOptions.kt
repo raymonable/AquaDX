@@ -52,7 +52,7 @@ class AquaGameOptions(
     @SettingField("chu3-linked-verse")
     var chusanLvUnlockAll: Boolean = false,
     @SettingField("chu3-linked-verse")
-    var chusanLvDifficulty: Int? = null,
+    var chusanLvDifficulty: Int = 1,
     
     @SettingField("chu3-matching-chat")
     var chusanSymbolChat1: Int? = null,
