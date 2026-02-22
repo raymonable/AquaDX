@@ -116,6 +116,7 @@ class Chu3UserData : BaseEntity(), IUserData {
     var netBattleConsecutiveWinCount = 0
     var charaIllustId = 0
     var skillId = 0
+    var stageId = 0
     var overPowerPoint = 0
     var overPowerRate = 0
     var overPowerLowerRank = 0

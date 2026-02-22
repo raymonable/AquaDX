@@ -3,9 +3,10 @@
   import { CHU3_MATCHINGS } from "../../libs/config.js";
   import type { ChusanMatchingOption, GameOption } from "../../libs/generalTypes.js";
   import { t, ts } from "../../libs/i18n.js";
-  import { DATA, SETTING } from "../../libs/sdk.js";
+  import { DATA, GAME, SETTING, USER } from "../../libs/sdk.js";
   import StatusOverlays from "../StatusOverlays.svelte";
   import GameSettingFields from "./GameSettingFields.svelte";
+  import { EN_REF } from "../../libs/i18n/en_ref.js";
 
   let custom = false
   let overlay = false
@@ -16,6 +17,7 @@
   let symbols: Record<number, number> = {};
   let allItems: Record<string, Record<string, { name: string }>> = {}
   let submitting: string | undefined | null;  
+  let settings: Record<string, GameOption> = {};
 
   let existingUrl = "";
   SETTING.get().then(s => {
@@ -30,6 +32,7 @@
       if (opt.key.substring(0, symbolKey.length) == symbolKey && opt.value)
         symbols[parseInt(opt.key.substring(symbolKey.length))] = opt.value;
     })
+    settings = Object.fromEntries(s.map(v => [v.key, v]))
   })
 
   async function fetchSymbolData() {
@@ -46,6 +49,14 @@
 
     await SETTING.set(field, symbols[id + 1]).catch(e => error = e.message).finally(() => submitting = null);
     changed = changed.filter(v => v != `chusanSymbolChat${id}`)
+    return true
+  }
+
+  async function updateLvDifficulty() {
+    if (submitting) return false
+    submitting = `chusanLvDifficulty`
+    await SETTING.set("chusanLvDifficulty", settings["chusanLvDifficulty"].value).catch(e => error = e.message).finally(() => submitting = null);
+    changed = changed.filter(v => v != `chusanLvDifficulty`)
     return true
   }
 
@@ -66,13 +77,47 @@
       existingUrl = opt.matching
     }).catch(e => error = e.message)
   }
+
+  let linkedVerseAvailable = false;
+  USER.me().then(async me => {
+    let summary = await GAME.userSummary(me.username, "chu3")
+    let version = summary.lastVersion.split(".");
+    if (version[0] == "2" && parseInt(version[1]) >= 40)
+      linkedVerseAvailable = true;
+  })
 </script>
 
 <StatusOverlays {error} {loading}/>
 
 <div class="matching">
-  <h2>{t("userbox.header.matching")}</h2>
-  <p class="notice">{t("settings.cabNotice")}</p>
+  <h2>{t("userbox.header.matching")}{linkedVerseAvailable ? ` & ${t("userbox.header.linkedVerse")}` : ""}</h2>
+  <blockquote class="info">
+    {t("settings.cabNotice")}
+    {#if linkedVerseAvailable}
+      {t("userbox.lv.diffnotice")}
+    {/if}
+  </blockquote>
+
+  {#if linkedVerseAvailable}
+    <GameSettingFields game="chu3-linked-verse" />
+    {#if settings["chusanLvDifficulty"]}
+      <div class="field">
+        <label for={`chusanLvDifficulty`}>{ts(`userbox.lv.difficulty`)}</label>
+        <div>
+          <select bind:value={settings["chusanLvDifficulty"].value} id={`chusanLvDifficulty`} on:change={() => {changed = [...changed, `chusanLvDifficulty`];}}>
+            {#each {length: 5}, i}
+              <option value={i + 1}>{t(`userbox.lv.difficulty.${i + 1}` as keyof typeof EN_REF)}</option>
+            {/each}
+          </select>
+          {#if changed.includes(`chusanLvDifficulty`)}
+            <button transition:slide={{axis: "x"}} disabled={!!submitting} on:click={updateLvDifficulty}>
+              {t("settings.profile.save")}
+            </button>
+          {/if}
+        </div>
+      </div>
+    {/if}
+  {/if}
 
   <div class="matching-selector">
     <button on:click={_ => overlay = true}>{t('userbox.matching.select')}</button>

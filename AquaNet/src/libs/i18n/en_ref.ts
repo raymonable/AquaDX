@@ -194,6 +194,8 @@ export const EN_REF_SETTINGS = {
   'settings.fields.chusanTeamName.desc': 'Customize the text displayed on the top of your profile.',
   'settings.fields.chusanInfinitePenguins.name': 'Infinite Penguins',
   'settings.fields.chusanInfinitePenguins.desc': 'Set penguin statues for character level prompting to 999.',
+  'settings.fields.chusanLvUnlockAll.name': 'Unlock Linked Gates',
+  'settings.fields.chusanLvUnlockAll.desc': 'Incurs a long animated sequence, cannot be undone',
   'settings.fields.chusanMatchingReflector.name': 'Matching Server Reflector',
   'settings.fields.chusanMatchingReflector.desc': 'URL of the national matching server\'s UDP reflector.',
   'settings.fields.chusanMatchingServer.name': 'Matching Server',
@@ -224,7 +226,7 @@ export const EN_REF_SETTINGS = {
   'settings.profile.unchanged': 'Unchanged',
   'settings.export': 'Export Player Data',
   'settings.batchManualExport': "Export in Batch Manual (for Tachi)",
-  'settings.cabNotice': "Note: These settings will only affect your own cab/setup. If you're playing on someone else's setup, please contact them to change these settings.",
+  'settings.cabNotice': "These settings only apply for your keychip. If you're playing on someone else's setup, please ask them to change these settings.",
   'settings.siteNotice': "These settings only apply to the website.",
   'settings.regionNotice': "These settings are shared amongst Mai, Ongeki and Chuni.",
   'settings.regionSelector.title': "Prefecture Selector",
@@ -236,6 +238,7 @@ export const EN_REF_USERBOX = {
   'userbox.header.general': 'General Settings',
   'userbox.header.matching': 'National Matching',
   'userbox.header.matching.symbolChat': 'Chat Symbols (Matching)',
+  'userbox.header.linkedVerse': 'Linked Verse',
   'userbox.header.userbox': 'UserBox Settings',
   'userbox.header.preview': 'UserBox Preview',
   'userbox.nameplateId': 'Nameplate',
@@ -245,6 +248,7 @@ export const EN_REF_USERBOX = {
   'userbox.trophyIdSub2': 'Trophy Sub #2 (Title)',
   'userbox.mapIconId': 'Map Icon',
   'userbox.voiceId': 'System Voice',
+  'userbox.stageId': 'Stage',
   'userbox.avatarWear': 'Avatar Wear',
   'userbox.avatarHead': 'Avatar Head',
   'userbox.avatarFace': 'Avatar Face',
@@ -264,6 +268,14 @@ export const EN_REF_USERBOX = {
   'userbox.matching.custom.sub': 'Enter your own URL',
   'userbox.matching.symbolChat': 'Message Choice',
   'userbox.matching.symbolChat.default': 'Default',
+
+  'userbox.lv.diffnotice': 'In Linked Verse, you will be matched separately based on your difficulty.', 
+  'userbox.lv.difficulty': 'Linked Verse Difficulty',
+  'userbox.lv.difficulty.1': 'LEVEL V (1000 life, MASTER only)',
+  'userbox.lv.difficulty.2': 'LEVEL IV (3000 life, MASTER only)',
+  'userbox.lv.difficulty.3': 'LEVEL III (5000 life, MASTER only)',
+  'userbox.lv.difficulty.4': 'LEVEL II (5000 life, MASTER & EXPERT only)',
+  'userbox.lv.difficulty.5': 'LEVEL I (5000 life, ALL difficulties)',
 
   'userbox.new.name': 'AquaBox',
   'userbox.new.setup': 'Drag and drop your Chuni game folder (Lumi or newer) into the box below to display UserBoxes with their nameplate & avatar. All files are handled in-browser.',
@@ -286,7 +298,7 @@ export const EN_REF_USERBOX = {
 
 export const EN_REF_MAI_PHOTO = {
   'maiphoto.title': 'Mai Memorial Photo Gallery',
-  'maiphoto.url_warning': 'Note: If you want to share a photo with your friend, please save the photo. Do not copy image URL because the URL contains sensitive information.',
+  'maiphoto.url_warning': 'If you want to share a photo with your friend, please save the photo. Do not copy image URL because the URL contains sensitive information.',
   'maiphoto.none': 'No photo found. You can upload photo by clicking upload at the end of each game session.',
 }
 
