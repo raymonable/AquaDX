@@ -8,7 +8,7 @@ class Mai2GameEvent {
 
     var type = 0
     var startDate: String? = "2019-01-01 00:00:00.000000"
-    var endDate: String? = "2099-01-01 00:00:00.000000"
+    var endDate: String? = "2029-01-01 00:00:00.000000"
     var disableArea = ""
 }
 
@@ -17,13 +17,13 @@ class Mai2GameCharge {
     var orderId = 0L
     var price = 0
     var startDate: String? = "2019-01-01 00:00:00.000000"
-    var endDate: String? = "2099-01-01 00:00:00.000000"
+    var endDate: String? = "2029-01-01 00:00:00.000000"
 }
 
 class Mai2GameSellingCard {
     var cardId = 0L
     var startDate: String? = "2019-01-01 00:00:00.000000"
-    var endDate: String? = "2099-01-01 00:00:00.000000"
+    var endDate: String? = "2029-01-01 00:00:00.000000"
     var noticeStartDate: String? = "2019-01-01 00:00:00.000000"
-    var noticeEndDate: String? = "2099-01-01 00:00:00.000000"
+    var noticeEndDate: String? = "2029-01-01 00:00:00.000000"
 }
