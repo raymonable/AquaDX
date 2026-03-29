@@ -1,29 +1,43 @@
 package icu.samnyan.aqua.sega.maimai2.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import icu.samnyan.aqua.net.games.BaseEntity
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
-class Mai2GameEvent {
+@Entity
+@Table(name = "maimai2_game_event")
+class Mai2GameEvent : BaseEntity() {
     @JsonIgnore(false)
-    var id = 0L
+    override var id = 0L
 
     var type = 0
-    var startDate: String? = "2019-01-01 00:00:00.000000"
-    var endDate: String? = "2099-01-01 00:00:00.000000"
+    var startDate: String? = null
+    var endDate: String? = null
+
+    @JsonIgnore
+    var enable = false
     var disableArea = ""
 }
 
-class Mai2GameCharge {
+@Entity
+@Table(name = "maimai2_game_charge")
+class Mai2GameCharge : BaseEntity() {
+    @Column(unique = true)
     var chargeId = 0L
-    var orderId = 0L
-    var price = 0
-    var startDate: String? = "2019-01-01 00:00:00.000000"
-    var endDate: String? = "2099-01-01 00:00:00.000000"
+    val orderId = 0L
+    val price = 0
+    val startDate: String? = null
+    val endDate: String? = null
 }
 
-class Mai2GameSellingCard {
+@Entity
+@Table(name = "maimai2_game_selling_card")
+class Mai2GameSellingCard : BaseEntity() {
     var cardId = 0L
-    var startDate: String? = "2019-01-01 00:00:00.000000"
-    var endDate: String? = "2099-01-01 00:00:00.000000"
-    var noticeStartDate: String? = "2019-01-01 00:00:00.000000"
-    var noticeEndDate: String? = "2099-01-01 00:00:00.000000"
+    var startDate: String? = null
+    var endDate: String? = null
+    var noticeStartDate: String? = null
+    var noticeEndDate: String? = null
 }

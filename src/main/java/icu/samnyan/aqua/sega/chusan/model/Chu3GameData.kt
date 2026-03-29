@@ -2,27 +2,47 @@ package icu.samnyan.aqua.sega.chusan.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import icu.samnyan.aqua.net.games.BaseEntity
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
-class GameCharge {
+
+// BaseEntity does not expose id to json, but IdExposedEntity does
+@MappedSuperclass
+class IdExposedEntity {
+    @Id
+    var id: Long = 0
+}
+
+@Entity(name = "ChusanGameCharge")
+@Table(name = "chusan_game_charge")
+class GameCharge: BaseEntity() {
     var orderId = 0
+
+    @Column(unique = true)
     var chargeId = 0
     var price = 0
-    var startDate: LocalDateTime? = LocalDateTime.of(2019, 1, 1, 0, 0, 0)
-    var endDate: LocalDateTime? = LocalDateTime.of(2099, 1, 1, 0, 0, 0)
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
     var salePrice = 0
-    var saleStartDate: LocalDateTime? = LocalDateTime.of(2019, 1, 1, 0, 0, 0)
-    var saleEndDate: LocalDateTime? = LocalDateTime.of(2099, 1, 1, 0, 0, 0)
+    var saleStartDate: LocalDateTime? = null
+    var saleEndDate: LocalDateTime? = null
 }
 
-class GameEvent {
-    var id: Long = 0
+@Entity(name = "ChusanGameEvent")
+@Table(name = "chusan_game_event")
+class GameEvent: IdExposedEntity() {
     val type = 0
-    val startDate: LocalDateTime? = LocalDateTime.of(2019, 1, 1, 0, 0, 0)
-    val endDate: LocalDateTime? = LocalDateTime.of(2099, 1, 1, 0, 0, 0)
+    val startDate: LocalDateTime? = null
+    val endDate: LocalDateTime? = null
+
+    @JsonIgnore
+    val enable = false
 }
 
-class GameGacha {
+@Entity(name = "ChusanGameGacha")
+@Table(name = "chusan_game_gacha")
+class GameGacha : IdExposedEntity() {
     var gachaId = 0
     var gachaName: String? = null
     var type = 0
@@ -33,14 +53,15 @@ class GameGacha {
     var ceilingCnt = 0
     var changeRateCnt1 = 0
     var changeRateCnt2 = 0
-    var startDate: LocalDateTime? = LocalDateTime.of(2019, 1, 1, 0, 0, 0)
-    var endDate: LocalDateTime? = LocalDateTime.of(2099, 1, 1, 0, 0, 0)
-    var noticeStartDate: LocalDateTime? = LocalDateTime.of(2019, 1, 1, 0, 0, 0)
-    var noticeEndDate: LocalDateTime? = LocalDateTime.of(2099, 1, 1, 0, 0, 0)
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
+    var noticeStartDate: LocalDateTime? = null
+    var noticeEndDate: LocalDateTime? = null
 }
 
-class GameGachaCard {
-    var id: Long = 0
+@Entity(name = "ChusanGameGachaCard")
+@Table(name = "chusan_game_gacha_card")
+class GameGachaCard : IdExposedEntity() {
     var gachaId = 0
     var cardId = 0
     var rarity = 0
@@ -50,8 +71,9 @@ class GameGachaCard {
     var isPickup = false
 }
 
-class GameLoginBonus {
-    var id: Long = 0
+@Entity(name = "ChusanGameLoginBonus")
+@Table(name = "chusan_game_login_bonus")
+class GameLoginBonus : IdExposedEntity() {
     var version = 0
     var presetId = 0
     var loginBonusId = 0
@@ -63,17 +85,19 @@ class GameLoginBonus {
     var loginBonusCategoryType = 0
 }
 
-class GameLoginBonusPreset {
-    var id: Long = 0
+@Entity(name = "ChusanGameLoginBonusPreset")
+@Table(name = "chusan_game_login_bonus_preset")
+class GameLoginBonusPreset : IdExposedEntity() {
     var version = 0
     var presetName: String? = null
     var isEnabled = false
 }
 
-class GameLinkedVerse {
-    var id: Long = 0
+@Entity(name = "ChusanGameLinkedVerse")
+@Table(name = "chusan_game_linked_verse")
+class GameLinkedVerse: IdExposedEntity() {
     var musicId = 0
     var name: String? = null
-    var startDate: LocalDateTime? = LocalDateTime.of(2019, 1, 1, 0, 0, 0)
-    var endDate: LocalDateTime? = LocalDateTime.of(2099, 1, 1, 0, 0, 0)
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
 }
